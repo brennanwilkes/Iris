@@ -1,0 +1,19 @@
+Food
+	Lamb Sauce
+	Honey
+	MRE
+	Peanuts
+	Peanut Butter
+	Beans
+	Rice
+	Ramen
+	Cheese
+Water
+	*Water Bottle
+	Soda (A few different colours?)
+	Vodka
+Health
+	*Band Aid
+	*Gauze
+	*Painkiller
+	Antibiotics

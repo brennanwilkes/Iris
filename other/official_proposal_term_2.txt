@@ -1,0 +1,25 @@
+IDS Term 2 proposal
+
+
+Models
+	2-4 melee weapons
+	2-4 ranged weapons
+
+Animations
+	all weapons
+	Character
+		Spriniting
+		Crouching
+		Crawling
+		
+Support for
+	Emamies/side characters
+	Pickupable items
+
+Fully adjustable key bind system
+
+Health, Food, Water, Inventory Systems
+
+Level/Scene loading system
+
+Better support for multiple weapons

@@ -1,0 +1,52 @@
+IDS Term 1 Proposal
+
+Complete a 100% function character for a 3d video game (completed in term 2 and 3?)		
+
+Models will be done in blender
+Textures will be done in photoshop cs6
+Game rendering will be done with panda3d
+
+Character will be/have...
+	
+	Fully Textured and modeled...						
+		character
+* 		2-5 melee weapons
+*		2-5 range weapons
+		small testing space (with stairs, walls, ledges, hills)
+	
+	Full animations and controlable functionality
+		Walking
+		Jumping
+*		Sprinting
+*		Crouching
+*		Crawling
+*		Melee attack with multiple weapons
+		Ranged attack with multiple weapons
+*		Item pickup
+*		Item dropping
+*		Grabbing/hanging from ledges
+		Dynamic camera system
+			normally the mouse will control the dicrection the character is facing
+*			while enamies are in the area, the mouse will control where the character is aiming
+	
+*	Fully adjustable key bind system
+	
+	Startup/setup GUI
+	
+*	Health System
+*		Consumable items which can increase health
+	
+*	Food/water system
+*		Consumable items which can be consumed or saved
+	
+	Inventory system
+*		Weight system which adjusts movement speed
+		
+********************
+
+Every class the three of us will decide upon different tasks for the day. For example, 
+Michael might work on a camera control script, while Romar  works on a new sword model, 
+while Brennan works on a stairs detection and climbing script.
+
+This will mean that all three of us will be working on different scripts for the project,
+but no one will have to wait for someone else to finish work before they can do their own.

@@ -1,0 +1,16 @@
+
+*** using Panda3d game engine *** 
+*** using C++ ***
+
+somewhat explorative game
+simple combat system
+guns+melee
+simple hitboxes
+some puzzle solving
+first person view
+food/water - water filters with durability?
+procedural rooms/areas - scattered props
+inventory - 1 large weapon - XX litres of storage
+game takes place over 1 day
+Urban setting
+npcs with voices

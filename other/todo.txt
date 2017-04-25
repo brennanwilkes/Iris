@@ -1,0 +1,18 @@
+enemies
+	enemy pathfinding
+	Enemy Death effects
+optimizations
+	Proper grav system (panda)
+	Smart optimizations
+GUI
+	Start Menu
+	[keybinds]
+Implement level save/load
+Level change areas
+Lighting
+Sounds
+	Music [?]
+	Walking
+	Enemies
+	IRIS SPEAKING[?]
+Player Death / Respawn

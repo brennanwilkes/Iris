@@ -1,0 +1,9 @@
+bin
+panda_test
+panda_walking
+*~
+.DS_Store
+main
+localdir.cpp
+Eigen
+obj/*

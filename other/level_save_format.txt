@@ -1,0 +1,20 @@
+/*
+[window -> get_render()] is implied
+*/
+[Game] // GameObject dummy node
+	[Static] // Static object
+	[Entity] // All entities
+		[Item]
+			Name // A specific object that has name, ex. Object1
+			{
+				(Attribute) Data
+				(Attribute) Data
+				(Attribute) Data
+			}
+			Object2
+			{
+				(Attribute) Data
+			}
+[Menu]
+	// Do we need anything to be saved here?
+	
