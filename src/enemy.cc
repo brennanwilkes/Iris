@@ -36,7 +36,7 @@ void Enemy::tick(int m) {
 		tickFrame=0;
 		check_sight();
 	}
-	if(rot!=0){
+	/*if(rot!=0){
 		model.set_hpr((int)(model.get_hpr().get_x()+rot)%360,model.get_hpr().get_y(),model.get_hpr().get_z());
 		
 		running=true;
@@ -51,27 +51,31 @@ void Enemy::tick(int m) {
 		
 		
 		bas_mov(3);
-	}
+	}*/
 	
+	model.set_hpr((atan2(player.model.get_y()-model.get_y(),player.model.get_x()-model.get_x())*180.0/3.14159265358979323846)+90,model.get_hpr().get_y(),model.get_hpr().get_z());		
+	bas_mov(3);
 	
-	
+	cout<<anim_collection.get_frame()<<endl;
 	if (anim_collection.get_frame()==idleFC){
 		animframe=0;
 	} 
 	if (running){
-		if(anim_collection.get_frame()==moveFC){	
-			anim_collection.loop("Armature.2", true);
+		if(anim_collection.get_frame()==moveFC || (lastframe==anim_collection.get_frame()&&lastframe==otherlastframe)){	
+			anim_collection.play("Armature.2");
 		}
+		cout<<"yes"<<endl;
 	}
 	else{
-		if(animframe==0){	
-			anim_collection.loop("Armature.1", true);
+		if(animframe==0|| (lastframe==anim_collection.get_frame()&&lastframe==otherlastframe)){	
+			anim_collection.play("Armature.1");
 			animframe=1;
 		}
+		cout<<"no"<<endl;
 	}
 	
-	
-	
+	otherlastframe=lastframe;
+	lastframe=anim_collection.get_frame();
 	
 	if (tint>0){
 		model.clear_color_scale();
@@ -126,12 +130,12 @@ void Enemy::bas_mov(float dis){
 	qtrav_shoot.traverse(window -> get_render());
 	
 	
-	for (int i=0;i<qcoll_shoot->get_num_entries();i++){
+	/*for (int i=0;i<qcoll_shoot->get_num_entries();i++){
 		cout<<qcoll_shoot -> get_entry(i) -> get_into_node()->get_name()<<" ";
 	}
 	cout<<endl;
-	
-	
+	*/
+	running=false;
 	
 	if (qcoll_shoot -> get_num_entries() > 0)
 	{
@@ -148,7 +152,7 @@ void Enemy::bas_mov(float dis){
 		//running=false;
 		return;
 	}
-	
+	running=true;
 	/*
 	float xd,yd,zd,td;//,x2,y2,z2;
 	
@@ -207,12 +211,12 @@ void Enemy::bas_mov(float dis){
 	if (ytran!=0){
 		model.set_fluid_y(model.get_y() + ytran*tmpy*world.dt*15 );
 	}
-	if (xtran==0 && ytran==0){
+	/*if (xtran==0 && ytran==0){
 		running=false;
 	}
 	else{
 		running=true;
-	}
+	}*/
 	
 }
 
@@ -230,6 +234,9 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 	model.reparent_to(*parent);
 	
 	damage = dmg;
+	
+	lastframe=0;
+	otherlastframe=0;
 	
 	rot=0;
 	//max_health=100;
@@ -267,7 +274,7 @@ void Enemy::coll_set_up(int dist){
 	//courseGeometry.setCollideMask(BitMask32.bit(0))
 	
 	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
-	c_Node -> set_from_collide_mask(BitMask32::bit(1));
+	c_Node -> set_from_collide_mask(BitMask32::bit(0));
 	c_Node -> set_into_collide_mask(BitMask32::bit(3));
 	sphereModel = model.attach_new_node(c_Node);
 
