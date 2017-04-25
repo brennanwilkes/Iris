@@ -6,7 +6,7 @@ Player::Player() : GameObject() {}
 
 void Player::tick() {
 	if (speed>1 || !ground){
-		GameObject::tick(1); 
+		GameObject::tick(1,1); 
 	}
 	
 	
@@ -126,7 +126,7 @@ void Player::coll_set_up(){
 	c_Node = new CollisionNode("Player_sphere");
 	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
-	c_Node -> set_into_collide_mask(BitMask32::bit(4));
+	c_Node -> set_into_collide_mask(BitMask32::bit(0));
 	sphereModel = model.attach_new_node(c_Node);
 
 	sphereModel.show();

@@ -79,7 +79,7 @@ void Enemy::tick(int m) {
 		tint-=0.05;
 	}
 	
-	GameObject::tick(1);
+	GameObject::tick(1,0);
 	
 	
 	if (health<=0){
@@ -125,13 +125,13 @@ void Enemy::bas_mov(float dis){
 	shootRayModel.look_at(player.sphereModel);
 	qtrav_shoot.traverse(window -> get_render());
 	
-	/*
+	
 	for (int i=0;i<qcoll_shoot->get_num_entries();i++){
 		cout<<qcoll_shoot -> get_entry(i) -> get_into_node()->get_name()<<" ";
 	}
 	cout<<endl;
 	
-	*/
+	
 	
 	if (qcoll_shoot -> get_num_entries() > 0)
 	{
@@ -278,12 +278,12 @@ void Enemy::coll_set_up(int dist){
 
 	qcoll_shoot = new CollisionHandlerQueue;
 	c_Node = new CollisionNode("AI_Shoot");
-	c_Node -> add_solid(new CollisionRay(100, 0, 0, 0, dist, 0));
+	c_Node -> add_solid(new CollisionRay(0, 0, 5, 0, dist, 0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	shootRayModel = model.attach_new_node(c_Node);
 	shootRayModel.set_pos(0,0,0);
-	//shootRayModel.show();
+	shootRayModel.show();
 	qtrav_shoot.add_collider(shootRayModel, qcoll_shoot);
 
 	

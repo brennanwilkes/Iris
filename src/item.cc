@@ -80,7 +80,7 @@ void Item::tick(){
 	
 	if (gravFrame>10){
 		gravFrame=0;
-		GameObject::tick(10);
+		GameObject::tick(10,0);
 	}
 	
 	if (getxV()!=0){

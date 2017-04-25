@@ -46,8 +46,8 @@ void GameObject::setPos(float xx, float yy, float zz){
 	y = yy;
 	z = zz;
 }
-void GameObject::tick(int m){
-	checkGroundColl();
+void GameObject::tick(int m,int ind){
+	checkGroundColl(ind);
 	doGrav(m);
 	
 	
@@ -66,18 +66,19 @@ void GameObject::doGrav(int m){
 	}
 }
 
-void GameObject::checkGroundColl(){
+void GameObject::checkGroundColl(int ind){
 	// Set up traversers
 	ptrav.traverse(window -> get_render());
 	qtrav.traverse(window -> get_render());
 	// Do ground collision
-	if (coll_queue -> get_num_entries() > 0)
+	if (coll_queue -> get_num_entries() > ind)
 	{
 		coll_queue -> sort_entries();
 		// Stepping down
 		
 		
-		const auto dankmemes = coll_queue -> get_entry(0) -> get_surface_point(window -> get_render()).get_z();
+		
+		const auto dankmemes = coll_queue -> get_entry(ind) -> get_surface_point(window -> get_render()).get_z();
 		if (ground)
 		{
 			
