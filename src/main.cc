@@ -238,6 +238,9 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.wood2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/wood2.wav");
 	world.gameSounds.wood2->set_volume(1.0);
 	
+	world.gameSounds.background1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/background1.wav");
+	world.gameSounds.background1->set_volume(0.25);
+	
 	
 	
 	// Set up window
@@ -834,8 +837,8 @@ int main(int argc, char *argv[]) {
 	player.health=50;
 	
 
-	
-	
+	world.gameSounds.background1->set_loop(true);
+	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread))
 	{
 		// Things to do every frame

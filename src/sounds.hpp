@@ -66,6 +66,9 @@ public:
 	PT(AudioSound) walkSound5;
 	PT(AudioSound) walkSound6;
 	
+	
+	PT(AudioSound) background1;
+	
 private:
 
 };
