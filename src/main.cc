@@ -862,6 +862,7 @@ int main(int argc, char *argv[]) {
 			world.tick();
 			
 			if (player.health<=0){
+				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				player.death(itms,&entityModels);
 			}
 			

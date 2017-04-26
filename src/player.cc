@@ -271,8 +271,8 @@ void Player::refill(int md,float am){
 }
 
 void Player::removeItem(int itr){
-	weight -= inventory[handInd] -> weight;
-	volume -= inventory[handInd] -> volume;
+	weight -= inventory[itr] -> weight;
+	volume -= inventory[itr] -> volume;
 	inventory.erase(inventory.begin() + itr);
 	
 }
@@ -297,9 +297,9 @@ void Player::death(vector<Item*> v,NodePath* parent){
 		r2=rand()/(float)RAND_MAX;
 		r3=rand()/(float)RAND_MAX;
 		
-		drop(i,v,parent);
+		drop(0,v,parent);
 		cout<<i<<endl;
-		v.back() -> accel((r-0.5)*10,(r2-0.5)*10,r3*5);
+		v.back() -> accel((r-0.5),(r2-0.5),r3);
 	}
 	
 	deaths++;
@@ -307,9 +307,9 @@ void Player::death(vector<Item*> v,NodePath* parent){
 	health=100;
 	food=100;
 	water=100;
-	
-	
-	
+	player.arms=&player.empty_arms;
+	player.mainHand=NULL;
+	calc_arms();
 }
 void Player::calc_arms(){
 	
