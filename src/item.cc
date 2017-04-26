@@ -84,24 +84,34 @@ void Item::tick(){
 	}
 	
 	if (getxV()!=0){
-		model.set_fluid_x(model.get_x() + getxV());
+		model.set_x(model.get_x() + getxV());
 		if(ground){
 			if (getxV()<=0.1 && getxV()>=-0.1){
 				setVel(0.0,getyV(),getzV());
 			}
 			else{
-				setVel(pow(getxV(),0.5),getyV(),getzV());
+				if (getxV()>0){
+					setVel(pow(getxV(),0.5),getyV(),getzV());
+				}
+				else{
+					setVel(-1*pow(-1*getxV(),0.5),getyV(),getzV());
+				}
 			}
 		}
 	}
 	if (getyV()!=0){
-		model.set_fluid_y(model.get_y() + getyV());
+		model.set_y(model.get_y() + getyV());
 		if(ground){
 			if (getyV()<=0.1 && getyV()>=-0.1){
 				setVel(getxV(),0.0,getzV());
 			}
 			else{
-				setVel(getxV(),pow(getyV(),0.5),getzV());
+				if (getyV()>0){
+					setVel(getxV(),pow(getyV(),0.5),getzV());
+				}
+				else{
+					setVel(getxV(),-1*pow(-1*getyV(),0.5),getzV());
+				}
 			}
 		}
 	}

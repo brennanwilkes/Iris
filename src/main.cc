@@ -1273,7 +1273,6 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 										td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
 										dmg=(dmg/(pow(td,rngM)/100.0));
 										itms[h]->accel(dmg*xd/100.0,dmg*yd/100.0,dmg*zd/100.0);
-															
 										
 									}
 								}

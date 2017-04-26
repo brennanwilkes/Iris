@@ -242,6 +242,7 @@ bool Player::drop(int itr,vector<Item*> itms,NodePath* parent){
 		itms.back() -> model.reparent_to(*parent);
 		itms.back() -> model.set_pos(model.get_pos().get_x(),model.get_pos().get_y(),model.get_pos().get_z()+5);
 		itms.back() -> model.show();
+		itms.back() -> setVel(0,0,0);
 		return true;
 	}
 	
@@ -296,6 +297,8 @@ void Player::death(vector<Item*> v,NodePath* parent){
 		r=rand()/(float)RAND_MAX;
 		r2=rand()/(float)RAND_MAX;
 		r3=rand()/(float)RAND_MAX;
+		
+		cout<<i<<" "<<inventory[i]->model<<endl;
 		
 		drop(0,v,parent);
 		cout<<i<<endl;

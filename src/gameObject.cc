@@ -47,11 +47,17 @@ void GameObject::setPos(float xx, float yy, float zz){
 	z = zz;
 }
 void GameObject::tick(int m,int ind){
+	/*if (isnan(getyV())){
+		setVel(getxV(),0.0,getzV());
+	}
+	if (isnan(getxV())){
+		setVel(0.0,getyV(),getzV());
+	}
+	if (isnan(getzV())){
+		setVel(getxV(),getyV(),0.0);
+	}*/
 	checkGroundColl(ind);
 	doGrav(m);
-	
-	
-	
 }
 
 void GameObject::doGrav(int m){
