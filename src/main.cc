@@ -420,7 +420,8 @@ int main(int argc, char *argv[]) {
 	defbutNP.set_scale(0.1);
 	defbutNP.set_pos(xs+0.1,0, 0.25);
 	defbutNP.reparent_to(menuItems);
-
+	keys.buttonIndex["click-mouse1-"+QuitButton->get_id()] = QuitButton;
+	
 	/*PGButton* CamTogButton;
 	CamTogButton = new PGButton("CamTogButton");
 	CamTogButton -> setup("Toggle Camera");
@@ -437,6 +438,7 @@ int main(int argc, char *argv[]) {
 	defbutNP3.set_scale(0.1);
 	defbutNP3.set_pos(xs + 0.1, 0, 0.65);
 	defbutNP3.reparent_to(menuItems);
+	keys.buttonIndex["click-mouse1-"+HitTogButton->get_id()] = HitTogButton;
 	
 	PGButton* DoubleTogButton;
 	DoubleTogButton = new PGButton("DoubleTogButton");
@@ -445,6 +447,8 @@ int main(int argc, char *argv[]) {
 	defbutNP4.set_scale(0.1);
 	defbutNP4.set_pos(xs + 0.1, 0, 0.45);
 	defbutNP4.reparent_to(menuItems);
+	keys.buttonIndex["click-mouse1-"+DoubleTogButton->get_id()] = DoubleTogButton;
+
 	
 	PGButton* OptionTogButton;
 	OptionTogButton = new PGButton("OptionTogButton");
@@ -457,11 +461,12 @@ int main(int argc, char *argv[]) {
 	defbutNP6.set_scale(0.1);
 	defbutNP6.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP6.reparent_to(optionMenuItems);
+	keys.buttonIndex["click-mouse1-"+OptionTogButton->get_id()] = OptionTogButton;
 
 
 	for (unsigned int i=0; i<keys.keybindItems.size(); i++){
 		PGButton* butt;
-		butt = new PGButton("Bind "+keys.keybindItems.at(i));
+		butt = new PGButton("Bind"+keys.keybindItems.at(i));
 		butt -> setup(keys.keybindItems.at(i)+":"+ keys.keybinds[keys.keybindItems.at(i)].first.get_name());
 		NodePath BindNode1 = window -> get_pixel_2d().attach_new_node(butt);
 		BindNode1.set_scale(0.1);
@@ -469,7 +474,12 @@ int main(int argc, char *argv[]) {
 		BindNode1.reparent_to(optionMenuItems);
 		window -> get_panda_framework() -> define_key(butt->get_click_event(MouseButton::one() ), "Bind "+keys.keybindItems.at(i)+"Press",&rebindButton, butt);
 		keys.keybindMenu.push_back(butt);
+		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
 	}
+
+
+
+
 
 	PT(Texture) redTex=TexturePool::load_texture(local_dir()+"Assets/Red.png");
 	PT(Texture) greenTex=TexturePool::load_texture(local_dir()+"Assets/Blue.png");
@@ -609,7 +619,8 @@ int main(int argc, char *argv[]) {
 	invBut.set_pos(xs + 2, 0, 0.6);
 	invBut.reparent_to(menuItems);
 	invBut.show();
-	
+	keys.buttonIndex["click-mouse1-"+InvButton1->get_id()] = InvButton1;
+
 	//////////////////////////////////////////////
 	
 	PGButton* InvButton2;
@@ -625,13 +636,13 @@ int main(int argc, char *argv[]) {
 	invBut2.set_pos(xs + 2, 0, 0.0);
 	invBut2.reparent_to(menuItems);
 	invBut2.show();
-	
+	keys.buttonIndex["click-mouse1-"+InvButton2->get_id()] = InvButton2;
+
 	//////////////////////////////////////////////
 	
 	PGButton* InvButton3;
 	InvButton3 = new PGButton("InvButton3");
 	InvButton3 -> setup(blank_plane);
-	
 	
 	NodePath invBut3 = window -> get_pixel_2d().attach_new_node(InvButton3);
 	invBut3.set_transparency(TransparencyAttrib::M_alpha, 1);
@@ -640,7 +651,8 @@ int main(int argc, char *argv[]) {
 	invBut3.set_pos(xs + 2, 0, -0.6);
 	invBut3.reparent_to(menuItems);
 	invBut3.show();
-	
+	keys.buttonIndex["click-mouse1-"+InvButton3->get_id()] = InvButton3;
+
 	//////////////////////////////////////////////
 	
 	
@@ -849,9 +861,7 @@ int main(int argc, char *argv[]) {
 			//timetest = globalClock -> get_real_time();
 			//timetest2 = globalClock -> get_real_time();
 			//cout << timetest << endl
-			
-			//cout<<enems[0]->shootRayModel.get_pos()<<endl;
-			
+
 			world.get_keys(mouseWatcher, keys.keybinds); // updates keybinds held status . THIS SHOULD BE DONE FIRST
 			world.look(window);
 			world.move(keys.keybinds);
@@ -861,8 +871,9 @@ int main(int argc, char *argv[]) {
 			
 			cout << timetest << endl;
 			*/
-
-			world.tick();
+		
+			//if ((not world.pause_menu) and (not world.option_menu))
+				world.tick();
 			
 			if (player.health<=0){
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
@@ -970,14 +981,14 @@ void toggleOptionMenu(const Event* eventPtr, void* dataPtr){
 void invPress(const Event* eventPtr, void* dataPtr){
 	int si=getMenuSliderInd();
 	int t=0;
-	
-	if(eventPtr->get_name()=="click-mouse1-pg28"){
+	string tag = keys.buttonIndex[eventPtr->get_name()]->get_name();
+	if(tag == "InvButton2"){
 		t=1;
 	}
-	else if(eventPtr->get_name()=="click-mouse1-pg29"){
+	else if(tag == "InvButton3"){
 		t=2;
 	}
-	cout<<eventPtr->get_name()<<endl;
+	//cout<<eventPtr->get_name()<<endl;
 	
 	
 	player.handInd=(si+t);
@@ -1009,27 +1020,19 @@ void hide_arms(const Event* eventPtr, void* dataPtr){
 
 void rebindButton(const Event* eventPtr, void* dataPtr){
 	MouseWatcher* mouseWatcher = (MouseWatcher*)window -> get_mouse().node();
-	cout << eventPtr->get_name()<<endl;
-	for (int i=0; i<15; i++){
-		if (eventPtr->get_name() == "click-mouse1-pg"+to_string(i+5)){
+	string tag = keys.buttonIndex[eventPtr->get_name()]->get_name();
+	for (auto i: keys.keybindItems){
+		if (tag == ("Bind"+i)){
 			for (auto k: keys.allKeys){
 				if (mouseWatcher-> is_button_down(k)){
 					cout << k.get_name() << endl;
-					keys.keybinds[keys.keybindItems.at(i)].first = k;
+					keys.keybinds[i].first = k;
+					keys.buttonIndex[eventPtr->get_name()] -> setup(i+":"+ k.get_name());
 					return;
 				}
 			}
 		}
 	}
-	
-	/*
-	for (int i=0; i<keys.keybindItems.size(); i++){
-		if (eventPtr->get_name() == keys.keybindItems.at(i)){
-			s= keybindItems.at(i);
-			break;
-		}
-	}
-	}*/
 }
 
 void menu(const Event* eventPtr, void* dataPtr){
@@ -1047,9 +1050,8 @@ void drop(const Event* eventPtr, void* dataPtr){
 		player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(dataPtr)));
 	}
 }
+
 void onE(const Event* eventPtr, void* dataPtr){
-	
-	
 	player.qtrav_shoot.traverse(window -> get_render());
 	if (player.qcoll_shoot -> get_num_entries() > 0)
 	{
@@ -1067,12 +1069,8 @@ void onE(const Event* eventPtr, void* dataPtr){
 }
 
 void onR(const Event* eventPtr, void* dataPtr){
-	
 	if (player.mainHand!=NULL){
 		if (player.mainHand->type=='g'){
-			
-			
-			
 			if (player.mainHand->tot_ammo-(player.mainHand->max_amount-player.mainHand->amount)>0){
 				player.mainHand->tot_ammo-=(player.mainHand->max_amount-player.mainHand->amount);
 				player.mainHand->amount=player.mainHand->max_amount;
