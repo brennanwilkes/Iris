@@ -182,9 +182,7 @@ void Player::coll_set_up(){
 
 bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
 	for (unsigned int i = 0; i < itms.size(); i++){
-		
 		if(itm == itms[i] -> sphereModel.node()){
-			
 			int trans=0;
 			if (player.mode){
 				trans=20;
@@ -192,10 +190,8 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
 			if (player.model.get_distance(itms[i]->model)-trans > 30){
 				return false;
 			}
-			
-			
 			if (itms[i]->type=='g'){
-				for (unsigned int x=0;x<inventory.size();x++){
+				/*for (unsigned int x=0;x<inventory.size();x++){
 					if (itms[i]->id==inventory[x]->id){
 						inventory[x]->tot_ammo+=itms[i]->tot_ammo;
 						itms[i]->tot_ammo=0;
@@ -203,7 +199,7 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
 						return true;
 					}
 				
-				}
+				}*/			//this is taking ammo from guns dont delete
 			}
 			else if (itms[i]->type=='a'){
 				for (unsigned int x=0;x<inventory.size();x++){
@@ -212,20 +208,12 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
 						itms[i]->model.detach_node();
 						itms[i]->model.remove_node();
 						itms.erase(itms.begin()+i);
-						
-						
 						return true;
 					}
 			
 				}
 				return false;
 			}
-			
-			
-			
-			
-			
-			
 			if((itms[i] -> weight + weight <= max_weight) && (itms[i] -> volume + volume <= max_volume)){
 				//cout<<2<<endl;
 				inventory.push_back(itms[i]);
