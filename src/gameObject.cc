@@ -60,7 +60,7 @@ void GameObject::doGrav(int m){
 	
 	
 	if (world.dt <= 0.1)		
-		accel(0, 0, world.dt * -9.8*m);
+		accel(0, 0, world.dt * -9.8*m*(1.0/2.0));
 	if (!ground){
 		model.set_fluid_z(model.get_z() + getzV());
 	}
