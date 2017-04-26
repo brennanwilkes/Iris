@@ -323,7 +323,7 @@ void Enemy::attack() {
 	
 	td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
 	
-	player.health-=td*damage/20.0;
+	player.health-=damage/td;
 	
 	player.tint=1;
 	
