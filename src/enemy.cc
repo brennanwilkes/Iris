@@ -55,27 +55,19 @@ void Enemy::tick(int m) {
 	
 	model.set_hpr((atan2(player.model.get_y()-model.get_y(),player.model.get_x()-model.get_x())*180.0/3.14159265358979323846)+90,model.get_hpr().get_y(),model.get_hpr().get_z());		
 	bas_mov(3);
-	
-	cout<<anim_collection.get_frame()<<endl;
-	if (anim_collection.get_frame()==idleFC){
-		animframe=0;
-	} 
 	if (running){
-		if(anim_collection.get_frame()==moveFC || (lastframe==anim_collection.get_frame()&&lastframe==otherlastframe)){	
-			anim_collection.play("Armature.2");
+		if(anim_collection.get_frame()==anim_collection.get_num_frames()-1){// || lastframe==anim_collection.get_frame()){	
+			anim_collection.loop("Armature.2",true);
 		}
-		cout<<"yes"<<endl;
 	}
 	else{
-		if(animframe==0|| (lastframe==anim_collection.get_frame()&&lastframe==otherlastframe)){	
-			anim_collection.play("Armature.1");
-			animframe=1;
+		if(anim_collection.get_frame()==anim_collection.get_num_frames()-1){//|| lastframe==anim_collection.get_frame()){	
+			anim_collection.loop("Armature.1",true);
 		}
-		cout<<"no"<<endl;
 	}
 	
-	otherlastframe=lastframe;
-	lastframe=anim_collection.get_frame();
+	
+	
 	
 	if (tint>0){
 		model.clear_color_scale();
