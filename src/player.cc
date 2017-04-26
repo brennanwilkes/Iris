@@ -293,15 +293,14 @@ void Player::play_anim(){
 }
 void Player::death(vector<Item*> v,NodePath* parent){
 	float r,r2,r3;
-	for (unsigned int i=0;i<inventory.size();i++){
+	unsigned int send_nudes=inventory.size();
+	for (unsigned int i=0;i<send_nudes;i++){
 		r=rand()/(float)RAND_MAX;
 		r2=rand()/(float)RAND_MAX;
 		r3=rand()/(float)RAND_MAX;
 		
-		cout<<i<<" "<<inventory[i]->model<<endl;
 		
 		drop(0,v,parent);
-		cout<<i<<endl;
 		v.back() -> accel((r-0.5),(r2-0.5),r3);
 	}
 	

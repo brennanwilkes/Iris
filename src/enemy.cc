@@ -270,7 +270,7 @@ void Enemy::coll_set_up(int dist){
 	c_Node -> set_into_collide_mask(BitMask32::bit(3));
 	sphereModel = model.attach_new_node(c_Node);
 
-	sphereModel.show();
+	//sphereModel.show();
 	coll_push -> add_collider(sphereModel, model);
 	ptrav.add_collider(sphereModel, coll_push);
 
@@ -282,7 +282,7 @@ void Enemy::coll_set_up(int dist){
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	shootRayModel = model.attach_new_node(c_Node);
 	shootRayModel.set_pos(0,0,0);
-	shootRayModel.show();
+	//shootRayModel.show();
 	qtrav_shoot.add_collider(shootRayModel, qcoll_shoot);
 
 	

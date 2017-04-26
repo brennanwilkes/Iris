@@ -1187,8 +1187,8 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 					}
 					else if(player.mainHand->id==2){
 						frameGunCount = player.bat_collection.get_frame()-player.bat_collection.get_num_frames();
-						dmg=5;
-						rngM=2.0;
+						dmg=10;
+						rngM=1.5;
 					}
 					else if(player.mainHand->id==10){
 						frameGunCount = player.ak_collection.get_frame()-player.ak_collection.get_num_frames();

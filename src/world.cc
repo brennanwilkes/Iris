@@ -256,6 +256,11 @@ void World::draw(){
 			itms[ij]->sphereModel.show();
 			itms[ij]->rayModel.show();
 		}
+		for (unsigned int ij=0;ij<enems.size();ij++){
+			enems[ij]->sphereModel.show();
+			enems[ij]->rayModel.show();
+			
+		}
 	}
 	else{
 		player.sphereModel.hide();
@@ -263,6 +268,11 @@ void World::draw(){
 		for (unsigned int ij=0;ij<itms.size();ij++){
 			itms[ij]->sphereModel.hide();
 			itms[ij]->rayModel.hide();
+		}
+		for (unsigned int ij=0;ij<enems.size();ij++){
+			enems[ij]->sphereModel.hide();
+			enems[ij]->rayModel.hide();
+			
 		}
 	}
 	/*
