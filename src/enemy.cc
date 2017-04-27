@@ -326,6 +326,28 @@ void Enemy::attack() {
 	player.health-=damage/td;
 	
 	player.tint=1;
+	float ran=rand()/(float)RAND_MAX;
+	if(ran>(6.0/7.0)){
+		world.gameSounds.scream1->play();
+	}
+	else if(ran>(5.0/7.0)){
+		world.gameSounds.scream2->play();
+	}
+	else if(ran>(4.0/7.0)){
+		world.gameSounds.scream3->play();
+	}
+	else if(ran>(3.0/7.0)){
+		world.gameSounds.femaleGrunt1->play();
+	}
+	else if(ran>(2.0/7.0)){
+		world.gameSounds.femaleGrunt5->play();
+	}
+	else if(ran>(1.0/7.0)){
+		world.gameSounds.femaleGrunt6->play();
+	}
+	else{
+		world.gameSounds.femaleGrunt7->play();
+	}
 	
 	
 }
