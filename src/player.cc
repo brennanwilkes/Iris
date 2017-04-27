@@ -6,7 +6,7 @@ Player::Player() : GameObject() {}
 
 void Player::tick() {
 	if (speed>1 || !ground){
-		GameObject::tick(1); 
+		GameObject::tick(1,1); 
 	}
 	
 	
@@ -126,7 +126,7 @@ void Player::coll_set_up(){
 	c_Node = new CollisionNode("Player_sphere");
 	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
-	c_Node -> set_into_collide_mask(BitMask32::bit(4));
+	c_Node -> set_into_collide_mask(BitMask32::bit(0));
 	sphereModel = model.attach_new_node(c_Node);
 
 	sphereModel.show();
@@ -182,9 +182,7 @@ void Player::coll_set_up(){
 
 bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
 	for (unsigned int i = 0; i < itms.size(); i++){
-		
 		if(itm == itms[i] -> sphereModel.node()){
-			
 			int trans=0;
 			if (player.mode){
 				trans=20;
@@ -192,10 +190,8 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
 			if (player.model.get_distance(itms[i]->model)-trans > 30){
 				return false;
 			}
-			
-			
 			if (itms[i]->type=='g'){
-				for (unsigned int x=0;x<inventory.size();x++){
+				/*for (unsigned int x=0;x<inventory.size();x++){
 					if (itms[i]->id==inventory[x]->id){
 						inventory[x]->tot_ammo+=itms[i]->tot_ammo;
 						itms[i]->tot_ammo=0;
@@ -203,7 +199,7 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
 						return true;
 					}
 				
-				}
+				}*/			//this is taking ammo from guns dont delete
 			}
 			else if (itms[i]->type=='a'){
 				for (unsigned int x=0;x<inventory.size();x++){
@@ -212,20 +208,12 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
 						itms[i]->model.detach_node();
 						itms[i]->model.remove_node();
 						itms.erase(itms.begin()+i);
-						
-						
 						return true;
 					}
 			
 				}
 				return false;
 			}
-			
-			
-			
-			
-			
-			
 			if((itms[i] -> weight + weight <= max_weight) && (itms[i] -> volume + volume <= max_volume)){
 				//cout<<2<<endl;
 				inventory.push_back(itms[i]);
@@ -254,6 +242,7 @@ bool Player::drop(int itr,vector<Item*> itms,NodePath* parent){
 		itms.back() -> model.reparent_to(*parent);
 		itms.back() -> model.set_pos(model.get_pos().get_x(),model.get_pos().get_y(),model.get_pos().get_z()+5);
 		itms.back() -> model.show();
+		itms.back() -> setVel(0,0,0);
 		return true;
 	}
 	
@@ -283,8 +272,8 @@ void Player::refill(int md,float am){
 }
 
 void Player::removeItem(int itr){
-	weight -= inventory[handInd] -> weight;
-	volume -= inventory[handInd] -> volume;
+	weight -= inventory[itr] -> weight;
+	volume -= inventory[itr] -> volume;
 	inventory.erase(inventory.begin() + itr);
 	
 }
@@ -304,14 +293,15 @@ void Player::play_anim(){
 }
 void Player::death(vector<Item*> v,NodePath* parent){
 	float r,r2,r3;
-	for (unsigned int i=0;i<inventory.size();i++){
+	unsigned int send_nudes=inventory.size();
+	for (unsigned int i=0;i<send_nudes;i++){
 		r=rand()/(float)RAND_MAX;
 		r2=rand()/(float)RAND_MAX;
 		r3=rand()/(float)RAND_MAX;
 		
-		drop(i,v,parent);
-		cout<<i<<endl;
-		v.back() -> accel((r-0.5)*10,(r2-0.5)*10,r3*5);
+		
+		drop(0,v,parent);
+		v.back() -> accel((r-0.5),(r2-0.5),r3);
 	}
 	
 	deaths++;
@@ -319,9 +309,9 @@ void Player::death(vector<Item*> v,NodePath* parent){
 	health=100;
 	food=100;
 	water=100;
-	
-	
-	
+	player.arms=&player.empty_arms;
+	player.mainHand=NULL;
+	calc_arms();
 }
 void Player::calc_arms(){
 	

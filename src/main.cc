@@ -213,6 +213,17 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.femaleGrunt7 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/female-grunt7.wav");
 	world.gameSounds.femaleGrunt7->set_volume(1.0);
 	
+	
+	world.gameSounds.scream1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream1.wav");
+	world.gameSounds.scream1->set_volume(1.0);
+	world.gameSounds.scream2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream2.wav");
+	world.gameSounds.scream2->set_volume(1.0);
+	world.gameSounds.scream3 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream3.wav");
+	world.gameSounds.scream3->set_volume(1.0);
+	world.gameSounds.scream4 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream4.wav");
+	world.gameSounds.scream4->set_volume(1.0);
+	
+	
 	world.gameSounds.glass = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/glass.wav");
 	world.gameSounds.glass->set_volume(1.0);
 	
@@ -237,6 +248,9 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.wood1->set_volume(1.0);
 	world.gameSounds.wood2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/wood2.wav");
 	world.gameSounds.wood2->set_volume(1.0);
+	
+	world.gameSounds.background1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/background1.wav");
+	world.gameSounds.background1->set_volume(0.25);
 	
 	
 	
@@ -393,6 +407,8 @@ int main(int argc, char *argv[]) {
 	//vector<NodePath> ND;
 
 	vector<string> Dir = {"Assets/Stage/Terrain_C.egg","Assets/Stage/SkyBox.egg","Assets/Stage/Grave.egg","Assets/Stage/Building_C.egg","Assets/Stage/Stone_C.egg","Assets/Stage/Ramp_C.egg","Assets/Stage/Stairs_C.egg","Assets/sphere/sphere.egg"};
+	
+	//vector<string> Dir = {"Assets/starea/lag_.egg"};
 
 	vector<StaticObject> ND;
 	for(auto x:Dir)
@@ -417,7 +433,8 @@ int main(int argc, char *argv[]) {
 	defbutNP.set_scale(0.1);
 	defbutNP.set_pos(xs+0.1,0, 0.25);
 	defbutNP.reparent_to(menuItems);
-
+	keys.buttonIndex["click-mouse1-"+QuitButton->get_id()] = QuitButton;
+	
 	/*PGButton* CamTogButton;
 	CamTogButton = new PGButton("CamTogButton");
 	CamTogButton -> setup("Toggle Camera");
@@ -434,6 +451,7 @@ int main(int argc, char *argv[]) {
 	defbutNP3.set_scale(0.1);
 	defbutNP3.set_pos(xs + 0.1, 0, 0.65);
 	defbutNP3.reparent_to(menuItems);
+	keys.buttonIndex["click-mouse1-"+HitTogButton->get_id()] = HitTogButton;
 	
 	PGButton* DoubleTogButton;
 	DoubleTogButton = new PGButton("DoubleTogButton");
@@ -442,6 +460,8 @@ int main(int argc, char *argv[]) {
 	defbutNP4.set_scale(0.1);
 	defbutNP4.set_pos(xs + 0.1, 0, 0.45);
 	defbutNP4.reparent_to(menuItems);
+	keys.buttonIndex["click-mouse1-"+DoubleTogButton->get_id()] = DoubleTogButton;
+
 	
 	PGButton* OptionTogButton;
 	OptionTogButton = new PGButton("OptionTogButton");
@@ -454,11 +474,12 @@ int main(int argc, char *argv[]) {
 	defbutNP6.set_scale(0.1);
 	defbutNP6.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP6.reparent_to(optionMenuItems);
+	keys.buttonIndex["click-mouse1-"+OptionTogButton->get_id()] = OptionTogButton;
 
 
 	for (unsigned int i=0; i<keys.keybindItems.size(); i++){
 		PGButton* butt;
-		butt = new PGButton("Bind "+keys.keybindItems.at(i));
+		butt = new PGButton("Bind"+keys.keybindItems.at(i));
 		butt -> setup(keys.keybindItems.at(i)+":"+ keys.keybinds[keys.keybindItems.at(i)].first.get_name());
 		NodePath BindNode1 = window -> get_pixel_2d().attach_new_node(butt);
 		BindNode1.set_scale(0.1);
@@ -466,7 +487,12 @@ int main(int argc, char *argv[]) {
 		BindNode1.reparent_to(optionMenuItems);
 		window -> get_panda_framework() -> define_key(butt->get_click_event(MouseButton::one() ), "Bind "+keys.keybindItems.at(i)+"Press",&rebindButton, butt);
 		keys.keybindMenu.push_back(butt);
+		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
 	}
+
+
+
+
 
 	PT(Texture) redTex=TexturePool::load_texture(local_dir()+"Assets/Red.png");
 	PT(Texture) greenTex=TexturePool::load_texture(local_dir()+"Assets/Blue.png");
@@ -606,7 +632,8 @@ int main(int argc, char *argv[]) {
 	invBut.set_pos(xs + 2, 0, 0.6);
 	invBut.reparent_to(menuItems);
 	invBut.show();
-	
+	keys.buttonIndex["click-mouse1-"+InvButton1->get_id()] = InvButton1;
+
 	//////////////////////////////////////////////
 	
 	PGButton* InvButton2;
@@ -622,13 +649,13 @@ int main(int argc, char *argv[]) {
 	invBut2.set_pos(xs + 2, 0, 0.0);
 	invBut2.reparent_to(menuItems);
 	invBut2.show();
-	
+	keys.buttonIndex["click-mouse1-"+InvButton2->get_id()] = InvButton2;
+
 	//////////////////////////////////////////////
 	
 	PGButton* InvButton3;
 	InvButton3 = new PGButton("InvButton3");
 	InvButton3 -> setup(blank_plane);
-	
 	
 	NodePath invBut3 = window -> get_pixel_2d().attach_new_node(InvButton3);
 	invBut3.set_transparency(TransparencyAttrib::M_alpha, 1);
@@ -637,7 +664,8 @@ int main(int argc, char *argv[]) {
 	invBut3.set_pos(xs + 2, 0, -0.6);
 	invBut3.reparent_to(menuItems);
 	invBut3.show();
-	
+	keys.buttonIndex["click-mouse1-"+InvButton3->get_id()] = InvButton3;
+
 	//////////////////////////////////////////////
 	
 	
@@ -834,36 +862,32 @@ int main(int argc, char *argv[]) {
 	player.health=50;
 	
 
-	
-	
+	world.gameSounds.background1->set_loop(true);
+	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread))
 	{
 		// Things to do every frame
 		// Keybinds should not go here.
-		if (world.is_running())
+		if (world.menuStatus==0)
 		{
+			player.volumeNodePath.show();
+			player.weightNodePath.show();
 			//Main Game
-			//timetest = globalClock -> get_real_time();
-			//timetest2 = globalClock -> get_real_time();
-			//cout << timetest << endl
-			
-			//cout<<enems[0]->shootRayModel.get_pos()<<endl;
+			player.handDisplay.show();
 			
 			world.get_keys(mouseWatcher, keys.keybinds); // updates keybinds held status . THIS SHOULD BE DONE FIRST
 			world.look(window);
 			world.move(keys.keybinds);
 			
-			/*timetest=globalClock -> get_real_time()-timetest2;
-			timetest2 = globalClock -> get_real_time();
 			
-			cout << timetest << endl;
-			*/
-
 			world.tick();
 			
+			
 			if (player.health<=0){
+				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				player.death(itms,&entityModels);
 			}
+			
 			
 			if (player.mainHand!=NULL){
 				if (player.mainHand->type=='g'){
@@ -875,32 +899,36 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			
-			//timetest=globalClock -> get_real_time()-timetest2;
-			//timetest2 = globalClock -> get_real_time();
-			//cout << timetest << endl;
-			
 			HealthBar->set_value(player.health);
 			WaterBar->set_value(player.water);
 			FoodBar->set_value(player.food);
 			Bars.show();
 			
 			
-			//timetest=globalClock -> get_real_time()-timetest2;
-			//timetest2 = globalClock -> get_real_time();
-			//cout << timetest << endl;
-			
 			
 			world.draw();
 			
-			//timetest=globalClock -> get_real_time()-timetest2;
-			//timetest2 = globalClock -> get_real_time();
-			//cout << timetest << endl<<endl;
+			
 		}
-		else if (world.pause_menu){
+		else if(world.menuStatus==1){
+			player.volumeNodePath.hide();
+			player.weightNodePath.hide();
+			Bars.hide();
+		}
+		else{
+			player.handDisplay.hide();
+			player.volumeNodePath.hide();
+			player.weightNodePath.hide();
+			Bars.hide();
+		}
+		/*else if (world.menuStatus!=0){
 			//pause menu
 			Bars.hide();
 			
-		}
+		}*/
+		
+		world.dt = globalClock -> get_real_time() - world.preTime;
+		world.preTime = globalClock -> get_real_time();
 		
 		calc_inv(InvButton1,InvButton2,InvButton3,&blankTex);
 		
@@ -917,26 +945,31 @@ void sys_exit(const Event* eventPtr, void* dataPtr){
 }
 
 void jump(const Event* eventPtr, void* dataPtr){
-	if (player.ground || player.doublejump)
-	{
-		player.accel(0, 0, 1);
-		player.ground = false;
+	if (world.menuStatus==0){
+		if (player.ground || player.doublejump)
+		{
+			world.gameSounds.femaleGrunt7->play();
+			player.accel(0, 0, 1);
+			player.ground = false;
+		}
+		world.tickCount=121;
 	}
-	world.tickCount=121;
 }
 
 void toggle(const Event* eventPtr, void* dataPtr){
-	player.mode = 1 - player.mode;
-
-	if (player.arms!=NULL){
-		if (player.arms_shown) {
-			player.arms->show();
-		}
-		else{
-			player.arms->hide();
-			player.pistol_arms.hide();
-			player.bat_arms.hide();
-			player.ak_arms.hide();
+	if(world.menuStatus==0){
+		player.mode = 1 - player.mode;
+	
+		if (player.arms!=NULL){
+			if (player.arms_shown) {
+				player.arms->show();
+			}
+			else{
+				player.arms->hide();
+				player.pistol_arms.hide();
+				player.bat_arms.hide();
+				player.ak_arms.hide();
+			}
 		}
 	}
 }
@@ -966,14 +999,14 @@ void toggleOptionMenu(const Event* eventPtr, void* dataPtr){
 void invPress(const Event* eventPtr, void* dataPtr){
 	int si=getMenuSliderInd();
 	int t=0;
-	
-	if(eventPtr->get_name()=="click-mouse1-pg28"){
+	string tag = keys.buttonIndex[eventPtr->get_name()]->get_name();
+	if(tag == "InvButton2"){
 		t=1;
 	}
-	else if(eventPtr->get_name()=="click-mouse1-pg29"){
+	else if(tag == "InvButton3"){
 		t=2;
 	}
-	cout<<eventPtr->get_name()<<endl;
+	//cout<<eventPtr->get_name()<<endl;
 	
 	
 	player.handInd=(si+t);
@@ -1005,27 +1038,19 @@ void hide_arms(const Event* eventPtr, void* dataPtr){
 
 void rebindButton(const Event* eventPtr, void* dataPtr){
 	MouseWatcher* mouseWatcher = (MouseWatcher*)window -> get_mouse().node();
-	cout << eventPtr->get_name()<<endl;
-	for (int i=0; i<15; i++){
-		if (eventPtr->get_name() == "click-mouse1-pg"+to_string(i+5)){
+	string tag = keys.buttonIndex[eventPtr->get_name()]->get_name();
+	for (auto i: keys.keybindItems){
+		if (tag == ("Bind"+i)){
 			for (auto k: keys.allKeys){
 				if (mouseWatcher-> is_button_down(k)){
 					cout << k.get_name() << endl;
-					keys.keybinds[keys.keybindItems.at(i)].first = k;
+					keys.keybinds[i].first = k;
+					keys.buttonIndex[eventPtr->get_name()] -> setup(i+":"+ k.get_name());
 					return;
 				}
 			}
 		}
 	}
-	
-	/*
-	for (int i=0; i<keys.keybindItems.size(); i++){
-		if (eventPtr->get_name() == keys.keybindItems.at(i)){
-			s= keybindItems.at(i);
-			break;
-		}
-	}
-	}*/
 }
 
 void menu(const Event* eventPtr, void* dataPtr){
@@ -1033,42 +1058,41 @@ void menu(const Event* eventPtr, void* dataPtr){
 }
 
 void drop(const Event* eventPtr, void* dataPtr){
-	if(player.mainHand==NULL){
-		cout<<"empty"<<endl;
-	}
-	else{
-		player.drop(player.handInd,itms,&gameModels);
-		player.arms=&player.empty_arms;
-		player.mainHand=NULL;
-		player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(dataPtr)));
-	}
-}
-void onE(const Event* eventPtr, void* dataPtr){
-	
-	
-	player.qtrav_shoot.traverse(window -> get_render());
-	if (player.qcoll_shoot -> get_num_entries() > 0)
-	{
-		if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Item_sphere"){
-			
-			
-			player.qcoll_shoot -> sort_entries();
-			player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
-			
+	if (world.menuStatus==0){
+		if(player.mainHand==NULL){
+			cout<<"empty"<<endl;
+		}
+		else{
+			player.drop(player.handInd,itms,&gameModels);
+			player.arms=&player.empty_arms;
+			player.mainHand=NULL;
+			player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(dataPtr)));
 		}
 	}
-	else{
-		//cout<<"no"<<endl;
+}
+
+void onE(const Event* eventPtr, void* dataPtr){
+	if(world.menuStatus==0){
+		player.qtrav_shoot.traverse(window -> get_render());
+		if (player.qcoll_shoot -> get_num_entries() > 0)
+		{
+			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Item_sphere"){
+			
+			
+				player.qcoll_shoot -> sort_entries();
+				player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
+			
+			}
+		}
+		else{
+			//cout<<"no"<<endl;
+		}
 	}
 }
 
 void onR(const Event* eventPtr, void* dataPtr){
-	
-	if (player.mainHand!=NULL){
+	if (player.mainHand!=NULL && world.menuStatus==0){
 		if (player.mainHand->type=='g'){
-			
-			
-			
 			if (player.mainHand->tot_ammo-(player.mainHand->max_amount-player.mainHand->amount)>0){
 				player.mainHand->tot_ammo-=(player.mainHand->max_amount-player.mainHand->amount);
 				player.mainHand->amount=player.mainHand->max_amount;
@@ -1100,7 +1124,7 @@ int getMenuSliderInd(){
 	return (round(Slider->get_value()*player.inventory.size()));
 }
 void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){	
-	if (world.pause_menu){
+	if (world.menuStatus==1){
 	
 		PGFrameStyle sb=fs->get_frame_style(0); // frame_style(0): ready state
 		sb.set_type(PGFrameStyle::T_flat);
@@ -1164,7 +1188,7 @@ void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){
 }
 
 void onMouse1(const Event* eventPtr, void* dataPtr){
-	if (world.pause_menu ==0){
+	if (world.menuStatus==0 && player.mode==0){
 		if (player.mainHand!=NULL){
 			if (player.mainHand->type=='c'){		//Consumable item
 				player.mainHand->action1();
@@ -1186,8 +1210,8 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 					}
 					else if(player.mainHand->id==2){
 						frameGunCount = player.bat_collection.get_frame()-player.bat_collection.get_num_frames();
-						dmg=5;
-						rngM=2.0;
+						dmg=10;
+						rngM=1.5;
 					}
 					else if(player.mainHand->id==10){
 						frameGunCount = player.ak_collection.get_frame()-player.ak_collection.get_num_frames();
@@ -1196,6 +1220,12 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 					}
 					if (eventPtr==NULL || frameGunCount==-1){
 						player.mainHand->amount--;		//this is ammo
+						
+						/*		//scream while firing ak
+						if(player.mainHand->id==10&&eventPtr!=NULL){
+							world.gameSounds.scream4->play();
+						}
+						*/
 						
 						player.qtrav_shoot.traverse(window -> get_render());
 						if (player.qcoll_shoot -> get_num_entries() > 0) 
@@ -1239,13 +1269,26 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 										td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
 										dmg=((dmg/(pow(td,rngM)/10.0))-1);
 										
+										dmg=dmg*2;
+										
 										dmg=dmg*(1+(player.kills/50)+(player.xp/1000));
 										
 										enems[i]->health-=dmg;
-										cout<<enems[i]->health<<endl;
+										//cout<<enems[i]->health<<endl;
 										
 										if (dmg>0){
 											enems[i]->tint=1.0;
+										}
+										
+										float ran=rand()/(float)RAND_MAX;
+										if(ran>(2.0/3.0)){
+											world.gameSounds.Snarl->play();
+										}
+										else if(ran>(1.0/3.0)){
+											world.gameSounds.Snarl2->play();
+										}
+										else{
+											world.gameSounds.hiss->play();
 										}
 										
 									}
@@ -1270,7 +1313,6 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 										td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
 										dmg=(dmg/(pow(td,rngM)/100.0));
 										itms[h]->accel(dmg*xd/100.0,dmg*yd/100.0,dmg*zd/100.0);
-															
 										
 									}
 								}

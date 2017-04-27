@@ -46,12 +46,18 @@ void GameObject::setPos(float xx, float yy, float zz){
 	y = yy;
 	z = zz;
 }
-void GameObject::tick(int m){
-	checkGroundColl();
+void GameObject::tick(int m,int ind){
+	/*if (isnan(getyV())){
+		setVel(getxV(),0.0,getzV());
+	}
+	if (isnan(getxV())){
+		setVel(0.0,getyV(),getzV());
+	}
+	if (isnan(getzV())){
+		setVel(getxV(),getyV(),0.0);
+	}*/
+	checkGroundColl(ind);
 	doGrav(m);
-	
-	
-	
 }
 
 void GameObject::doGrav(int m){
@@ -60,24 +66,25 @@ void GameObject::doGrav(int m){
 	
 	
 	if (world.dt <= 0.1)		
-		accel(0, 0, world.dt * -9.8*m);
+		accel(0, 0, world.dt * -9.8*m*(1.0/2.0));
 	if (!ground){
 		model.set_fluid_z(model.get_z() + getzV());
 	}
 }
 
-void GameObject::checkGroundColl(){
+void GameObject::checkGroundColl(int ind){
 	// Set up traversers
 	ptrav.traverse(window -> get_render());
 	qtrav.traverse(window -> get_render());
 	// Do ground collision
-	if (coll_queue -> get_num_entries() > 0)
+	if (coll_queue -> get_num_entries() > ind)
 	{
 		coll_queue -> sort_entries();
 		// Stepping down
 		
 		
-		const auto dankmemes = coll_queue -> get_entry(0) -> get_surface_point(window -> get_render()).get_z();
+		
+		const auto dankmemes = coll_queue -> get_entry(ind) -> get_surface_point(window -> get_render()).get_z();
 		if (ground)
 		{
 			
@@ -90,8 +97,11 @@ void GameObject::checkGroundColl(){
 		// Stop falling if next pos is underground
 		if (model.get_z() + getzV() <= dankmemes)
 		{
+			if(getzV()<-1){
+				health=health-pow(getzV(),2);
+			}
 			model.set_fluid_z(dankmemes);
-			setVel(0, 0, 0);
+			setVel(getxV(),getyV(), 0);
 			ground = true;
 		}
 		//~ for (int i(0); i < coll_queue -> get_num_entries(); ++i)

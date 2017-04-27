@@ -15,9 +15,10 @@
 #include <cstdlib>
 
 World::World(){
-	game_running = 1;
-	pause_menu = 0;
-	option_menu = 0;
+	//game_running = 1;
+	//pause_menu = 0;
+	//option_menu = 0;
+	menuStatus=0;
 }
 
 void World::init(){
@@ -27,19 +28,11 @@ void World::init(){
 }
 
 void World::tick(){
-	//cout<<player.health<<endl;
-	dt = globalClock -> get_real_time() - preTime;
+	
 
-	//float timetest=globalClock -> get_real_time();
-	//float timetest2=globalClock -> get_real_time();
 	
 	player.tick();
 	
-	/*timetest=globalClock -> get_real_time()-timetest2;
-	timetest2 = globalClock -> get_real_time();
-
-	cout << "player tick \t\t"<<timetest << endl;
-	*/
 	
 	
 	for (unsigned int i=0;i<itms.size();i++){
@@ -50,24 +43,9 @@ void World::tick(){
 	}
 	
 
-	//timetest=globalClock -> get_real_time()-timetest2;
-	//timetest2 = globalClock -> get_real_time();
-	//cout << "item tick \t\t"<<timetest << endl;
-	
-	
-	//cout<<"before arms"<<endl;
-	/*for (auto &itm:itms){
-		itm -> tick();
-	}*/
 	
 	
 	player.calc_arms();
-	
-	
-	//timetest=globalClock -> get_real_time()-timetest2;
-	//timetest2 = globalClock -> get_real_time();
-	//cout << timetest << endl;
-	//cout<<"after arms"<<endl;
 	
 	
 	if (player.mode==0){
@@ -83,10 +61,6 @@ void World::tick(){
 		}
 	}
 	
-	
-	//timetest=globalClock -> get_real_time()-timetest2;
-	//timetest2 = globalClock -> get_real_time();
-	//cout << timetest << endl;
 	
 	
 	//RECOIL
@@ -109,13 +83,6 @@ void World::tick(){
 		
 	}
 	
-	
-	//timetest=globalClock -> get_real_time()-timetest2;
-	//timetest2 = globalClock -> get_real_time();
-	//cout << timetest << endl;
-	
-	
-	//cout<<tickCount&2<<endl;
 	if (player.speed>1 && tickCount%15==1){
 		//float rann=rand()/(float)RAND_MAX;
 		
@@ -152,11 +119,6 @@ void World::tick(){
 	
 	
 	
-	//timetest=globalClock -> get_real_time()-timetest2;
-	//timetest2 = globalClock -> get_real_time();
-	//cout << timetest << endl;
-	
-	
 	
 	
 	
@@ -167,10 +129,7 @@ void World::tick(){
 	if (tickCount>120){
 		float ran=rand()/(float)RAND_MAX;
 		
-		//cout<<" "<<ran<<" "<<player.speed<<" "<<ran/player.speed<<endl;
-		
-		//cout << ran << " " << (100-player.water)/500.0 << endl;
-		
+
 		if (player.food<25 || player.water<35){
 			if(ran<((100-pow(0.5,player.food))/1000.0)){
 				player.health--;
@@ -198,21 +157,12 @@ void World::tick(){
 		}
 		
 		
-		
-		
-		
-		
-		//cout<<player.water<<endl;
 		tickCount=0;
 	}
 	
 	
-	//timetest=globalClock -> get_real_time()-timetest2;
-	//timetest2 = globalClock -> get_real_time();
-	//cout << timetest << endl<<endl;
 	
 	
-	preTime = globalClock -> get_real_time();
 }
 
 
@@ -256,6 +206,11 @@ void World::draw(){
 			itms[ij]->sphereModel.show();
 			itms[ij]->rayModel.show();
 		}
+		for (unsigned int ij=0;ij<enems.size();ij++){
+			enems[ij]->sphereModel.show();
+			enems[ij]->rayModel.show();
+			
+		}
 	}
 	else{
 		player.sphereModel.hide();
@@ -263,6 +218,11 @@ void World::draw(){
 		for (unsigned int ij=0;ij<itms.size();ij++){
 			itms[ij]->sphereModel.hide();
 			itms[ij]->rayModel.hide();
+		}
+		for (unsigned int ij=0;ij<enems.size();ij++){
+			enems[ij]->sphereModel.hide();
+			enems[ij]->rayModel.hide();
+			
 		}
 	}
 	/*
@@ -352,11 +312,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 		player.zoom=0;
 	}
 	
-	/*if (keybinds["drop"].second)
-		player.camera.set_hpr(player.camera.get_hpr().get_x() + 2.0, player.camera.get_hpr().get_y(), 0);
-	if (keybinds["pickup].second)
-		player.camera.set_hpr(player.camera.get_hpr().get_x() - 2.0, player.camera.get_hpr().get_y(), 0);
-	*/
+	
 	
 	// Move the player
 	player.model.set_fluid_x(player.model.get_x() + dx * dt * 15 * walk);
@@ -390,10 +346,14 @@ void World::apply_grav(){
 }
 
 void World::menu(){
-	game_running = 1 - game_running;
-	pause_menu = 1 - pause_menu;
+	if (menuStatus==0){
+		menuStatus=1;
+	}
+	else{
+		menuStatus=0;
+	}
 	
-	if (game_running)
+	if (menuStatus==0)
 	{
 		if (player.arms!=NULL){
 			player.arms->show();
@@ -406,14 +366,8 @@ void World::menu(){
 		props.set_mouse_mode(WindowProperties::M_confined);
 		window -> get_graphics_window() -> request_properties(props);
 	}
-	//cout<<"- "<<pause_menu<<endl;
-	else if (pause_menu)
+	else if (menuStatus==1)
 	{	
-		/*for (unsigned int j=0;j<player.weapons.size();j++){
-			if (j!=(unsigned int)player.weaponN){
-				player.weapons[j].Node.hide();
-			}
-		}*/
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
@@ -429,14 +383,9 @@ void World::menu(){
 		
 	}
 	
-	//if (option_menu)
 	else
 	{	
-		/*for (unsigned int j=0;j<player.weapons.size();j++){
-			if (j!=(unsigned int)player.weaponN){
-				player.weapons[j].Node.hide();
-			}
-		}*/
+		
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
@@ -458,18 +407,17 @@ void World::menu(){
 }
 
 void World::menuOption(){
-	option_menu= 1 - option_menu;
-	pause_menu = 1 - pause_menu;
+
 	
-	//cout<<"- "<<pause_menu<<endl;
-	//cout<<"-- "<<option_menu<<endl;
-	if (option_menu)
+	if (menuStatus==2){
+		menuStatus=1;
+	}
+	else{
+		menuStatus=2;
+	}
+	
+	if (menuStatus==2)
 	{	
-		/*for (unsigned int j=0;j<player.weapons.size();j++){
-			if (j!=(unsigned int)player.weaponN){
-				player.weapons[j].Node.hide();
-			}
-		}*/
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
@@ -485,7 +433,7 @@ void World::menuOption(){
 		
 	}
 	
-	if (pause_menu)
+	if (menuStatus==1)
 	{
 		if (player.arms!=NULL){
 			player.arms->hide();

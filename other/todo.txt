@@ -1,6 +1,3 @@
-enemies
-	enemy pathfinding
-	Enemy Death effects
 optimizations
 	Proper grav system (panda)
 	Smart optimizations
@@ -9,10 +6,13 @@ GUI
 	[keybinds]
 Implement level save/load
 Level change areas
-Lighting
+Light objects?
 Sounds
 	Music [?]
 	Walking
 	Enemies
 	IRIS SPEAKING[?]
-Player Death / Respawn
+Player Respawn
+Iris Animations
+Enemy drops?
+Nedgev support

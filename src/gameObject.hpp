@@ -19,9 +19,9 @@ public:
 	void setVel(float x, float y, float z);
 	void setPos(float x,float y, float z);
 	
-	void tick(int m);
+	void tick(int m,int ind);
 	void doGrav(int m);
-	void checkGroundColl();
+	void checkGroundColl(int ind);
 	
 	float getX();
 	float getY();

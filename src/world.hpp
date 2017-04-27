@@ -29,11 +29,12 @@ public:
 	
 	Sounds gameSounds;
 	
-	bool is_running() {return game_running;;}
+	//bool is_running() {return menuStatus;}
 	void menu();
 	void menuOption();
-	bool pause_menu;
-	bool option_menu;
+	//bool pause_menu;
+	//bool option_menu;
+	int menuStatus;
 //	static AsyncTask::DoneStatus	addToTime		(GenericAsyncTask* task, void* data);
 //	static AsyncTask::DoneStatus	CamLookTask		(GenericAsyncTask* task, void* data);
 //	static AsyncTask::DoneStatus	SpinCameraTask	(GenericAsyncTask* task, void* data);

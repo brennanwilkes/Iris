@@ -18,6 +18,8 @@ public: //will do enum later
 
 
 	vector<ButtonHandle> allKeys;
+	
+	map <std::string, PGButton*> buttonIndex;
 private:
 
 };

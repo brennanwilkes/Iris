@@ -58,6 +58,8 @@ public:
 	int tickFrame;
 	int tickFrame2;
 	int animframe;
+	int lastframe;
+	int otherlastframe;
 	
 	int idleFC;
 	int moveFC;
