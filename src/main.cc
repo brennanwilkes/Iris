@@ -213,6 +213,17 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.femaleGrunt7 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/female-grunt7.wav");
 	world.gameSounds.femaleGrunt7->set_volume(1.0);
 	
+	
+	world.gameSounds.scream1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream1.wav");
+	world.gameSounds.scream1->set_volume(1.0);
+	world.gameSounds.scream2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream2.wav");
+	world.gameSounds.scream2->set_volume(1.0);
+	world.gameSounds.scream3 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream3.wav");
+	world.gameSounds.scream3->set_volume(1.0);
+	world.gameSounds.scream4 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream4.wav");
+	world.gameSounds.scream4->set_volume(1.0);
+	
+	
 	world.gameSounds.glass = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/glass.wav");
 	world.gameSounds.glass->set_volume(1.0);
 	
@@ -396,6 +407,8 @@ int main(int argc, char *argv[]) {
 	//vector<NodePath> ND;
 
 	vector<string> Dir = {"Assets/Stage/Terrain_C.egg","Assets/Stage/SkyBox.egg","Assets/Stage/Grave.egg","Assets/Stage/Building_C.egg","Assets/Stage/Stone_C.egg","Assets/Stage/Ramp_C.egg","Assets/Stage/Stairs_C.egg","Assets/sphere/sphere.egg"};
+	
+	//vector<string> Dir = {"Assets/starea/lag_.egg"};
 
 	vector<StaticObject> ND;
 	for(auto x:Dir)
@@ -857,7 +870,10 @@ int main(int argc, char *argv[]) {
 		// Keybinds should not go here.
 		if (world.menuStatus==0)
 		{
+			player.volumeNodePath.show();
+			player.weightNodePath.show();
 			//Main Game
+			player.handDisplay.show();
 			
 			world.get_keys(mouseWatcher, keys.keybinds); // updates keybinds held status . THIS SHOULD BE DONE FIRST
 			world.look(window);
@@ -894,6 +910,17 @@ int main(int argc, char *argv[]) {
 			
 			
 		}
+		else if(world.menuStatus==1){
+			player.volumeNodePath.hide();
+			player.weightNodePath.hide();
+			Bars.hide();
+		}
+		else{
+			player.handDisplay.hide();
+			player.volumeNodePath.hide();
+			player.weightNodePath.hide();
+			Bars.hide();
+		}
 		/*else if (world.menuStatus!=0){
 			//pause menu
 			Bars.hide();
@@ -921,6 +948,7 @@ void jump(const Event* eventPtr, void* dataPtr){
 	if (world.menuStatus==0){
 		if (player.ground || player.doublejump)
 		{
+			world.gameSounds.femaleGrunt7->play();
 			player.accel(0, 0, 1);
 			player.ground = false;
 		}
@@ -1193,6 +1221,12 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 					if (eventPtr==NULL || frameGunCount==-1){
 						player.mainHand->amount--;		//this is ammo
 						
+						/*		//scream while firing ak
+						if(player.mainHand->id==10&&eventPtr!=NULL){
+							world.gameSounds.scream4->play();
+						}
+						*/
+						
 						player.qtrav_shoot.traverse(window -> get_render());
 						if (player.qcoll_shoot -> get_num_entries() > 0) 
 						{
@@ -1240,10 +1274,21 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 										dmg=dmg*(1+(player.kills/50)+(player.xp/1000));
 										
 										enems[i]->health-=dmg;
-										cout<<enems[i]->health<<endl;
+										//cout<<enems[i]->health<<endl;
 										
 										if (dmg>0){
 											enems[i]->tint=1.0;
+										}
+										
+										float ran=rand()/(float)RAND_MAX;
+										if(ran>(2.0/3.0)){
+											world.gameSounds.Snarl->play();
+										}
+										else if(ran>(1.0/3.0)){
+											world.gameSounds.Snarl2->play();
+										}
+										else{
+											world.gameSounds.hiss->play();
 										}
 										
 									}

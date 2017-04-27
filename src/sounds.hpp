@@ -41,6 +41,11 @@ public:
 	PT(AudioSound) femaleGrunt6;
 	PT(AudioSound) femaleGrunt7;
 	
+	PT(AudioSound) scream1;
+	PT(AudioSound) scream2;
+	PT(AudioSound) scream3;
+	PT(AudioSound) scream4;
+	
 	PT(AudioSound) glass;
 	
 	PT(AudioSound) heyShout;
