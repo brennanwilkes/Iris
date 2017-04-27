@@ -855,30 +855,23 @@ int main(int argc, char *argv[]) {
 	{
 		// Things to do every frame
 		// Keybinds should not go here.
-		if (world.is_running())
+		if (world.menuStatus==0)
 		{
 			//Main Game
-			//timetest = globalClock -> get_real_time();
-			//timetest2 = globalClock -> get_real_time();
-			//cout << timetest << endl
-
+			
 			world.get_keys(mouseWatcher, keys.keybinds); // updates keybinds held status . THIS SHOULD BE DONE FIRST
 			world.look(window);
 			world.move(keys.keybinds);
 			
-			/*timetest=globalClock -> get_real_time()-timetest2;
-			timetest2 = globalClock -> get_real_time();
 			
-			cout << timetest << endl;
-			*/
-		
-			//if ((not world.pause_menu) and (not world.option_menu))
-				world.tick();
+			world.tick();
+			
 			
 			if (player.health<=0){
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				player.death(itms,&entityModels);
 			}
+			
 			
 			if (player.mainHand!=NULL){
 				if (player.mainHand->type=='g'){
@@ -890,32 +883,25 @@ int main(int argc, char *argv[]) {
 				}
 			}
 			
-			//timetest=globalClock -> get_real_time()-timetest2;
-			//timetest2 = globalClock -> get_real_time();
-			//cout << timetest << endl;
-			
 			HealthBar->set_value(player.health);
 			WaterBar->set_value(player.water);
 			FoodBar->set_value(player.food);
 			Bars.show();
 			
 			
-			//timetest=globalClock -> get_real_time()-timetest2;
-			//timetest2 = globalClock -> get_real_time();
-			//cout << timetest << endl;
-			
 			
 			world.draw();
 			
-			//timetest=globalClock -> get_real_time()-timetest2;
-			//timetest2 = globalClock -> get_real_time();
-			//cout << timetest << endl<<endl;
+			
 		}
-		else if (world.pause_menu){
+		/*else if (world.menuStatus!=0){
 			//pause menu
 			Bars.hide();
 			
-		}
+		}*/
+		
+		world.dt = globalClock -> get_real_time() - world.preTime;
+		world.preTime = globalClock -> get_real_time();
 		
 		calc_inv(InvButton1,InvButton2,InvButton3,&blankTex);
 		
@@ -932,26 +918,30 @@ void sys_exit(const Event* eventPtr, void* dataPtr){
 }
 
 void jump(const Event* eventPtr, void* dataPtr){
-	if (player.ground || player.doublejump)
-	{
-		player.accel(0, 0, 1);
-		player.ground = false;
+	if (world.menuStatus==0){
+		if (player.ground || player.doublejump)
+		{
+			player.accel(0, 0, 1);
+			player.ground = false;
+		}
+		world.tickCount=121;
 	}
-	world.tickCount=121;
 }
 
 void toggle(const Event* eventPtr, void* dataPtr){
-	player.mode = 1 - player.mode;
-
-	if (player.arms!=NULL){
-		if (player.arms_shown) {
-			player.arms->show();
-		}
-		else{
-			player.arms->hide();
-			player.pistol_arms.hide();
-			player.bat_arms.hide();
-			player.ak_arms.hide();
+	if(world.menuStatus==0){
+		player.mode = 1 - player.mode;
+	
+		if (player.arms!=NULL){
+			if (player.arms_shown) {
+				player.arms->show();
+			}
+			else{
+				player.arms->hide();
+				player.pistol_arms.hide();
+				player.bat_arms.hide();
+				player.ak_arms.hide();
+			}
 		}
 	}
 }
@@ -1040,36 +1030,40 @@ void menu(const Event* eventPtr, void* dataPtr){
 }
 
 void drop(const Event* eventPtr, void* dataPtr){
-	if(player.mainHand==NULL){
-		cout<<"empty"<<endl;
-	}
-	else{
-		player.drop(player.handInd,itms,&gameModels);
-		player.arms=&player.empty_arms;
-		player.mainHand=NULL;
-		player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(dataPtr)));
+	if (world.menuStatus==0){
+		if(player.mainHand==NULL){
+			cout<<"empty"<<endl;
+		}
+		else{
+			player.drop(player.handInd,itms,&gameModels);
+			player.arms=&player.empty_arms;
+			player.mainHand=NULL;
+			player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(dataPtr)));
+		}
 	}
 }
 
 void onE(const Event* eventPtr, void* dataPtr){
-	player.qtrav_shoot.traverse(window -> get_render());
-	if (player.qcoll_shoot -> get_num_entries() > 0)
-	{
-		if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Item_sphere"){
+	if(world.menuStatus==0){
+		player.qtrav_shoot.traverse(window -> get_render());
+		if (player.qcoll_shoot -> get_num_entries() > 0)
+		{
+			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Item_sphere"){
 			
 			
-			player.qcoll_shoot -> sort_entries();
-			player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
+				player.qcoll_shoot -> sort_entries();
+				player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
 			
+			}
 		}
-	}
-	else{
-		//cout<<"no"<<endl;
+		else{
+			//cout<<"no"<<endl;
+		}
 	}
 }
 
 void onR(const Event* eventPtr, void* dataPtr){
-	if (player.mainHand!=NULL){
+	if (player.mainHand!=NULL && world.menuStatus==0){
 		if (player.mainHand->type=='g'){
 			if (player.mainHand->tot_ammo-(player.mainHand->max_amount-player.mainHand->amount)>0){
 				player.mainHand->tot_ammo-=(player.mainHand->max_amount-player.mainHand->amount);
@@ -1102,7 +1096,7 @@ int getMenuSliderInd(){
 	return (round(Slider->get_value()*player.inventory.size()));
 }
 void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){	
-	if (world.pause_menu){
+	if (world.menuStatus==1){
 	
 		PGFrameStyle sb=fs->get_frame_style(0); // frame_style(0): ready state
 		sb.set_type(PGFrameStyle::T_flat);
@@ -1166,7 +1160,7 @@ void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){
 }
 
 void onMouse1(const Event* eventPtr, void* dataPtr){
-	if (world.pause_menu ==0){
+	if (world.menuStatus==0 && player.mode==0){
 		if (player.mainHand!=NULL){
 			if (player.mainHand->type=='c'){		//Consumable item
 				player.mainHand->action1();
