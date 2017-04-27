@@ -198,12 +198,10 @@ void Enemy::bas_mov(float dis){
 	}
 	
 	if (xtran!=0){
-		cout<<"movex"<<endl;
 		model.set_fluid_x(model.get_x() + xtran*tmpx*world.dt*15 );
 	}
 	if (ytran!=0){
 		model.set_fluid_y(model.get_y() + ytran*tmpy*world.dt*15 );
-		cout<<"movey"<<endl;
 	}
 	/*if (xtran==0 && ytran==0){
 		running=false;

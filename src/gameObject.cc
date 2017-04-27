@@ -97,8 +97,11 @@ void GameObject::checkGroundColl(int ind){
 		// Stop falling if next pos is underground
 		if (model.get_z() + getzV() <= dankmemes)
 		{
+			if(getzV()<-1){
+				health=health-pow(getzV(),2);
+			}
 			model.set_fluid_z(dankmemes);
-			setVel(0, 0, 0);
+			setVel(getxV(),getyV(), 0);
 			ground = true;
 		}
 		//~ for (int i(0); i < coll_queue -> get_num_entries(); ++i)
