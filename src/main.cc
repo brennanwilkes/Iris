@@ -868,7 +868,10 @@ int main(int argc, char *argv[]) {
 		// Keybinds should not go here.
 		if (world.menuStatus==0)
 		{
+			player.volumeNodePath.show();
+			player.weightNodePath.show();
 			//Main Game
+			player.handDisplay.show();
 			
 			world.get_keys(mouseWatcher, keys.keybinds); // updates keybinds held status . THIS SHOULD BE DONE FIRST
 			world.look(window);
@@ -904,6 +907,17 @@ int main(int argc, char *argv[]) {
 			world.draw();
 			
 			
+		}
+		else if(world.menuStatus==1){
+			player.volumeNodePath.hide();
+			player.weightNodePath.hide();
+			Bars.hide();
+		}
+		else{
+			player.handDisplay.hide();
+			player.volumeNodePath.hide();
+			player.weightNodePath.hide();
+			Bars.hide();
 		}
 		/*else if (world.menuStatus!=0){
 			//pause menu
