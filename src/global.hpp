@@ -8,8 +8,12 @@
 #include "windowFramework.h"
 #include <vector>
 
+#include "filename.h"
+#include "executionEnvironment.h"
+
 extern AsyncTaskManager* taskMgr;
 extern ClockObject* globalClock;
+extern Filename mydir; 
 extern Player player;
 extern vector<GameObject*> objs;
 extern vector<Enemy*> enems;
