@@ -1085,7 +1085,16 @@ void onE(const Event* eventPtr, void* dataPtr){
 			}
 		}
 		else{
-			//cout<<"no"<<endl;
+			float x,y,d = 0.0;
+			for (unsigned int i=0;i<itms.size();i++){
+				x=itms[i]->model.get_x()-player.model.get_x();
+				y=itms[i]->model.get_y()-player.model.get_y();
+				d=sqrt(pow(x,2)+pow(y,2));
+				if(d<20){
+					player.pick_up(itms[i]-> sphereModel.node(), itms);
+					break;
+				}
+			}
 		}
 	}
 }

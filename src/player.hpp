@@ -108,7 +108,7 @@ public:
 	
 	void set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string dir);
 	void coll_set_up();
-	bool pick_up(PandaNode* itm,vector<Item*> itms);
+	bool pick_up(PandaNode* itm,vector<Item*> &itms);
 	bool drop(int itr,vector<Item*> itms,NodePath* parent);
 	//void recoil(int fc, float mult);
 	

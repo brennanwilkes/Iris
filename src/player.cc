@@ -180,7 +180,7 @@ void Player::coll_set_up(){
 }
 
 
-bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
+bool Player::pick_up(PandaNode* itm,vector<Item*> &itms){
 	for (unsigned int i = 0; i < itms.size(); i++){
 		if(itm == itms[i] -> sphereModel.node()){
 			int trans=0;
@@ -216,6 +216,7 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
 			}
 			if((itms[i] -> weight + weight <= max_weight) && (itms[i] -> volume + volume <= max_volume)){
 				//cout<<2<<endl;
+				cout<<"ya"<<endl;
 				inventory.push_back(itms[i]);
 				itms.erase(itms.begin()+i);
 				weight+=inventory.back()->weight;
