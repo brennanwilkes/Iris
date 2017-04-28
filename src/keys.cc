@@ -5,6 +5,7 @@ Keys::Keys(){
 	/*keybinds = {
 	{"menu", {key, false}}
 	} */
+	//https://www.panda3d.org/manual/index.php/Keyboard_Support
 	keybinds["menu"] = std::make_pair(KeyboardButton::escape(), false);
 	keybinds["jump"] = std::make_pair(KeyboardButton::space(), false);
 	keybinds["cameraToggle" ] = std::make_pair(KeyboardButton::ascii_key('f'), false);

@@ -28,9 +28,6 @@ void World::init(){
 }
 
 void World::tick(){
-	
-
-	
 	player.tick();
 	
 	
@@ -41,13 +38,9 @@ void World::tick(){
 	for (unsigned int i=0;i<enems.size();i++){
 		enems[i]->tick(1);
 	}
-	
 
 	
-	
 	player.calc_arms();
-	
-	
 	if (player.mode==0){
 		player.arms_shown=true;
 		if (player.arms!=NULL){
@@ -61,27 +54,24 @@ void World::tick(){
 		}
 	}
 	
-	
+
+
 	
 	//RECOIL
 	if (player.recoil_frames>0){
-		
 		float ranR=rand()/(float)RAND_MAX;
 		
 		ranR++;
 		player.recoil_frames--;
-		
-		
-		
 		
 		ranR-=1.5;
 		ranR*=2;
 		
 		player.camera.set_p(player.camera,player.recoil_mult*ranR);
 		player.camera.set_h(player.camera,player.recoil_mult*ranR);
-		
-		
 	}
+
+
 	
 	if (player.speed>1 && tickCount%15==1){
 		//float rann=rand()/(float)RAND_MAX;
@@ -119,17 +109,9 @@ void World::tick(){
 	
 	
 	
-	
-	
-	
-	
-	
-	
 	tickCount++;
 	if (tickCount>120){
 		float ran=rand()/(float)RAND_MAX;
-		
-
 		if (player.food<25 || player.water<35){
 			if(ran<((100-pow(0.5,player.food))/1000.0)){
 				player.health--;
@@ -137,7 +119,6 @@ void World::tick(){
 			if(ran<((100-pow(0.5,player.water))/1000.0)){
 				player.health--;
 			}
-		
 		}
 		
 		
@@ -159,10 +140,6 @@ void World::tick(){
 		
 		tickCount=0;
 	}
-	
-	
-	
-	
 }
 
 
@@ -322,9 +299,6 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	{
 		player.model.set_hpr(player.camera.get_hpr().get_x(), 0, 0);
 	}
-	
-	
-	
 }
 
 
@@ -338,7 +312,6 @@ void World::apply_grav(){
 				itms[i]->model.set_fluid_z(itms[i]->model.get_z() + itms[i]->getzV());
 			}
 		}
-		
 		player.accel(0, 0, -9.8 * dt);
 	}
 	if (!player.ground)

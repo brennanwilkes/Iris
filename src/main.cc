@@ -48,6 +48,8 @@ https://www.panda3d.org/manual/index.php/Common_State_Changes
 #include "collisionSphere.h"
 #include "collisionTraverser.h"
 #include "directionalLight.h"
+#include "executionEnvironment.h"
+#include "filename.h"
 #include "genericAsyncTask.h"
 #include "mouseButton.h"
 #include "mouseWatcher.h"
@@ -82,8 +84,7 @@ https://www.panda3d.org/manual/index.php/Common_State_Changes
 #include "load_prc_file.h"
 #include "configVariableFilename.h"
 
-#include "filename.h"
-#include "executionEnvironment.h"
+
 
 AsyncTaskManager* taskMgr = AsyncTaskManager::get_global_ptr(); 
 ClockObject* globalClock = ClockObject::get_global_clock();
@@ -111,7 +112,7 @@ void toggleDoubleJump(const Event* eventPtr, void* dataPtr);
 void toggleOptionMenu(const Event* eventPtr, void* dataPtr);
 void invPress(const Event* eventPtr, void* dataPtr);
 void jump(const Event* eventPtr, void* dataPtr);
-void menu(const Event* eventPtr, void* dataPtr);		
+void menu(const Event* eventPtr, void* dataPtr);
 void hide_arms(const Event* eventPtr, void* dataPtr);
 void onMouse1(const Event* eventPtr, void* dataPtr);
 void onE(const Event* eventPtr, void* dataPtr);
@@ -831,16 +832,26 @@ int main(int argc, char *argv[]) {
 	// data is a void pointer, so it can take anything.
 	
 
-	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", menu, window);
-	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", jump, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "toggle camera", toggle, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
 	
+	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", &jump, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "cameraToggle", &toggle, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "pickup", &onE, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "reload", &onR, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
 
-	
 	window -> get_panda_framework() -> define_key("h", "hide_arms", hide_arms, NULL);
-	
-	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(MouseButton::one() ), "quit button press", &sys_exit, QuitButton);
 
+	keys.wildKeys["menu"] = &menu;
+	keys.wildKeys["jump"] = &jump;
+	keys.wildKeys["cameraToggle"] = &toggle;
+	keys.wildKeys["use"] = &onMouse1;
+	keys.wildKeys["pickup"] = &onE;
+	keys.wildKeys["reload"] = &onR;
+	keys.wildKeys["drop"] = &drop;
+
+	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(MouseButton::one() ), "quit button press", &sys_exit, QuitButton);
 	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(MouseButton::one() ), "Hit button press", &toggleHitBox, HitTogButton);
 	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(MouseButton::one() ), "Double button press", &toggleDoubleJump, DoubleTogButton);
 	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(MouseButton::one() ), "Option button press", &toggleOptionMenu, OptionTogButton);
@@ -851,10 +862,7 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(MouseButton::one() ), "Inventory slot press", &invPress, &blankTex);
 	window -> get_panda_framework() -> define_key(InvButton3->get_click_event(MouseButton::one() ), "Inventory slot press", &invPress, &blankTex);
 	
-	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "Shoot", &onMouse1, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "Action", &onE, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "Action", &onR, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "Temp Drop", &drop, &blankTex);
+	
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	NNS.hide();
 	// Start the loop / gameoptionMe
@@ -881,7 +889,6 @@ int main(int argc, char *argv[]) {
 			world.get_keys(mouseWatcher, keys.keybinds); // updates keybinds held status . THIS SHOULD BE DONE FIRST
 			world.look(window);
 			world.move(keys.keybinds);
-			
 			
 			world.tick();
 			
@@ -1009,8 +1016,6 @@ void invPress(const Event* eventPtr, void* dataPtr){
 	else if(tag == "InvButton3"){
 		t=2;
 	}
-	//cout<<eventPtr->get_name()<<endl;
-	
 	
 	player.handInd=(si+t);
 	if ((int)player.inventory.size()>t){
@@ -1021,10 +1026,7 @@ void invPress(const Event* eventPtr, void* dataPtr){
 		player.mainHand=NULL;
 		player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(dataPtr)));
 	}
-
 }
-
-
 
 void hide_arms(const Event* eventPtr, void* dataPtr){
 	player.arms_shown = !player.arms_shown;
@@ -1046,9 +1048,16 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 		if (tag == ("Bind"+i)){
 			for (auto k: keys.allKeys){
 				if (mouseWatcher-> is_button_down(k)){
-					cout << k.get_name() << endl;
 					keys.keybinds[i].first = k;
 					keys.buttonIndex[eventPtr->get_name()] -> setup(i+":"+ k.get_name());
+					for (auto j: keys.wildKeys){
+						if (i==(j.first)){
+							window -> get_panda_framework() -> define_key(k.get_name(), i, keys.wildKeys[i], NULL);
+							//window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
+
+							return;
+						}
+					}
 					return;
 				}
 			}
@@ -1077,14 +1086,10 @@ void drop(const Event* eventPtr, void* dataPtr){
 void onE(const Event* eventPtr, void* dataPtr){
 	if(world.menuStatus==0){
 		player.qtrav_shoot.traverse(window -> get_render());
-		if (player.qcoll_shoot -> get_num_entries() > 0)
-		{
+		if (player.qcoll_shoot -> get_num_entries() > 0){
 			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Item_sphere"){
-			
-			
 				player.qcoll_shoot -> sort_entries();
 				player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
-			
 			}
 		}
 		else{
@@ -1126,16 +1131,15 @@ void onR(const Event* eventPtr, void* dataPtr){
 					world.gameSounds.pistolReloadSound->play();
 				}
 			}
-			
 		}
 	}
-	
 }
 
 int getMenuSliderInd(){
 	return (round(Slider->get_value()*player.inventory.size()));
 }
-void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){	
+
+void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){
 	if (world.menuStatus==1){
 	
 		PGFrameStyle sb=fs->get_frame_style(0); // frame_style(0): ready state
