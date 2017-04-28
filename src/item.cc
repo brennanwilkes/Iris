@@ -15,11 +15,11 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	model.reparent_to(*parent);
 	
 	
-	PT(CollisionNode) c_Node;
+	//PT(CollisionNode) c_Node;
 	
 	gravFrame=0;
 	
-	//player
+	/*
 	c_Node = new CollisionNode("Item_sphere");
 	c_Node -> add_solid(new CollisionSphere(xxx, yyy, zzz, rad));				//x y z radius
 	c_Node -> set_from_collide_mask(BitMask32::all_off());
@@ -32,6 +32,8 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	
 	//sphereModel.show();
 
+	*/
+	
 	float xs = -(w -> get_graphics_window()->get_x_size() / (float)w ->get_graphics_window()->get_y_size());
 		
 	PT(Texture) wt;

@@ -82,8 +82,8 @@ public:
 	PT(CollisionHandlerQueue) qcoll_shoot;
 	PT(CollisionHandlerQueue) qcoll_pickup;
 
-	CollisionTraverser ptrav;
-	CollisionTraverser qtrav;
+	//CollisionTraverser ptrav;
+	//CollisionTraverser qtrav;
 	CollisionTraverser qtrav_shoot;
 	CollisionTraverser qtrav_pickup;
 	

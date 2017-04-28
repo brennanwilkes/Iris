@@ -860,12 +860,15 @@ int main(int argc, char *argv[]) {
 	world.tickCount=0;
 	
 	player.health=50;
-	
+	int temptickcount=0;
 
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread))
 	{
+		if(temptickcount<=2){
+			temptickcount++;
+		}
 		// Things to do every frame
 		// Keybinds should not go here.
 		if (world.menuStatus==0)
@@ -879,9 +882,9 @@ int main(int argc, char *argv[]) {
 			world.look(window);
 			world.move(keys.keybinds);
 			
-			
-			world.tick();
-			
+			if(temptickcount>=2){
+				world.tick();
+			}
 			
 			if (player.health<=0){
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));

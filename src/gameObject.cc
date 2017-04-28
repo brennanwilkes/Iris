@@ -2,10 +2,13 @@
 #include "global.hpp"
 
 GameObject::GameObject(){
-	coll_queue = new CollisionHandlerQueue;
+	coll_grav = new CollisionHandlerGravity;
 	coll_push = new CollisionHandlerPusher;
 	ground = false;
 }
+
+CollisionTraverser GameObject::gtrav;
+CollisionTraverser GameObject::ptrav;
 
 void GameObject::init(){
 	PT(CollisionNode) c_Node;
@@ -16,8 +19,17 @@ void GameObject::init(){
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	rayModel = model.attach_new_node(c_Node);
 	
-	rayModel.show();
-	qtrav.add_collider(rayModel, coll_queue);
+	coll_grav -> add_collider(rayModel, model);
+
+	GameObject::gtrav.add_collider(rayModel, coll_grav);
+
+	c_Node = new CollisionNode("Coll_Sphere");
+	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
+	c_Node -> set_from_collide_mask(BitMask32::bit(0));
+	c_Node -> set_into_collide_mask(BitMask32::all_off());
+	sphereModel = model.attach_new_node(c_Node);
+	coll_push -> add_collider(sphereModel, model);
+	GameObject::ptrav.add_collider(sphereModel, coll_push);
 	
 	zV=0;
 	xV=0;
@@ -63,19 +75,23 @@ void GameObject::tick(int m,int ind){
 void GameObject::doGrav(int m){
 	//cout<<"dt: "<<world.dt<<endl;
 	
-	
+	/*
 	
 	if (world.dt <= 0.1)		
 		accel(0, 0, world.dt * -9.8*m*(1.0/2.0));
 	if (!ground){
 		model.set_fluid_z(model.get_z() + getzV());
 	}
+	
+	*/
 }
 
 void GameObject::checkGroundColl(int ind){
 	// Set up traversers
+	
+	/*
 	ptrav.traverse(window -> get_render());
-	qtrav.traverse(window -> get_render());
+	gtrav.traverse(window -> get_render());
 	// Do ground collision
 	if (coll_queue -> get_num_entries() > ind)
 	{
@@ -108,6 +124,7 @@ void GameObject::checkGroundColl(int ind){
 			//~ cout << coll_queue -> get_entry(i) -> get_into_node() -> get_name() << ", ";
 		//~ cout << endl;
 	}
+	*/
 }
 
 

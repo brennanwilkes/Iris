@@ -123,6 +123,7 @@ void Player::coll_set_up(){
 	qcoll_pickup = new CollisionHandlerQueue;
 
 	PT(CollisionNode) c_Node;
+	/*
 	c_Node = new CollisionNode("Player_sphere");
 	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
@@ -132,7 +133,7 @@ void Player::coll_set_up(){
 	sphereModel.show();
 	coll_push -> add_collider(sphereModel, model);
 	ptrav.add_collider(sphereModel, coll_push);
-	
+	*/
 	
 	
 	
@@ -156,7 +157,7 @@ void Player::coll_set_up(){
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	pickupRayModel = camera.attach_new_node(c_Node);
 
-	pickupRayModel.show();
+	//pickupRayModel.show();
 	qtrav_pickup.add_collider(pickupRayModel, qcoll_pickup);
 	
 	
