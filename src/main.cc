@@ -961,13 +961,14 @@ void sys_exit(const Event* eventPtr, void* dataPtr){
 
 void jump(const Event* eventPtr, void* dataPtr){
 	if (world.menuStatus==0){
-		if (player.ground || player.doublejump)
+		if(player.doublejump || player.coll_grav->get_airborne_height()<0.2)
 		{
 			world.gameSounds.femaleGrunt7->play();
-			player.accel(0, 0, 1);
-			player.ground = false;
+			player.coll_grav->add_velocity(25.0);
 		}
 		world.tickCount=121;
+		
+		
 	}
 }
 
@@ -1092,7 +1093,7 @@ void onE(const Event* eventPtr, void* dataPtr){
 	if(world.menuStatus==0){
 		player.qtrav_shoot.traverse(window -> get_render());
 		if (player.qcoll_shoot -> get_num_entries() > 0){
-			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Item_sphere"){
+			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Coll_Sphere"){
 				player.qcoll_shoot -> sort_entries();
 				player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
 			}
@@ -1315,13 +1316,13 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 									}
 								}
 							}
-							else if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Item_sphere"){
+							else if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Coll_Sphere"){
 								//hit item
 								// WE NEED MAPS LOL WITH TAGS
+								cout<<"hit"<<endl;
 								for (unsigned int h = 0; h < itms.size(); h++){
 									if (itms[h]->sphereModel.node()==player.qcoll_shoot -> get_entry(0) ->get_into_node()){
 										float xd,yd,zd,td;
-										
 										
 										xd=itms[h]->model.get_x();
 										yd=itms[h]->model.get_y();
@@ -1339,7 +1340,7 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 								}
 								
 							}
-							
+							cout<<player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()<<endl;
 							
 		
 						}

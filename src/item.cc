@@ -14,10 +14,11 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	model.set_pos(xx,yy,zz);
 	model.reparent_to(*parent);
 	
+	gravFrame=0;
 	
 	//PT(CollisionNode) c_Node;
 	
-	gravFrame=0;
+	
 	
 	/*
 	c_Node = new CollisionNode("Item_sphere");
@@ -50,16 +51,11 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	imgNode.set_pos(xs+0.1,0, -1);
 	
 	
-	/*
-	imgName=
-	*/
+	
 	setVel(0,0,0);
 	
 	
-	//imgName=xx;
-	//w.id=player.weapons.size();
-	//w.available=true;
-	//w.selected=false;
+
 	weight=wei;
 	volume=vol;
 	
@@ -67,8 +63,6 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	imgTex=TexturePool::load_texture(fn2);
 	imgNode.set_texture(imgTex);
 	imgNode.hide();
-	//player.weapons.push_back(w);
-	//player.weapons.back().Node.hide();
 }
 void Item::action1(){
 	cout<<"error, action for item not handled"<<endl;
@@ -86,9 +80,8 @@ void Item::tick(){
 	}
 	
 	if (getxV()!=0){
-		model.set_x(model.get_x() + getxV());
-		if(ground){
-			if (getxV()<=0.1 && getxV()>=-0.1){
+		if(coll_grav->get_airborne_height()<0.2){
+			if (getxV()<=1 && getxV()>=-1){
 				setVel(0.0,getyV(),getzV());
 			}
 			else{
@@ -102,9 +95,8 @@ void Item::tick(){
 		}
 	}
 	if (getyV()!=0){
-		model.set_y(model.get_y() + getyV());
-		if(ground){
-			if (getyV()<=0.1 && getyV()>=-0.1){
+		if(coll_grav->get_airborne_height()<0.2){
+			if (getyV()<=1 && getyV()>=-1){
 				setVel(getxV(),0.0,getzV());
 			}
 			else{

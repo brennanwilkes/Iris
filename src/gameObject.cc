@@ -5,6 +5,7 @@ GameObject::GameObject(){
 	coll_grav = new CollisionHandlerGravity;
 	coll_push = new CollisionHandlerPusher;
 	ground = false;
+	lastz=0.0;
 }
 
 CollisionTraverser GameObject::gtrav;
@@ -26,7 +27,7 @@ void GameObject::init(){
 	c_Node = new CollisionNode("Coll_Sphere");
 	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
-	c_Node -> set_into_collide_mask(BitMask32::all_off());
+	c_Node -> set_into_collide_mask(BitMask32::bit(3));
 	sphereModel = model.attach_new_node(c_Node);
 	coll_push -> add_collider(sphereModel, model);
 	GameObject::ptrav.add_collider(sphereModel, coll_push);
@@ -59,72 +60,26 @@ void GameObject::setPos(float xx, float yy, float zz){
 	z = zz;
 }
 void GameObject::tick(int m,int ind){
-	/*if (isnan(getyV())){
-		setVel(getxV(),0.0,getzV());
+	//cout<<coll_grav->get_impact_velocity()<<endl;
+	if (coll_grav->get_impact_velocity()<-50.0){
+		health=health+((coll_grav->get_impact_velocity()+50.0)/2.0);
+		cout<<health<<endl;
 	}
-	if (isnan(getxV())){
-		setVel(0.0,getyV(),getzV());
+	if(getxV()!=0){
+		model.set_fluid_x(model.get_x()+getxV());
 	}
-	if (isnan(getzV())){
-		setVel(getxV(),getyV(),0.0);
-	}*/
-	checkGroundColl(ind);
-	doGrav(m);
+	if(getyV()!=0){
+		model.set_fluid_y(model.get_y()+getyV());
+	}
+	
 }
 
 void GameObject::doGrav(int m){
-	//cout<<"dt: "<<world.dt<<endl;
 	
-	/*
-	
-	if (world.dt <= 0.1)		
-		accel(0, 0, world.dt * -9.8*m*(1.0/2.0));
-	if (!ground){
-		model.set_fluid_z(model.get_z() + getzV());
-	}
-	
-	*/
 }
 
 void GameObject::checkGroundColl(int ind){
-	// Set up traversers
 	
-	/*
-	ptrav.traverse(window -> get_render());
-	gtrav.traverse(window -> get_render());
-	// Do ground collision
-	if (coll_queue -> get_num_entries() > ind)
-	{
-		coll_queue -> sort_entries();
-		// Stepping down
-		
-		
-		
-		const auto dankmemes = coll_queue -> get_entry(ind) -> get_surface_point(window -> get_render()).get_z();
-		if (ground)
-		{
-			
-			
-			if (model.get_z() - 0.01 < dankmemes)
-				model.set_fluid_z(dankmemes);
-			else if (model.get_z() > dankmemes)
-				ground = false;
-		}
-		// Stop falling if next pos is underground
-		if (model.get_z() + getzV() <= dankmemes)
-		{
-			if(getzV()<-1){
-				health=health-pow(getzV(),2);
-			}
-			model.set_fluid_z(dankmemes);
-			setVel(getxV(),getyV(), 0);
-			ground = true;
-		}
-		//~ for (int i(0); i < coll_queue -> get_num_entries(); ++i)
-			//~ cout << coll_queue -> get_entry(i) -> get_into_node() -> get_name() << ", ";
-		//~ cout << endl;
-	}
-	*/
 }
 
 

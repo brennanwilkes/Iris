@@ -30,29 +30,17 @@ void World::init(){
 void World::tick(){
 
 	
-	//player.tick();
+	player.tick();
 	
 	GameObject::gtrav.traverse(window -> get_render());
 	GameObject::ptrav.traverse(window -> get_render());
 	
-	/*for (unsigned int i=0;i<itms.size();i++){
+	for (unsigned int i=0;i<itms.size();i++){
 		itms[i]->tick();
 	}
 	for (unsigned int i=0;i<enems.size();i++){
 		enems[i]->tick(1);
 	}
-	player.gtrav.traverse(window -> get_render());
-	player.ptrav.traverse(window -> get_render());
-	
-	
-	for (unsigned int i=0;i<itms.size();i++){
-		itms[i]->gtrav.traverse(window -> get_render());
-		itms[i]->ptrav.traverse(window -> get_render());
-	}
-	for (unsigned int i=0;i<enems.size();i++){
-		enems[i]->gtrav.traverse(window -> get_render());
-		enems[i]->ptrav.traverse(window -> get_render());
-	}*/
 	
 	player.calc_arms();
 	if (player.mode==0){

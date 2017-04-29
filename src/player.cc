@@ -216,8 +216,6 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> &itms){
 				return false;
 			}
 			if((itms[i] -> weight + weight <= max_weight) && (itms[i] -> volume + volume <= max_volume)){
-				//cout<<2<<endl;
-				cout<<"ya"<<endl;
 				inventory.push_back(itms[i]);
 				itms.erase(itms.begin()+i);
 				weight+=inventory.back()->weight;

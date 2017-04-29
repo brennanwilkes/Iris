@@ -50,6 +50,7 @@ public:
 	float volume;
 	int health;
 	
+	float lastz;
 	
 	float tint;
 	
