@@ -48,6 +48,8 @@ https://www.panda3d.org/manual/index.php/Common_State_Changes
 #include "collisionSphere.h"
 #include "collisionTraverser.h"
 #include "directionalLight.h"
+#include "executionEnvironment.h"
+#include "filename.h"
 #include "genericAsyncTask.h"
 #include "mouseButton.h"
 #include "mouseWatcher.h"
@@ -78,13 +80,15 @@ https://www.panda3d.org/manual/index.php/Common_State_Changes
 #include "keys.hpp"
 
 #include "global.hpp"
-#include "localdir.cpp"
 
 #include "load_prc_file.h"
 #include "configVariableFilename.h"
 
+
+
 AsyncTaskManager* taskMgr = AsyncTaskManager::get_global_ptr(); 
 ClockObject* globalClock = ClockObject::get_global_clock();
+Filename mydir = ((Filename)ExecutionEnvironment::get_binary_name()).get_dirname()+"/";
 vector<GameObject*> objs;
 vector<Enemy*> enems;
 vector<Item*> itms;
@@ -108,7 +112,7 @@ void toggleDoubleJump(const Event* eventPtr, void* dataPtr);
 void toggleOptionMenu(const Event* eventPtr, void* dataPtr);
 void invPress(const Event* eventPtr, void* dataPtr);
 void jump(const Event* eventPtr, void* dataPtr);
-void menu(const Event* eventPtr, void* dataPtr);		
+void menu(const Event* eventPtr, void* dataPtr);
 void hide_arms(const Event* eventPtr, void* dataPtr);
 void onMouse1(const Event* eventPtr, void* dataPtr);
 void onE(const Event* eventPtr, void* dataPtr);
@@ -144,112 +148,112 @@ int main(int argc, char *argv[]) {
 	
 	
 	world.gameSounds.AM = AudioManager::create_AudioManager();
-	world.gameSounds.akFireSound = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/akFire.wav");
+	world.gameSounds.akFireSound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/akFire.wav");
 	world.gameSounds.akFireSound->set_volume(0.25);
-	world.gameSounds.akEmptySound = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/akEmpty.wav");
+	world.gameSounds.akEmptySound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/akEmpty.wav");
 	world.gameSounds.akEmptySound->set_volume(0.75);
-	world.gameSounds.akReloadSound = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/akReload.wav");
+	world.gameSounds.akReloadSound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/akReload.wav");
 	world.gameSounds.akReloadSound->set_volume(0.75);
 	
 	
 	
-	world.gameSounds.pistolFireSound = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/pistolFire.wav");
+	world.gameSounds.pistolFireSound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/pistolFire.wav");
 	world.gameSounds.pistolFireSound->set_volume(0.25);
 	world.gameSounds.pistolEmptySound = world.gameSounds.akEmptySound;
 	world.gameSounds.pistolEmptySound->set_volume(0.75);
 	world.gameSounds.pistolReloadSound = world.gameSounds.akReloadSound;
 	world.gameSounds.pistolReloadSound->set_volume(0.75);
 	
-	world.gameSounds.batFireSound = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/batFire.wav");
+	world.gameSounds.batFireSound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/batFire.wav");
 	world.gameSounds.batFireSound->set_volume(0.5);
 	
 	
-	world.gameSounds.ricochetSound1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/ricochet-1.wav");
+	world.gameSounds.ricochetSound1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-1.wav");
 	world.gameSounds.ricochetSound1->set_volume(0.25);
-	world.gameSounds.ricochetSound2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/ricochet-2.wav");
+	world.gameSounds.ricochetSound2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-2.wav");
 	world.gameSounds.ricochetSound2->set_volume(0.25);
-	world.gameSounds.ricochetSound3 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/ricochet-3.wav");
+	world.gameSounds.ricochetSound3 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-3.wav");
 	world.gameSounds.ricochetSound3->set_volume(0.25);
-	world.gameSounds.ricochetSound4 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/ricochet-4.wav");
+	world.gameSounds.ricochetSound4 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-4.wav");
 	world.gameSounds.ricochetSound4->set_volume(0.25);
-	world.gameSounds.ricochetSound5 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/ricochet-5.wav");
+	world.gameSounds.ricochetSound5 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-5.wav");
 	world.gameSounds.ricochetSound5->set_volume(0.25);
-	world.gameSounds.ricochetSound6 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/ricochet-6.wav");
+	world.gameSounds.ricochetSound6 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-6.wav");
 	world.gameSounds.ricochetSound6->set_volume(0.25);
 	
-	world.gameSounds.walkSound1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/walk1.wav");
+	world.gameSounds.walkSound1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk1.wav");
 	world.gameSounds.walkSound1->set_volume(1.0);
-	world.gameSounds.walkSound2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/walk2.wav");
+	world.gameSounds.walkSound2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk2.wav");
 	world.gameSounds.walkSound2->set_volume(1.0);
-	world.gameSounds.walkSound3 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/walk3.wav");
+	world.gameSounds.walkSound3 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk3.wav");
 	world.gameSounds.walkSound3->set_volume(1.0);
-	world.gameSounds.walkSound4 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/walk4.wav");
+	world.gameSounds.walkSound4 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk4.wav");
 	world.gameSounds.walkSound4->set_volume(1.0);
-	world.gameSounds.walkSound5 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/walk5.wav");
+	world.gameSounds.walkSound5 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk5.wav");
 	world.gameSounds.walkSound5->set_volume(1.0);
-	world.gameSounds.walkSound6 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/walk6.wav");
+	world.gameSounds.walkSound6 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk6.wav");
 	world.gameSounds.walkSound6->set_volume(1.0);
 	
-	world.gameSounds.bulletHitSound1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/bulletHit.wav");
+	world.gameSounds.bulletHitSound1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/bulletHit.wav");
 	world.gameSounds.bulletHitSound1->set_volume(1.0);
-	world.gameSounds.bulletHitSound2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/bulletHit2.wav");
+	world.gameSounds.bulletHitSound2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/bulletHit2.wav");
 	world.gameSounds.bulletHitSound2->set_volume(1.0);
 	
-	world.gameSounds.bulletCasingFallSound = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/BulletCasingFall.wav");
+	world.gameSounds.bulletCasingFallSound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/BulletCasingFall.wav");
 	world.gameSounds.bulletCasingFallSound->set_volume(1.0);
 	
-	world.gameSounds.femaleGrunt1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/female-grunt1.wav");
+	world.gameSounds.femaleGrunt1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt1.wav");
 	world.gameSounds.femaleGrunt1->set_volume(1.0);
-	world.gameSounds.femaleGrunt2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/female-grunt2.wav");
+	world.gameSounds.femaleGrunt2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt2.wav");
 	world.gameSounds.femaleGrunt2->set_volume(1.0);
-	world.gameSounds.femaleGrunt3 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/female-grunt3.wav");
+	world.gameSounds.femaleGrunt3 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt3.wav");
 	world.gameSounds.femaleGrunt3->set_volume(1.0);
-	world.gameSounds.femaleGrunt4 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/female-grunt4.wav");
+	world.gameSounds.femaleGrunt4 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt4.wav");
 	world.gameSounds.femaleGrunt4->set_volume(1.0);
-	world.gameSounds.femaleGrunt5 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/female-grunt5.wav");
+	world.gameSounds.femaleGrunt5 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt5.wav");
 	world.gameSounds.femaleGrunt5->set_volume(1.0);
-	world.gameSounds.femaleGrunt6 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/female-grunt6.wav");
+	world.gameSounds.femaleGrunt6 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt6.wav");
 	world.gameSounds.femaleGrunt6->set_volume(1.0);
-	world.gameSounds.femaleGrunt7 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/female-grunt7.wav");
+	world.gameSounds.femaleGrunt7 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt7.wav");
 	world.gameSounds.femaleGrunt7->set_volume(1.0);
 	
 	
-	world.gameSounds.scream1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream1.wav");
+	world.gameSounds.scream1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/scream1.wav");
 	world.gameSounds.scream1->set_volume(1.0);
-	world.gameSounds.scream2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream2.wav");
+	world.gameSounds.scream2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/scream2.wav");
 	world.gameSounds.scream2->set_volume(1.0);
-	world.gameSounds.scream3 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream3.wav");
+	world.gameSounds.scream3 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/scream3.wav");
 	world.gameSounds.scream3->set_volume(1.0);
-	world.gameSounds.scream4 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/scream4.wav");
+	world.gameSounds.scream4 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/scream4.wav");
 	world.gameSounds.scream4->set_volume(1.0);
 	
 	
-	world.gameSounds.glass = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/glass.wav");
+	world.gameSounds.glass = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/glass.wav");
 	world.gameSounds.glass->set_volume(1.0);
 	
-	world.gameSounds.heyShout = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/heyShout.wav");
+	world.gameSounds.heyShout = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/heyShout.wav");
 	world.gameSounds.heyShout->set_volume(1.0);
 	
-	world.gameSounds.hiss = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/hiss.wav");
+	world.gameSounds.hiss = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/hiss.wav");
 	world.gameSounds.hiss->set_volume(1.0);
 	
-	world.gameSounds.impact = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/impact.wav");
+	world.gameSounds.impact = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/impact.wav");
 	world.gameSounds.impact->set_volume(1.0);
 	
-	world.gameSounds.Snarl = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/Snarl.wav");
+	world.gameSounds.Snarl = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/Snarl.wav");
 	world.gameSounds.Snarl->set_volume(1.0);
-	world.gameSounds.Snarl2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/Snarl2.wav");
+	world.gameSounds.Snarl2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/Snarl2.wav");
 	world.gameSounds.Snarl2->set_volume(1.0);
 	
-	world.gameSounds.walkSand = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/walk-sand.wav");
+	world.gameSounds.walkSand = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk-sand.wav");
 	world.gameSounds.walkSand->set_volume(1.0);
 	
-	world.gameSounds.wood1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/wood1.wav");
+	world.gameSounds.wood1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/wood1.wav");
 	world.gameSounds.wood1->set_volume(1.0);
-	world.gameSounds.wood2 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/wood2.wav");
+	world.gameSounds.wood2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/wood2.wav");
 	world.gameSounds.wood2->set_volume(1.0);
 	
-	world.gameSounds.background1 = world.gameSounds.AM->get_sound(local_dir()+"Assets/Sounds/background1.wav");
+	world.gameSounds.background1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/background1.wav");
 	world.gameSounds.background1->set_volume(0.25);
 	
 	
@@ -285,7 +289,7 @@ int main(int argc, char *argv[]) {
 	NNS.set_pos(xss,0, 0);
 	
 	
-	wts=TexturePool::load_texture(local_dir()+"Assets/loadscreen-temp.png");
+	wts=TexturePool::load_texture(mydir+"Assets/loadscreen-temp.png");
 	NNS.set_texture(wts);
 	
 	NNS.show();
@@ -338,7 +342,7 @@ int main(int argc, char *argv[]) {
 	NNS2.set_pos(xss,0, -1.0);
 	
 	
-	tbak=TexturePool::load_texture(local_dir()+"Assets/temp-bak.png");
+	tbak=TexturePool::load_texture(mydir+"Assets/temp-bak.png");
 	NNS2.set_texture(tbak);
 	
 	NNS2.show();
@@ -361,27 +365,27 @@ int main(int argc, char *argv[]) {
 
 	
 	// Set up player camera and model
-	player.set_up(&gameModels,window,&framework,local_dir());
+	player.set_up(&gameModels,window,&framework,mydir);
 	
 	
 	
-	window->load_model(player.pistol_arms, local_dir() + "Assets/Iris/FirstPersonViewModel-Fire.egg");
+	window->load_model(player.pistol_arms, mydir + "Assets/Iris/FirstPersonViewModel-Fire.egg");
 	// don't use PT or CPT with AnimControlCollection 
 	//bind the animations to the model
 	auto_bind(player.pistol_arms.node(), player.pistol_collection);
 	player.pistol_collection.play("Armature");
 	
 	
-	window->load_model(player.bat_arms, local_dir() + "Assets/Iris/fpvBat-atttack.egg");
+	window->load_model(player.bat_arms, mydir + "Assets/Iris/fpvBat-atttack.egg");
 	auto_bind(player.bat_arms.node(), player.bat_collection);
 	player.bat_collection.play("Armature");
 	
 	
-	window->load_model(player.empty_arms, local_dir() + "Assets/Iris/EmptyHands-Idle.egg");
+	window->load_model(player.empty_arms, mydir + "Assets/Iris/EmptyHands-Idle.egg");
 	auto_bind(player.empty_arms.node(), player.empty_collection);
 	player.empty_collection.play("Armature");
 	
-	window->load_model(player.ak_arms, local_dir() + "Assets/Iris/fpvak47-fire.egg");
+	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvak47-fire.egg");
 	auto_bind(player.ak_arms.node(), player.ak_collection);
 	player.ak_collection.play("Armaturblender how to seperate a meshe");
 	
@@ -414,7 +418,7 @@ int main(int argc, char *argv[]) {
 	for(auto x:Dir)
 	{
 		//StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale=1){
-		ND.push_back(StaticObject(-8,42,0,local_dir()+x,&gameModels,window,&framework,2.6));
+		ND.push_back(StaticObject(-8,42,0,mydir+x,&gameModels,window,&framework,2.6));
 		
 	}
 	PT(CollisionNode) c_Node;
@@ -494,9 +498,9 @@ int main(int argc, char *argv[]) {
 
 
 
-	PT(Texture) redTex=TexturePool::load_texture(local_dir()+"Assets/Red.png");
-	PT(Texture) greenTex=TexturePool::load_texture(local_dir()+"Assets/Blue.png");
-	PT(Texture) blueTex=TexturePool::load_texture(local_dir()+"Assets/Green.png");
+	PT(Texture) redTex=TexturePool::load_texture(mydir+"Assets/Red.png");
+	PT(Texture) greenTex=TexturePool::load_texture(mydir+"Assets/Blue.png");
+	PT(Texture) blueTex=TexturePool::load_texture(mydir+"Assets/Green.png");
 	
 	PGWaitBar* HealthBar;
 	HealthBar = new PGWaitBar("HealthBar");
@@ -611,9 +615,9 @@ int main(int argc, char *argv[]) {
 	
 	
 	
-	NodePath blank_plane = window->load_model(framework.get_models(),local_dir()+"Assets/plane.egg");
+	NodePath blank_plane = window->load_model(framework.get_models(),mydir+"Assets/plane.egg");
 	blank_plane.set_transparency(TransparencyAttrib::M_alpha, 1);
-	PT(Texture) blankTex=TexturePool::load_texture(local_dir()+"Assets/blank_slot2.png");
+	PT(Texture) blankTex=TexturePool::load_texture(mydir+"Assets/blank_slot2.png");
 	
 	
 
@@ -683,60 +687,60 @@ int main(int argc, char *argv[]) {
 	
 	
 	
-	WeaponObject ak47('g',35,0,20,1.0f,1.0f, local_dir()+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,local_dir()+"blenderFiles/ak47icon.png",24.0,10);
+	WeaponObject ak47('g',35,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
 	ak47.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak47);
 	
 	
-	WeaponObject ak48('g',37,0,20,1.0f,1.0f, local_dir()+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,local_dir()+"blenderFiles/ak47icon.png",24.0,10);
+	WeaponObject ak48('g',37,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
 	ak48.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak48);
 	
 	
 	
-	WeaponObject ak49('g',39,0,20,1.0f,1.0f, local_dir()+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,local_dir()+"blenderFiles/ak47icon.png",24.0,10);
+	WeaponObject ak49('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
 	ak49.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak49);
 	
 	
-	WeaponObject Bat('g',15,0,20,1.0f,1.0f, local_dir()+"Model/Baseballbat.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,local_dir()+"blenderFiles/baticon.png",15.0,2);
+	WeaponObject Bat('g',15,0,20,1.0f,1.0f, mydir+"Model/Baseballbat.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/baticon.png",15.0,2);
 	Bat.weapon_init(15,1.0,1.0,0,0,1);
 	itms.push_back(&Bat);
 	
 	
 	
-	WeaponObject Pis('g',25,0,25,1.0f,1.0f, local_dir()+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,0.25f,1,0,0,1.5f,0,local_dir()+"Model/PIstol/ITSAGUN.png",8.0,0);
+	WeaponObject Pis('g',25,0,25,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,0.25f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
 	Pis.weapon_init(8,1.0,1.0,0,64,1);	
 	itms.push_back(&Pis);
 	
 		
 	
-	HealthItem Pill('c',0,0,20,1.0f,1.0f, local_dir()+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,local_dir()+"blenderFiles/pbottleicon.png",100.0,1);
+	HealthItem Pill('c',0,0,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",100.0,1);
 	itms.push_back(&Pill);
 	
-	Item Ammo('a',5,0,20,1.0f,1.0f, local_dir()+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,local_dir()+"blenderFiles/pbottleicon.png",35.0,10);
+	Item Ammo('a',5,0,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",35.0,10);
 	itms.push_back(&Ammo);
 	
-	FoodItem cheese('c',55,0,20,1.0f,1.0f, local_dir()+"blenderFiles/cheese.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,local_dir()+"blenderFiles/cheeseicon.png",25.0,5);
+	FoodItem cheese('c',55,0,20,1.0f,1.0f, mydir+"blenderFiles/cheese.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/cheeseicon.png",25.0,5);
 	itms.push_back(&cheese);
 	
-	WaterItem booootle('c',45,5,20,1.0f,1.0f, local_dir()+"blenderFiles/Bootle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,local_dir()+"blenderFiles/BottleIcon.png",80.0,6);
+	WaterItem booootle('c',45,5,20,1.0f,1.0f, mydir+"blenderFiles/Bootle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/BottleIcon.png",80.0,6);
 	itms.push_back(&booootle);
 	
-	//healthItem dora('c',25,15,500,1.0f,1.0f, local_dir()+"blenderFiles/Bootle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,local_dir()+"blenderFiles/BottleIcon.png",80.0,4);
+	//healthItem dora('c',25,15,500,1.0f,1.0f, mydir+"blenderFiles/Bootle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/BottleIcon.png",80.0,4);
 	//itms.push_back(&dora);
 	
 
 	Enemy romar;
-	romar.set_up(&shootableModels,window,&framework,local_dir()+"Assets/INSECT/insect.egg",50.0,-10,-10,0,15.0,40,24,0,10.0);
+	romar.set_up(&shootableModels,window,&framework,mydir+"Assets/INSECT/insect.egg",50.0,-10,-10,0,15.0,40,24,0,10.0);
 	romar.init();
 	romar.coll_set_up(1000);
 	enems.push_back(&romar);
 	
 
-	window->load_model(romar.model, local_dir() + "Assets/INSECT/insect-Idle.egg");
+	window->load_model(romar.model, mydir + "Assets/INSECT/insect-Idle.egg");
 	auto_bind(romar.model.node(), romar.anim_collection);
-	window->load_model(romar.model, local_dir() + "Assets/INSECT/insect-Move.egg");
+	window->load_model(romar.model, mydir + "Assets/INSECT/insect-Move.egg");
 	auto_bind(romar.model.node(), romar.anim_collection);
 	romar.anim_collection.loop("Armature.1", true);
 	
@@ -744,7 +748,7 @@ int main(int argc, char *argv[]) {
 
 	/*
 	Enemy sebastian;
-	sebastian.set_up(&shootableModels,window,&framework,local_dir()+"Assets/INSECT/insect.egg",500.0,10,10,10,15.0);
+	sebastian.set_up(&shootableModels,window,&framework,mydir+"Assets/INSECT/insect.egg",500.0,10,10,10,15.0);
 	sebastian.init();
 	sebastian.coll_set_up(10);
 	enems.push_back(&sebastian);
@@ -781,7 +785,7 @@ int main(int argc, char *argv[]) {
 		
 		
 		
-		w.tex=TexturePool::load_texture(local_dir()+"Assets/"+xx+".png");
+		w.tex=TexturePool::load_texture(mydir+"Assets/"+xx+".png");
 		w.Node.set_texture(w.tex);
 		w.Node.hide();
 		player.weapons.push_back(w);
@@ -814,7 +818,7 @@ int main(int argc, char *argv[]) {
 	nd_crosshair.set_pos(-0.25, 0 ,-0.25);
 	
 	
-	tex_crosshair=TexturePool::load_texture(local_dir()+"Assets/CrossHair.png");
+	tex_crosshair=TexturePool::load_texture(mydir+"Assets/CrossHair.png");
 	nd_crosshair.set_texture(tex_crosshair);
 	
 	nd_crosshair.show();
@@ -828,16 +832,26 @@ int main(int argc, char *argv[]) {
 	// data is a void pointer, so it can take anything.
 	
 
-	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", menu, window);
-	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", jump, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "toggle camera", toggle, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
 	
+	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", &jump, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "cameraToggle", &toggle, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "pickup", &onE, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "reload", &onR, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
 
-	
 	window -> get_panda_framework() -> define_key("h", "hide_arms", hide_arms, NULL);
-	
-	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(MouseButton::one() ), "quit button press", &sys_exit, QuitButton);
 
+	keys.wildKeys["menu"] = &menu;
+	keys.wildKeys["jump"] = &jump;
+	keys.wildKeys["cameraToggle"] = &toggle;
+	keys.wildKeys["use"] = &onMouse1;
+	keys.wildKeys["pickup"] = &onE;
+	keys.wildKeys["reload"] = &onR;
+	keys.wildKeys["drop"] = &drop;
+
+	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(MouseButton::one() ), "quit button press", &sys_exit, QuitButton);
 	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(MouseButton::one() ), "Hit button press", &toggleHitBox, HitTogButton);
 	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(MouseButton::one() ), "Double button press", &toggleDoubleJump, DoubleTogButton);
 	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(MouseButton::one() ), "Option button press", &toggleOptionMenu, OptionTogButton);
@@ -848,10 +862,7 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(MouseButton::one() ), "Inventory slot press", &invPress, &blankTex);
 	window -> get_panda_framework() -> define_key(InvButton3->get_click_event(MouseButton::one() ), "Inventory slot press", &invPress, &blankTex);
 	
-	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "Shoot", &onMouse1, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "Action", &onE, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "Action", &onR, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "Temp Drop", &drop, &blankTex);
+	
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	NNS.hide();
 	// Start the loop / gameoptionMe
@@ -882,10 +893,11 @@ int main(int argc, char *argv[]) {
 			world.look(window);
 			world.move(keys.keybinds);
 			
+
 			if(temptickcount>=2){
 				world.tick();
 			}
-			
+
 			if (player.health<=0){
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				player.death(itms,&entityModels);
@@ -1009,8 +1021,6 @@ void invPress(const Event* eventPtr, void* dataPtr){
 	else if(tag == "InvButton3"){
 		t=2;
 	}
-	//cout<<eventPtr->get_name()<<endl;
-	
 	
 	player.handInd=(si+t);
 	if ((int)player.inventory.size()>t){
@@ -1021,10 +1031,7 @@ void invPress(const Event* eventPtr, void* dataPtr){
 		player.mainHand=NULL;
 		player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(dataPtr)));
 	}
-
 }
-
-
 
 void hide_arms(const Event* eventPtr, void* dataPtr){
 	player.arms_shown = !player.arms_shown;
@@ -1046,9 +1053,16 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 		if (tag == ("Bind"+i)){
 			for (auto k: keys.allKeys){
 				if (mouseWatcher-> is_button_down(k)){
-					cout << k.get_name() << endl;
 					keys.keybinds[i].first = k;
 					keys.buttonIndex[eventPtr->get_name()] -> setup(i+":"+ k.get_name());
+					for (auto j: keys.wildKeys){
+						if (i==(j.first)){
+							window -> get_panda_framework() -> define_key(k.get_name(), i, keys.wildKeys[i], NULL);
+							//window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
+
+							return;
+						}
+					}
 					return;
 				}
 			}
@@ -1077,14 +1091,10 @@ void drop(const Event* eventPtr, void* dataPtr){
 void onE(const Event* eventPtr, void* dataPtr){
 	if(world.menuStatus==0){
 		player.qtrav_shoot.traverse(window -> get_render());
-		if (player.qcoll_shoot -> get_num_entries() > 0)
-		{
+		if (player.qcoll_shoot -> get_num_entries() > 0){
 			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Item_sphere"){
-			
-			
 				player.qcoll_shoot -> sort_entries();
 				player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
-			
 			}
 		}
 		else{
@@ -1126,16 +1136,15 @@ void onR(const Event* eventPtr, void* dataPtr){
 					world.gameSounds.pistolReloadSound->play();
 				}
 			}
-			
 		}
 	}
-	
 }
 
 int getMenuSliderInd(){
 	return (round(Slider->get_value()*player.inventory.size()));
 }
-void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){	
+
+void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){
 	if (world.menuStatus==1){
 	
 		PGFrameStyle sb=fs->get_frame_style(0); // frame_style(0): ready state

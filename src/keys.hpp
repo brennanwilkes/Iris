@@ -16,9 +16,10 @@ public: //will do enum later
 	vector <string> keybindItems;
 	vector <PGButton*> keybindMenu;
 
-
 	vector<ButtonHandle> allKeys;
-	
+
+	map <std::string, void(*)(const Event* , void*)> wildKeys;
+
 	map <std::string, PGButton*> buttonIndex;
 private:
 
