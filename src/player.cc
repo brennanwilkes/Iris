@@ -179,7 +179,7 @@ void Player::coll_set_up(){
 	
 	
 	
-	c_Node = new CollisionNode("Player_pickup_ray");
+	/*c_Node = new CollisionNode("Player_pickup_ray");
 	c_Node -> add_solid(new CollisionSegment(0, 0, 0, 0, 20, 0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(2));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
@@ -187,7 +187,7 @@ void Player::coll_set_up(){
 
 	//pickupRayModel.show();
 	qtrav_pickup.add_collider(pickupRayModel, qcoll_pickup);
-	
+	*/
 	
 	// Player Shoot ray setup.
 	// BRENNAN when you set up the player constructor, put this in there as well. It should be the same as everything else.
@@ -195,7 +195,7 @@ void Player::coll_set_up(){
 	qcoll_shoot = new CollisionHandlerQueue;
 	c_Node = new CollisionNode("Player_Shoot");
 	c_Node -> add_solid(new CollisionRay(0, 0, 0, 0, 1, 0));
-	c_Node -> set_from_collide_mask(BitMask32::bit(3));
+	c_Node -> set_from_collide_mask(BitMask32::bit(0));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	shootRayModel = camera.attach_new_node(c_Node);
 	shootRayModel.show();

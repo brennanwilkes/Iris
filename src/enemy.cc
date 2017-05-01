@@ -272,7 +272,7 @@ void Enemy::coll_set_up(int dist){
 	
 	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
-	c_Node -> set_into_collide_mask(BitMask32::bit(3));
+	c_Node -> set_into_collide_mask(BitMask32::bit(0));
 	sphereModel = model.attach_new_node(c_Node);
 
 	//sphereModel.show();
