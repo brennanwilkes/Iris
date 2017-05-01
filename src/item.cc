@@ -14,12 +14,13 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	model.set_pos(xx,yy,zz);
 	model.reparent_to(*parent);
 	
-	
-	PT(CollisionNode) c_Node;
-	
 	gravFrame=0;
 	
-	//player
+	//PT(CollisionNode) c_Node;
+	
+	health=-1;
+	
+	/*
 	c_Node = new CollisionNode("Item_sphere");
 	c_Node -> add_solid(new CollisionSphere(xxx, yyy, zzz, rad));				//x y z radius
 	c_Node -> set_from_collide_mask(BitMask32::all_off());
@@ -32,6 +33,8 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	
 	//sphereModel.show();
 
+	*/
+	
 	float xs = -(w -> get_graphics_window()->get_x_size() / (float)w ->get_graphics_window()->get_y_size());
 		
 	PT(Texture) wt;
@@ -48,16 +51,11 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	imgNode.set_pos(xs+0.1,0, -1);
 	
 	
-	/*
-	imgName=
-	*/
+	
 	setVel(0,0,0);
 	
 	
-	//imgName=xx;
-	//w.id=player.weapons.size();
-	//w.available=true;
-	//w.selected=false;
+
 	weight=wei;
 	volume=vol;
 	
@@ -65,8 +63,6 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	imgTex=TexturePool::load_texture(fn2);
 	imgNode.set_texture(imgTex);
 	imgNode.hide();
-	//player.weapons.push_back(w);
-	//player.weapons.back().Node.hide();
 }
 void Item::action1(){
 	cout<<"error, action for item not handled"<<endl;
@@ -78,15 +74,14 @@ void Item::tick(){
 	
 	gravFrame++;
 	
-	if (gravFrame>10){
+	if (gravFrame>1){			//change this to change how often/fluid
 		gravFrame=0;
-		GameObject::tick(10,0);
+		GameObject::tick(1,0);
 	}
-	
+	cout<<model<<" "<<coll_grav->get_airborne_height()<<endl;
 	if (getxV()!=0){
-		model.set_x(model.get_x() + getxV());
-		if(ground){
-			if (getxV()<=0.1 && getxV()>=-0.1){
+		if(coll_grav->get_airborne_height()<2.0){
+			if (getxV()<=2 && getxV()>=-2){
 				setVel(0.0,getyV(),getzV());
 			}
 			else{
@@ -100,9 +95,8 @@ void Item::tick(){
 		}
 	}
 	if (getyV()!=0){
-		model.set_y(model.get_y() + getyV());
-		if(ground){
-			if (getyV()<=0.1 && getyV()>=-0.1){
+		if(coll_grav->get_airborne_height()<2.0){
+			if (getyV()<=2 && getyV()>=-2){
 				setVel(getxV(),0.0,getzV());
 			}
 			else{
@@ -117,6 +111,12 @@ void Item::tick(){
 	}
 	
 	
+	if(getxV()!=0){
+		model.set_fluid_x(model.get_x()+getxV());
+	}
+	if(getyV()!=0){
+		model.set_fluid_y(model.get_y()+getyV());
+	}
 	
 	
 	

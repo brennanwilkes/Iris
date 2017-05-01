@@ -871,12 +871,15 @@ int main(int argc, char *argv[]) {
 	world.tickCount=0;
 	
 	player.health=50;
-	
+	int temptickcount=0;
 
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread))
 	{
+		if(temptickcount<=2){
+			temptickcount++;
+		}
 		// Things to do every frame
 		// Keybinds should not go here.
 		if (world.menuStatus==0)
@@ -890,9 +893,11 @@ int main(int argc, char *argv[]) {
 			world.look(window);
 			world.move(keys.keybinds);
 			
-			world.tick();
-			
-			
+
+			if(temptickcount>=2){
+				world.tick();
+			}
+
 			if (player.health<=0){
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				player.death(itms,&entityModels);
@@ -957,13 +962,20 @@ void sys_exit(const Event* eventPtr, void* dataPtr){
 
 void jump(const Event* eventPtr, void* dataPtr){
 	if (world.menuStatus==0){
-		if (player.ground || player.doublejump)
+		cout<<player.coll_grav->get_airborne_height()<<endl;
+		if(player.doublejump || player.coll_grav->get_airborne_height()<2.0)
 		{
 			world.gameSounds.femaleGrunt7->play();
-			player.accel(0, 0, 1);
-			player.ground = false;
+			if (player.doublejump){
+				player.coll_grav->add_velocity(25.0);
+			}
+			else{
+				player.coll_grav->set_velocity(25.0);
+			}
 		}
 		world.tickCount=121;
+		
+		
 	}
 }
 
@@ -1088,7 +1100,7 @@ void onE(const Event* eventPtr, void* dataPtr){
 	if(world.menuStatus==0){
 		player.qtrav_shoot.traverse(window -> get_render());
 		if (player.qcoll_shoot -> get_num_entries() > 0){
-			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Item_sphere"){
+			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Coll_Sphere"){
 				player.qcoll_shoot -> sort_entries();
 				player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
 			}
@@ -1311,13 +1323,13 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 									}
 								}
 							}
-							else if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Item_sphere"){
+							else if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Coll_Sphere"){
 								//hit item
 								// WE NEED MAPS LOL WITH TAGS
+								cout<<"hit"<<endl;
 								for (unsigned int h = 0; h < itms.size(); h++){
 									if (itms[h]->sphereModel.node()==player.qcoll_shoot -> get_entry(0) ->get_into_node()){
 										float xd,yd,zd,td;
-										
 										
 										xd=itms[h]->model.get_x();
 										yd=itms[h]->model.get_y();
@@ -1335,7 +1347,7 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 								}
 								
 							}
-							
+							cout<<player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()<<endl;
 							
 		
 						}

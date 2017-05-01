@@ -28,9 +28,12 @@ void World::init(){
 }
 
 void World::tick(){
+
+	
 	player.tick();
 	
-	
+	GameObject::gtrav.traverse(window -> get_render());
+	GameObject::ptrav.traverse(window -> get_render());
 	
 	for (unsigned int i=0;i<itms.size();i++){
 		itms[i]->tick();
@@ -38,7 +41,6 @@ void World::tick(){
 	for (unsigned int i=0;i<enems.size();i++){
 		enems[i]->tick(1);
 	}
-
 	
 	player.calc_arms();
 	if (player.mode==0){
@@ -304,7 +306,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 
 
 void World::apply_grav(){
-	if (dt <= 0.1){
+	/*if (dt <= 0.1){
 		
 		for (unsigned int i=0;i<itms.size();i++){
 			itms[i]->accel(0,0,-9.8*dt);
@@ -316,6 +318,7 @@ void World::apply_grav(){
 	}
 	if (!player.ground)
 		player.model.set_fluid_z(player.model.get_z() + player.getzV());
+	*/
 }
 
 void World::menu(){
