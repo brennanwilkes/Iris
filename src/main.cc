@@ -962,6 +962,9 @@ int main(int argc, char *argv[]) {
 void sys_exit(const Event* eventPtr, void* dataPtr){
 	exit(0);
 }
+void nothing(const Event* eventPtr, void* dataPtr){
+	return;
+}
 
 void jump(const Event* eventPtr, void* dataPtr){
 	if (world.menuStatus==0){
@@ -1069,7 +1072,7 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 					keys.buttonIndex[eventPtr->get_name()] -> setup(i+":"+ k.get_name());
 					for (auto j: keys.wildKeys){
 						if (i==(j.first)){
-							window -> get_panda_framework() -> define_key(oldKey, "NULL", &jump, NULL);
+							window -> get_panda_framework() -> define_key(oldKey, "NULL",nothing, NULL);
 							window -> get_panda_framework() -> define_key(k.get_name(), i, keys.wildKeys[i], NULL);
 							return;
 						}
