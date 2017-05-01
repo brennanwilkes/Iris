@@ -547,7 +547,7 @@ int main(int argc, char *argv[]) {
 	player.ammoNodePath2 = window->get_aspect_2d().attach_new_node(player.ammoNode2);
 	player.ammoNodePath2.set_scale(0.04);
 	player.ammoNodePath2.set_pos(xs+0.6,0, -0.9);
-	
+
 	
 	player.weightNode = new TextNode("weightNode");
 	player.weightNode->set_text("0");
@@ -830,7 +830,6 @@ int main(int argc, char *argv[]) {
 	
 	// define_key("event_name", "description", function, data);
 	// data is a void pointer, so it can take anything.
-	
 
 	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
 	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", &jump, NULL);
@@ -907,7 +906,7 @@ int main(int argc, char *argv[]) {
 			if (player.mainHand!=NULL){
 				if (player.mainHand->type=='g'){
 					if (player.mainHand->firerate>1 && (world.tickCount%(int)(30-player.mainHand->firerate))==0){
-						if (mouseWatcher -> is_button_down(MouseButton::one())){
+						if (mouseWatcher -> is_button_down((keys.keybinds["use"]).first)){
 							onMouse1(NULL,&blankTex);
 						}
 					}
@@ -928,12 +927,16 @@ int main(int argc, char *argv[]) {
 		else if(world.menuStatus==1){
 			player.volumeNodePath.hide();
 			player.weightNodePath.hide();
+			player.ammoNodePath.hide();
+			player.ammoNodePath2.hide();
 			Bars.hide();
 		}
 		else{
 			player.handDisplay.hide();
 			player.volumeNodePath.hide();
 			player.weightNodePath.hide();
+			player.ammoNodePath.hide();
+			player.ammoNodePath2.hide();
 			Bars.hide();
 		}
 		/*else if (world.menuStatus!=0){
@@ -1066,8 +1069,8 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 					keys.buttonIndex[eventPtr->get_name()] -> setup(i+":"+ k.get_name());
 					for (auto j: keys.wildKeys){
 						if (i==(j.first)){
+							window -> get_panda_framework() -> define_key(oldKey, "NULL", &jump, NULL);
 							window -> get_panda_framework() -> define_key(k.get_name(), i, keys.wildKeys[i], NULL);
-							//window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
 							return;
 						}
 					}
