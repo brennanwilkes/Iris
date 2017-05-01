@@ -22,12 +22,35 @@ void Player::tick() {
 		hitFog->set_exp_density(tint/200.0);
 	}
 	
+	if (coll_grav->get_velocity()<-50.0){
+		if(coll_grav->get_airborne_height()<2.0){
+			health=health+((coll_grav->get_velocity()+50.0)/2.0);
+			
+			cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
+			cout<<model<<" speed "<<coll_grav->get_velocity()<<endl;
+			cout<<model<<" health "<<health<<endl;
+			
+			coll_grav->set_velocity(0.0);
+		}
+		/*cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
+		cout<<model<<" speed "<<coll_grav->get_impact_velocity()<<endl;
+		cout<<model<<" health "<<health<<endl;*/
+	}
 	
 	//GameObject::tick(); 
 	ptrav.traverse(window -> get_render());
 }
 
-void Player::init() {GameObject::init();}
+void Player::init() {
+	
+	
+	
+	
+	GameObject::init();
+	
+	sphereModel.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z()+5);
+	
+}
 
 void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string dir){
 	camera = w -> get_camera_group(); 
@@ -109,6 +132,11 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	max_health=100;
 	health=100;
 	
+	
+	setVel(0,0,0);
+	
+	
+	
 	//Fog hitFog;
 	hitFog = new Fog("Hit Fog");
 	hitFog->set_color(1.0,0.0,0.0);
@@ -123,6 +151,7 @@ void Player::coll_set_up(){
 	qcoll_pickup = new CollisionHandlerQueue;
 
 	PT(CollisionNode) c_Node;
+	/*
 	c_Node = new CollisionNode("Player_sphere");
 	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
@@ -132,7 +161,7 @@ void Player::coll_set_up(){
 	sphereModel.show();
 	coll_push -> add_collider(sphereModel, model);
 	ptrav.add_collider(sphereModel, coll_push);
-	
+	*/
 	
 	
 	
@@ -150,15 +179,15 @@ void Player::coll_set_up(){
 	
 	
 	
-	c_Node = new CollisionNode("Player_pickup_ray");
+	/*c_Node = new CollisionNode("Player_pickup_ray");
 	c_Node -> add_solid(new CollisionSegment(0, 0, 0, 0, 20, 0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(2));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	pickupRayModel = camera.attach_new_node(c_Node);
 
-	pickupRayModel.show();
+	//pickupRayModel.show();
 	qtrav_pickup.add_collider(pickupRayModel, qcoll_pickup);
-	
+	*/
 	
 	// Player Shoot ray setup.
 	// BRENNAN when you set up the player constructor, put this in there as well. It should be the same as everything else.
@@ -166,12 +195,13 @@ void Player::coll_set_up(){
 	qcoll_shoot = new CollisionHandlerQueue;
 	c_Node = new CollisionNode("Player_Shoot");
 	c_Node -> add_solid(new CollisionRay(0, 0, 0, 0, 1, 0));
-	c_Node -> set_from_collide_mask(BitMask32::bit(3));
+	c_Node -> set_from_collide_mask(BitMask32::bit(0));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	shootRayModel = camera.attach_new_node(c_Node);
 	shootRayModel.show();
 	qtrav_shoot.add_collider(shootRayModel, qcoll_shoot);
-
+	
+	
 	
 	
 	
@@ -180,7 +210,7 @@ void Player::coll_set_up(){
 }
 
 
-bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
+bool Player::pick_up(PandaNode* itm,vector<Item*> &itms){
 	for (unsigned int i = 0; i < itms.size(); i++){
 		if(itm == itms[i] -> sphereModel.node()){
 			int trans=0;
@@ -215,7 +245,6 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> itms){
 				return false;
 			}
 			if((itms[i] -> weight + weight <= max_weight) && (itms[i] -> volume + volume <= max_volume)){
-				//cout<<2<<endl;
 				inventory.push_back(itms[i]);
 				itms.erase(itms.begin()+i);
 				weight+=inventory.back()->weight;

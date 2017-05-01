@@ -116,13 +116,15 @@ bool Enemy::check_sight(){
 void Enemy::bas_mov(float dis){
 	
 	
-	
+	float dis2=sqrt(pow(player.model.get_y()-model.get_y(),2)+pow(player.model.get_x()-model.get_x(),2));
 	//shootRayModel.set_pos(0,0,0);
 	shootRayModel.look_at(player.sphereModel);
+	//cout<<shootRayModel.get_hpr()<<endl;
+	shootRayModel.set_hpr(shootRayModel.get_hpr().get_x(),shootRayModel.get_hpr().get_y()-atan2(2.0,dis2),shootRayModel.get_hpr().get_z());
 	qtrav_shoot.traverse(window -> get_render());
 	
-	
-	/*for (int i=0;i<qcoll_shoot->get_num_entries();i++){
+	/*
+	for (int i=0;i<qcoll_shoot->get_num_entries();i++){
 		cout<<qcoll_shoot -> get_entry(i) -> get_into_node()->get_name()<<" ";
 	}
 	cout<<endl;
@@ -134,7 +136,9 @@ void Enemy::bas_mov(float dis){
 		
 		qcoll_shoot -> sort_entries();
 		
-		if (qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()!="Player_sphere"){
+		//cout<<qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()<<endl;
+		
+		if (qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()!="Coll_Sphere"){
 			return;
 		}
 
@@ -145,6 +149,7 @@ void Enemy::bas_mov(float dis){
 		return;
 	}
 	running=true;
+	//cout<<"ya"<<endl;
 	/*
 	float xd,yd,zd,td;//,x2,y2,z2;
 	
@@ -177,7 +182,7 @@ void Enemy::bas_mov(float dis){
 		xtran=-2.0;
 	}
 	
-	float dis2=sqrt(pow(player.model.get_y()-model.get_y(),2)+pow(player.model.get_x()-model.get_x(),2));
+	
 	
 	float tmpx=(sqrt(pow(player.model.get_x()-model.get_x(),2))/dis2);
 	float tmpy=(sqrt(pow(player.model.get_y()-model.get_y(),2))/dis2);
@@ -267,7 +272,7 @@ void Enemy::coll_set_up(int dist){
 	
 	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
-	c_Node -> set_into_collide_mask(BitMask32::bit(3));
+	c_Node -> set_into_collide_mask(BitMask32::bit(0));
 	sphereModel = model.attach_new_node(c_Node);
 
 	//sphereModel.show();
@@ -277,12 +282,12 @@ void Enemy::coll_set_up(int dist){
 
 	qcoll_shoot = new CollisionHandlerQueue;
 	c_Node = new CollisionNode("AI_Shoot");
-	c_Node -> add_solid(new CollisionRay(0, 0, 5, 0, dist, 0));
+	c_Node -> add_solid(new CollisionRay(0, 0, 2, 0, dist, 0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	shootRayModel = model.attach_new_node(c_Node);
 	shootRayModel.set_pos(0,0,0);
-	//shootRayModel.show();
+	shootRayModel.show();
 	qtrav_shoot.add_collider(shootRayModel, qcoll_shoot);
 
 	

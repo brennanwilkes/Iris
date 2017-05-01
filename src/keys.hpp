@@ -12,13 +12,15 @@
 class Keys{
 public: //will do enum later
 	Keys();
-	map <std::string, pair<ButtonHandle, bool> > keybinds;
-	vector <string> keybindItems;
+	map <std::string, pair<ButtonHandle, bool> > keybinds; //world.move
+	map <std::string, void(*)(const Event* , void*)> wildKeys; //window -> get_panda_framework() -> define_key
+
+	vector <string> keybindItems; //all actions ("reload", "use", etc)
 	vector <PGButton*> keybindMenu;
 
-
 	vector<ButtonHandle> allKeys;
-	
+
+
 	map <std::string, PGButton*> buttonIndex;
 private:
 

@@ -3,7 +3,7 @@
 
 #include "nodePath.h"
 #include "collisionHandlerPusher.h"
-#include "collisionHandlerQueue.h"
+#include "collisionHandlerGravity.h"
 #include "collisionNode.h"
 #include "collisionRay.h"
 #include "collisionSphere.h"
@@ -12,6 +12,9 @@
 class GameObject{
 public:
 	GameObject();
+	
+	static CollisionTraverser gtrav;
+	static CollisionTraverser ptrav;
 	
 	virtual void init();
 	
@@ -38,15 +41,16 @@ public:
 	NodePath sphereModel;
 	NodePath rayModel;
 	
-	PT(CollisionHandlerQueue) coll_queue;
+	PT(CollisionHandlerGravity) coll_grav;
 	PT(CollisionHandlerPusher) coll_push;
-	CollisionTraverser ptrav;
-	CollisionTraverser qtrav;
+	//CollisionTraverser ptrav;
+	//CollisionTraverser qtrav;
 	
 	float weight;
 	float volume;
 	int health;
 	
+	float lastz;
 	
 	float tint;
 	

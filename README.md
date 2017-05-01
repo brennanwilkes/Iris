@@ -1,7 +1,7 @@
 # README #
 
 
-### This repo is for Brennan/Romar/Michael's term 2 IDS Project ###
+### This repo is for Brennan/Romar/Ryan/Michael's term 2 IDS Project ###
 
 * 3D adventure/survival game
 * a0.1
