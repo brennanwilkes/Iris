@@ -78,10 +78,10 @@ void Item::tick(){
 		gravFrame=0;
 		GameObject::tick(1,0);
 	}
-	
+	cout<<model<<" "<<coll_grav->get_airborne_height()<<endl;
 	if (getxV()!=0){
-		if(coll_grav->get_airborne_height()<0.2){
-			if (getxV()<=1 && getxV()>=-1){
+		if(coll_grav->get_airborne_height()<2.0){
+			if (getxV()<=2 && getxV()>=-2){
 				setVel(0.0,getyV(),getzV());
 			}
 			else{
@@ -95,8 +95,8 @@ void Item::tick(){
 		}
 	}
 	if (getyV()!=0){
-		if(coll_grav->get_airborne_height()<0.2){
-			if (getyV()<=1 && getyV()>=-1){
+		if(coll_grav->get_airborne_height()<2.0){
+			if (getyV()<=2 && getyV()>=-2){
 				setVel(getxV(),0.0,getzV());
 			}
 			else{
