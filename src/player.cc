@@ -109,6 +109,11 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	max_health=100;
 	health=100;
 	
+	
+	setVel(0,0,0);
+	
+	
+	
 	//Fog hitFog;
 	hitFog = new Fog("Hit Fog");
 	hitFog->set_color(1.0,0.0,0.0);

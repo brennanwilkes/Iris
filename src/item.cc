@@ -18,7 +18,7 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	
 	//PT(CollisionNode) c_Node;
 	
-	
+	health=-1;
 	
 	/*
 	c_Node = new CollisionNode("Item_sphere");
@@ -74,9 +74,9 @@ void Item::tick(){
 	
 	gravFrame++;
 	
-	if (gravFrame>10){
+	if (gravFrame>1){			//change this to change how often/fluid
 		gravFrame=0;
-		GameObject::tick(10,0);
+		GameObject::tick(1,0);
 	}
 	
 	if (getxV()!=0){

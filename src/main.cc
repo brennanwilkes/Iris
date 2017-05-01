@@ -961,10 +961,16 @@ void sys_exit(const Event* eventPtr, void* dataPtr){
 
 void jump(const Event* eventPtr, void* dataPtr){
 	if (world.menuStatus==0){
-		if(player.doublejump || player.coll_grav->get_airborne_height()<0.2)
+		cout<<player.coll_grav->get_airborne_height()<<endl;
+		if(player.doublejump || player.coll_grav->get_airborne_height()<2.0)
 		{
 			world.gameSounds.femaleGrunt7->play();
-			player.coll_grav->add_velocity(25.0);
+			if (player.doublejump){
+				player.coll_grav->add_velocity(25.0);
+			}
+			else{
+				player.coll_grav->set_velocity(25.0);
+			}
 		}
 		world.tickCount=121;
 		
