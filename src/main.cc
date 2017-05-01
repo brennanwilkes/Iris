@@ -833,7 +833,6 @@ int main(int argc, char *argv[]) {
 	
 
 	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
-	
 	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", &jump, NULL);
 	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "cameraToggle", &toggle, NULL);
 	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, &blankTex);
@@ -850,6 +849,7 @@ int main(int argc, char *argv[]) {
 	keys.wildKeys["pickup"] = &onE;
 	keys.wildKeys["reload"] = &onR;
 	keys.wildKeys["drop"] = &drop;
+
 
 	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(MouseButton::one() ), "quit button press", &sys_exit, QuitButton);
 	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(MouseButton::one() ), "Hit button press", &toggleHitBox, HitTogButton);
@@ -950,6 +950,7 @@ int main(int argc, char *argv[]) {
 	return (0);
 }
 
+
 void sys_exit(const Event* eventPtr, void* dataPtr){
 	exit(0);
 }
@@ -1046,6 +1047,7 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 	string tag = keys.buttonIndex[eventPtr->get_name()]->get_name();
 	for (auto i: keys.keybindItems){
 		if (tag == ("Bind"+i)){
+			string oldKey = keys.keybinds[i].first.get_name();
 			for (auto k: keys.allKeys){
 				if (mouseWatcher-> is_button_down(k)){
 					keys.keybinds[i].first = k;
@@ -1054,7 +1056,6 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 						if (i==(j.first)){
 							window -> get_panda_framework() -> define_key(k.get_name(), i, keys.wildKeys[i], NULL);
 							//window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
-
 							return;
 						}
 					}
