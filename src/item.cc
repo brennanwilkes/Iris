@@ -111,6 +111,12 @@ void Item::tick(){
 	}
 	
 	
+	if(getxV()!=0){
+		model.set_fluid_x(model.get_x()+getxV());
+	}
+	if(getyV()!=0){
+		model.set_fluid_y(model.get_y()+getyV());
+	}
 	
 	
 	

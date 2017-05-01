@@ -22,12 +22,35 @@ void Player::tick() {
 		hitFog->set_exp_density(tint/200.0);
 	}
 	
+	if (coll_grav->get_velocity()<-50.0){
+		if(coll_grav->get_airborne_height()<2.0){
+			health=health+((coll_grav->get_velocity()+50.0)/2.0);
+			
+			cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
+			cout<<model<<" speed "<<coll_grav->get_velocity()<<endl;
+			cout<<model<<" health "<<health<<endl;
+			
+			coll_grav->set_velocity(0.0);
+		}
+		/*cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
+		cout<<model<<" speed "<<coll_grav->get_impact_velocity()<<endl;
+		cout<<model<<" health "<<health<<endl;*/
+	}
 	
 	//GameObject::tick(); 
 	ptrav.traverse(window -> get_render());
 }
 
-void Player::init() {GameObject::init();}
+void Player::init() {
+	
+	
+	
+	
+	GameObject::init();
+	
+	sphereModel.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z()+5);
+	
+}
 
 void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string dir){
 	camera = w -> get_camera_group(); 
@@ -177,7 +200,8 @@ void Player::coll_set_up(){
 	shootRayModel = camera.attach_new_node(c_Node);
 	shootRayModel.show();
 	qtrav_shoot.add_collider(shootRayModel, qcoll_shoot);
-
+	
+	
 	
 	
 	

@@ -27,7 +27,7 @@ void GameObject::init(){
 	c_Node = new CollisionNode("Coll_Sphere");
 	c_Node -> add_solid(new CollisionSphere(0, 0, 0, 2.0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
-	c_Node -> set_into_collide_mask(BitMask32::bit(3));
+	c_Node -> set_into_collide_mask(BitMask32::bit(0));
 	sphereModel = model.attach_new_node(c_Node);
 	coll_push -> add_collider(sphereModel, model);
 	GameObject::ptrav.add_collider(sphereModel, coll_push);
@@ -65,28 +65,7 @@ void GameObject::tick(int m,int ind){
 	//cout<<coll_grav->get_impact_velocity()<<endl;
 	
 	
-	if(health!=-1){
-		if (coll_grav->get_velocity()<-50.0){
-			if(coll_grav->get_airborne_height()<2.0){
-				health=health+((coll_grav->get_velocity()+50.0)/2.0);
-				
-				cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
-				cout<<model<<" speed "<<coll_grav->get_velocity()<<endl;
-				cout<<model<<" health "<<health<<endl;
-				
-				coll_grav->set_velocity(0.0);
-			}
-			/*cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
-			cout<<model<<" speed "<<coll_grav->get_impact_velocity()<<endl;
-			cout<<model<<" health "<<health<<endl;*/
-		}
-	}
-	if(getxV()!=0){
-		model.set_fluid_x(model.get_x()+getxV());
-	}
-	if(getyV()!=0){
-		model.set_fluid_y(model.get_y()+getyV());
-	}
+	
 	
 }
 
