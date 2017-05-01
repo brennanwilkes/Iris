@@ -968,8 +968,8 @@ void nothing(const Event* eventPtr, void* dataPtr){
 
 void jump(const Event* eventPtr, void* dataPtr){
 	if (world.menuStatus==0){
-		cout<<player.coll_grav->get_airborne_height()<<endl;
-		if(player.doublejump || player.coll_grav->get_airborne_height()<2.0)
+		cout<<player.coll_grav->get_airborne_height()<<" "<<player.coll_grav->get_velocity()<<endl;
+		if(player.doublejump || player.coll_grav->get_airborne_height()<0.1)
 		{
 			world.gameSounds.femaleGrunt7->play();
 			if (player.doublejump){

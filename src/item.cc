@@ -80,7 +80,7 @@ void Item::tick(){
 	}
 	//cout<<model<<" "<<coll_grav->get_airborne_height()<<endl;
 	if (getxV()!=0){
-		if(coll_grav->get_airborne_height()<2.0){
+		if(coll_grav->get_airborne_height()<0.1){
 			if (getxV()<=2 && getxV()>=-2){
 				setVel(0.0,getyV(),getzV());
 			}
@@ -95,7 +95,7 @@ void Item::tick(){
 		}
 	}
 	if (getyV()!=0){
-		if(coll_grav->get_airborne_height()<2.0){
+		if(coll_grav->get_airborne_height()<0.1){
 			if (getyV()<=2 && getyV()>=-2){
 				setVel(getxV(),0.0,getzV());
 			}
