@@ -9,6 +9,7 @@ void Player::tick() {
 		GameObject::tick(1,1); 
 	}
 	
+	totaltickcount++;
 	
 	
 	if (tint>0){
@@ -39,19 +40,27 @@ void Player::tick() {
 	
 	//GameObject::tick(); 
 	ptrav.traverse(window -> get_render());
-	
-	if(gameLevels.size()>0){
-		for (unsigned int i=0;i<gameLevels[player.lvlid]->exits.size();i++){
-			if (player.model.get_x() >= gameLevels[player.lvlid]->exits[i].x1 && player.model.get_x() <= gameLevels[player.lvlid]->exits[i].x2){
-				if (player.model.get_y() >= gameLevels[player.lvlid]->exits[i].y1 && player.model.get_y() <= gameLevels[player.lvlid]->exits[i].y2){
-					if (player.model.get_z() >= gameLevels[player.lvlid]->exits[i].z1 && player.model.get_z() <= gameLevels[player.lvlid]->exits[i].z2){
-						cout<<"Level change!"<<endl;
+	if(totaltickcount%60 == 0){
+		if(gameLevels.size()>player.lvlid){
+			for (unsigned int i=0;i<gameLevels[player.lvlid]->exits.size();i++){
+				if (player.model.get_x() >= gameLevels[player.lvlid]->exits[i].x1 && player.model.get_x() <= gameLevels[player.lvlid]->exits[i].x2){
+					if (player.model.get_y() >= gameLevels[player.lvlid]->exits[i].y1 && player.model.get_y() <= gameLevels[player.lvlid]->exits[i].y2){
+						if (player.model.get_z() >= gameLevels[player.lvlid]->exits[i].z1 && player.model.get_z() <= gameLevels[player.lvlid]->exits[i].z2){
+							cout<<"Level change!"<<endl;
+							
+							player.lvlid = gameLevels[player.lvlid]->exits[i].lvlid;
+							
+							
+							
+							
+							break;
+							
+						}
 					}
 				}
 			}
 		}
 	}
-	
 	
 	
 	
@@ -94,6 +103,8 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	kills=0;
 	deaths=0;
 	xp=0.0;
+	
+	totaltickcount=0;
 	
 	model = w -> load_model(pf->get_models(),dir+"Assets/Iris/Iris.egg");
 	model.set_scale(0.5);

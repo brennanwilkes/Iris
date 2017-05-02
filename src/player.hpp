@@ -120,6 +120,9 @@ public:
 	int lvlid;
 	
 	
+	int totaltickcount;
+	
+	
 private:
 	//vector<Item> inventory;
 };

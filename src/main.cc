@@ -684,7 +684,7 @@ int main(int argc, char *argv[]) {
 	
 	Level testlevel(0);
 	
-	ChangeRegion testregion(-10,10,-10,10,3,10,1);
+	ChangeRegion testregion(-10,10,-10,10,2,10,1);
 	
 	testlevel.exits.push_back(testregion);
 	
