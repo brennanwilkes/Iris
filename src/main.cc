@@ -99,6 +99,7 @@ NodePath gameModels;
 NodePath menuItems;
 NodePath optionMenuItems;
 PT(PGSliderBar) Slider=new PGSliderBar("MySliderBar");;
+vector<Level*> gameLevels;
 
 int scene;
 
@@ -682,8 +683,13 @@ int main(int argc, char *argv[]) {
 	
 	//Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,int zzz,int xxx,int yyy,float rad,int zzzz)
 	
+	Level testlevel(0);
 	
+	ChangeRegion testregion(-10,10,-10,10,3,10,1);
 	
+	testlevel.exits.push_back(testregion);
+	
+	gameLevels.push_back(&testlevel);
 	
 	
 	

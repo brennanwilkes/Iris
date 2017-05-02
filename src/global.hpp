@@ -4,6 +4,7 @@
 #include "player.hpp"
 #include "enemy.hpp"
 #include "world.hpp"
+#include "level.hpp"
 #include "nodePath.h"
 #include "windowFramework.h"
 #include <vector>
@@ -25,4 +26,5 @@ extern World world;
 extern WindowFramework *window;
 extern int scene;
 extern PT(PGSliderBar) Slider;
+extern vector<Level*> gameLevels;
 #endif

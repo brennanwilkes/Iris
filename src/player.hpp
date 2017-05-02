@@ -116,6 +116,10 @@ public:
 	void calc_arms();
 	void play_anim();
 	
+	
+	int lvlid;
+	
+	
 private:
 	//vector<Item> inventory;
 };

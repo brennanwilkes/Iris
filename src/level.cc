@@ -4,7 +4,7 @@
 #include <iostream>
 
 using namespace std;
-/*
+
 void Level::save(string filename){
 	char overwrite('y');
 	if (file_exists(filename))
@@ -19,12 +19,12 @@ void Level::save(string filename){
 	for (auto sta:statics)
 	{
 		f << "\t\t[StatObj]" << endl;
-		f << "\t\t\t" << sta.get_name() << endl;
+		f << "\t\t\t" << sta.model.get_name() << endl;
 		f << "\t\t\t{" << endl;
 		
-		f << "\t\t\tXpos:" << sta.get_x() << endl;
-		f << "\t\t\tYpos:" << sta.get_y() << endl;
-		f << "\t\t\tZpos:" << sta.get_z() << endl;
+		f << "\t\t\tXpos:" << sta.model.get_x() << endl;
+		f << "\t\t\tYpos:" << sta.model.get_y() << endl;
+		f << "\t\t\tZpos:" << sta.model.get_z() << endl;
 		
 		f << "\t\t\t}" << endl;
 		
@@ -33,14 +33,14 @@ void Level::save(string filename){
 	for (auto item:items)
 	{
 		f << "\t\t[Item]" << endl;
-		f << "\t\t\t" << item.get_name() << endl;
+		f << "\t\t\t" << item.model.get_name() << endl;
 		f << "\t\t\t{" << endl;
-		f << "\t\t\tXpos:" << item.get_x() << endl;
-		f << "\t\t\tYpos:" << item.get_y() << endl;
-		f << "\t\t\tZpos:" << item.get_z() << endl;
-		f << "\t\t\tHpos:" << item.get_h() << endl;
-		f << "\t\t\tPpos:" << item.get_p() << endl;
-		f << "\t\t\tRpos:" << item.get_r() << endl;
+		f << "\t\t\tXpos:" << item.model.get_x() << endl;
+		f << "\t\t\tYpos:" << item.model.get_y() << endl;
+		f << "\t\t\tZpos:" << item.model.get_z() << endl;
+		f << "\t\t\tHpos:" << item.model.get_h() << endl;
+		f << "\t\t\tPpos:" << item.model.get_p() << endl;
+		f << "\t\t\tRpos:" << item.model.get_r() << endl;
 		f << "\t\t\tid:" << item.id << endl;
 		f << "\t\t\ttype:" << item.type << endl;
 		f << "\t\t\t}" << endl;
@@ -56,4 +56,26 @@ bool Level::file_exists(string filename){
 	struct stat buffer;
 	return (stat(filename.c_str(), &buffer) == 0);
 }
-*/
+Level::Level(int idd){
+	id=idd;
+}
+
+ChangeRegion::ChangeRegion(float xx1,float xx2,float yy1,float yy2,float zz1,float zz2,int lvlidd){
+	x1=xx1;
+	x2=xx2;
+	
+	y1=yy1;
+	y2=yy2;
+	
+	z1=zz1;
+	z2=zz2;
+	lvlid=lvlidd;
+	
+	
+}
+
+
+
+
+
+
