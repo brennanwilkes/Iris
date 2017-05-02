@@ -462,7 +462,7 @@ void World::menuStart(){
 		optionMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(true);
-		props.set_mouse_mode(WindowProperties::M_absolute);
+		props.set_mouse_mode(WindowProperties::M_confined);
 		window -> get_graphics_window() -> request_properties(props);
 		
 		
