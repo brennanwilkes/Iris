@@ -80,34 +80,34 @@ void Item::tick(){
 	}
 	//cout<<model<<" "<<coll_grav->get_airborne_height()<<endl;
 	if (getxV()!=0){
-		if(coll_grav->is_on_ground()){
-			if (getxV()<=2 && getxV()>=-2){
-				setVel(0.0,getyV(),getzV());
+		//if(coll_grav->is_on_ground()){
+		if (getxV()<=2 && getxV()>=-2){
+			setVel(0.0,getyV(),getzV());
+		}
+		else{
+			if (getxV()>0){
+				setVel(pow(getxV(),0.5),getyV(),getzV());
 			}
 			else{
-				if (getxV()>0){
-					setVel(pow(getxV(),0.5),getyV(),getzV());
-				}
-				else{
-					setVel(-1*pow(-1*getxV(),0.5),getyV(),getzV());
-				}
+				setVel(-1*pow(-1*getxV(),0.5),getyV(),getzV());
 			}
 		}
+		//}
 	}
 	if (getyV()!=0){
-		if(coll_grav->is_on_ground()){
-			if (getyV()<=2 && getyV()>=-2){
-				setVel(getxV(),0.0,getzV());
+		//if(coll_grav->is_on_ground()){
+		if (getyV()<=2 && getyV()>=-2){
+			setVel(getxV(),0.0,getzV());
+		}
+		else{
+			if (getyV()>0){
+				setVel(getxV(),pow(getyV(),0.5),getzV());
 			}
 			else{
-				if (getyV()>0){
-					setVel(getxV(),pow(getyV(),0.5),getzV());
-				}
-				else{
-					setVel(getxV(),-1*pow(-1*getyV(),0.5),getzV());
-				}
+				setVel(getxV(),-1*pow(-1*getyV(),0.5),getzV());
 			}
 		}
+		//}
 	}
 	
 	

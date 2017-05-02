@@ -1001,7 +1001,7 @@ void jump(const Event* eventPtr, void* dataPtr){
 				player.coll_grav->set_velocity(25.0);
 			}
 		}
-		player.coll_grav->set_velocity(25.0);
+		//player.coll_grav->set_velocity(25.0);
 		world.tickCount=121;
 		
 		
@@ -1357,7 +1357,7 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 							else if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Coll_Sphere"){
 								//hit item
 								// WE NEED MAPS LOL WITH TAGS
-								cout<<"hit"<<endl;
+								//cout<<"hit"<<endl;
 								for (unsigned int h = 0; h < itms.size(); h++){
 									if (itms[h]->sphereModel.node()==player.qcoll_shoot -> get_entry(0) ->get_into_node()){
 										float xd,yd,zd,td;
@@ -1372,13 +1372,13 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 				
 										td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
 										dmg=(dmg/(pow(td,rngM)/100.0));
-										itms[h]->accel(dmg*xd/100.0,dmg*yd/100.0,dmg*zd/100.0);
+										itms[h]->accel(dmg*xd/100.0,dmg*yd/100.0,0.0);
 										
 									}
 								}
 								
 							}
-							cout<<player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()<<endl;
+							//cout<<player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()<<endl;
 							
 		
 						}
