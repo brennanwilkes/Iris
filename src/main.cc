@@ -96,6 +96,7 @@ Player player;
 Keys keys;
 World world;
 NodePath gameModels;
+NodePath startMenuItems;
 NodePath menuItems;
 NodePath optionMenuItems;
 PT(PGSliderBar) Slider=new PGSliderBar("MySliderBar");;
@@ -123,6 +124,7 @@ int getMenuSliderInd();
 void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt);
 
 void rebindButton(const Event* eventPtr, void* dataPtr);
+void startGame(const Event* eventPtr, void* dataPtr);
 
 int main(int argc, char *argv[]) {
 	// Panda Objects
@@ -264,7 +266,7 @@ int main(int argc, char *argv[]) {
 	window -> enable_keyboard();
 	
 	props = window -> get_graphics_window() -> get_properties();
-	props.set_cursor_hidden(true);
+	props.set_cursor_hidden(false);
 	props.set_mouse_mode(WindowProperties::M_confined);
 	window -> get_graphics_window() -> request_properties(props);
 
@@ -324,6 +326,8 @@ int main(int argc, char *argv[]) {
 			NodePath itemModels = entityModels.attach_new_node("All items");
 			NodePath pushableModels = entityModels.attach_new_node("All pushables");
 			NodePath interactModels = entityModels.attach_new_node("All interactables");
+	startMenuItems = window -> get_aspect_2d().attach_new_node("Start Menu Buttons");
+	startMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
 	menuItems = window -> get_aspect_2d().attach_new_node("Buttons and such");
 	menuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
 	optionMenuItems = window -> get_aspect_2d().attach_new_node("Option Menu Buttons");
@@ -428,27 +432,38 @@ int main(int argc, char *argv[]) {
 	
 	player.coll_set_up();
 
-	// Menu items
+	// Start Menu items
 	float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
 
+	PGButton* StartGameButton;
+	StartGameButton = new PGButton("StartGameButton");
+	StartGameButton -> setup("Start Game");
+	NodePath bnp = window -> get_pixel_2d().attach_new_node(StartGameButton);
+	bnp.set_scale(0.1);
+	bnp.set_pos(xs + 0.1, 0, 0.85);
+	bnp.reparent_to(startMenuItems);
+	keys.buttonIndex["click-mouse1-"+StartGameButton->get_id()] = StartGameButton;
+
+	PGButton* realQuitButton;
+	realQuitButton = new PGButton("QuitButton");
+	realQuitButton -> setup("Quit");
+	NodePath defbutNPk = window -> get_pixel_2d().attach_new_node(realQuitButton);
+	defbutNPk.set_scale(0.1);
+	defbutNPk.set_pos(xs+0.1,0, 0.65);
+	defbutNPk.reparent_to(startMenuItems);
+	keys.buttonIndex["click-mouse1-"+realQuitButton->get_id()] = realQuitButton;
+
+
+	// Menu items
 	PGButton* QuitButton;
-	QuitButton = new PGButton("QuitButton");
-	QuitButton -> setup("Quit Program");
+	QuitButton = new PGButton("MenuButton");
+	QuitButton -> setup("Main Menu");
 	NodePath defbutNP = window -> get_pixel_2d().attach_new_node(QuitButton);
 	defbutNP.set_scale(0.1);
 	defbutNP.set_pos(xs+0.1,0, 0.25);
 	defbutNP.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+QuitButton->get_id()] = QuitButton;
-	
-	/*PGButton* CamTogButton;
-	CamTogButton = new PGButton("CamTogButton");
-	CamTogButton -> setup("Toggle Camera");
-	NodePath defbutNP2 = window -> get_pixel_2d().attach_new_node(CamTogButton);
-	defbutNP2.set_scale(0.1);
-	defbutNP2.set_pos(xs + 0.1, 0, 0.65);
-	defbutNP2.reparent_to(menuItems);
-	*/
-	
+
 	PGButton* HitTogButton;
 	HitTogButton = new PGButton("HitTogButton");
 	HitTogButton -> setup("Toggle Hit Boxes");
@@ -457,7 +472,8 @@ int main(int argc, char *argv[]) {
 	defbutNP3.set_pos(xs + 0.1, 0, 0.65);
 	defbutNP3.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+HitTogButton->get_id()] = HitTogButton;
-	
+
+
 	PGButton* DoubleTogButton;
 	DoubleTogButton = new PGButton("DoubleTogButton");
 	DoubleTogButton -> setup("Toggle Double Jump");
@@ -467,7 +483,7 @@ int main(int argc, char *argv[]) {
 	defbutNP4.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+DoubleTogButton->get_id()] = DoubleTogButton;
 
-	
+
 	PGButton* OptionTogButton;
 	OptionTogButton = new PGButton("OptionTogButton");
 	OptionTogButton -> setup("Toggle Option Menu");
@@ -490,13 +506,10 @@ int main(int argc, char *argv[]) {
 		BindNode1.set_scale(0.1);
 		BindNode1.set_pos(xs+0.1*(i/8*8+1),0,0.85-(.2*(i%8+1)));
 		BindNode1.reparent_to(optionMenuItems);
-		window -> get_panda_framework() -> define_key(butt->get_click_event(MouseButton::one() ), "Bind "+keys.keybindItems.at(i)+"Press",&rebindButton, butt);
+		window -> get_panda_framework() -> define_key(butt->get_click_event(keys.keybinds["use"].first ), "Bind "+keys.keybindItems.at(i)+"Press",&rebindButton, butt);
 		keys.keybindMenu.push_back(butt);
 		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
 	}
-
-
-
 
 
 	PT(Texture) redTex=TexturePool::load_texture(mydir+"Assets/Red.png");
@@ -512,7 +525,6 @@ int main(int argc, char *argv[]) {
 	HealthNode.show();
 	HealthNode.reparent_to(Bars);
 	HealthNode.set_texture(redTex);
-	
 	
 	PGWaitBar* FoodBar;
 	FoodBar = new PGWaitBar("FoodBar");
@@ -534,8 +546,6 @@ int main(int argc, char *argv[]) {
 	WaterNode.reparent_to(Bars);
 	WaterNode.set_texture(greenTex);
 	
-	
-
 	
 	player.ammoNode = new TextNode("ammoNode");
 	player.ammoNode->set_text("0");
@@ -595,7 +605,7 @@ int main(int argc, char *argv[]) {
 	
 	
 
-	 
+	
 	// Setup, feeding the constructor with (bool vertical,float lenght,float width,float bevel)
 	Slider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
 	Slider->set_range(0,1);
@@ -608,27 +618,18 @@ int main(int argc, char *argv[]) {
 	
 	SliderNP.reparent_to(menuItems);
 	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
 	NodePath blank_plane = window->load_model(framework.get_models(),mydir+"Assets/plane.egg");
 	blank_plane.set_transparency(TransparencyAttrib::M_alpha, 1);
 	PT(Texture) blankTex=TexturePool::load_texture(mydir+"Assets/blank_slot2.png");
 	
 	
 
-
-
+	//////////////////////////////////////////////
 	PGButton* InvButton1;
 	InvButton1 = new PGButton("InvButton1");
 	InvButton1 -> setup(blank_plane);
-	
-	
 	
 	NodePath invBut = window -> get_pixel_2d().attach_new_node(InvButton1);
 	invBut.set_transparency(TransparencyAttrib::M_alpha, 1);
@@ -644,8 +645,6 @@ int main(int argc, char *argv[]) {
 	PGButton* InvButton2;
 	InvButton2 = new PGButton("InvButton2");
 	InvButton2 -> setup(blank_plane);
-	
-
 	
 	NodePath invBut2 = window -> get_pixel_2d().attach_new_node(InvButton2);
 	invBut2.set_transparency(TransparencyAttrib::M_alpha, 1);
@@ -858,17 +857,16 @@ int main(int argc, char *argv[]) {
 	keys.wildKeys["reload"] = &onR;
 	keys.wildKeys["drop"] = &drop;
 
-
-	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(MouseButton::one() ), "quit button press", &sys_exit, QuitButton);
-	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(MouseButton::one() ), "Hit button press", &toggleHitBox, HitTogButton);
-	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(MouseButton::one() ), "Double button press", &toggleDoubleJump, DoubleTogButton);
-	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(MouseButton::one() ), "Option button press", &toggleOptionMenu, OptionTogButton);
+	window -> get_panda_framework() -> define_key(StartGameButton->get_click_event(keys.keybinds["use"].first ), "Start Game", &startGame, NULL);
+	window -> get_panda_framework() -> define_key(realQuitButton->get_click_event(keys.keybinds["use"].first ), "quit button press", &sys_exit, realQuitButton);
+	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(keys.keybinds["use"].first ), "menu button press", &startGame, QuitButton);
+	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hit button press", &toggleHitBox, HitTogButton);
+	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(keys.keybinds["use"].first ), "Double button press", &toggleDoubleJump, DoubleTogButton);
+	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option button press", &toggleOptionMenu, OptionTogButton);
 	
-
-	
-	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(MouseButton::one() ), "Inventory slot press", &invPress, &blankTex);
-	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(MouseButton::one() ), "Inventory slot press", &invPress, &blankTex);
-	window -> get_panda_framework() -> define_key(InvButton3->get_click_event(MouseButton::one() ), "Inventory slot press", &invPress, &blankTex);
+	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory slot press", &invPress, &blankTex);
+	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(keys.keybinds["use"].first ), "Inventory slot press", &invPress, &blankTex);
+	window -> get_panda_framework() -> define_key(InvButton3->get_click_event(keys.keybinds["use"].first ), "Inventory slot press", &invPress, &blankTex);
 	
 	
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -883,7 +881,7 @@ int main(int argc, char *argv[]) {
 
 	
 	float shift;
-	
+	gameModels.hide();
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread))
@@ -986,7 +984,9 @@ int main(int argc, char *argv[]) {
 	return (0);
 }
 
-
+void startGame(const Event* eventPtr, void* dataPtr){
+	world.menuStart();
+}
 void sys_exit(const Event* eventPtr, void* dataPtr){
 	exit(0);
 }

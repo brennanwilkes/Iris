@@ -19,6 +19,7 @@ extern Player player;
 extern vector<GameObject*> objs;
 extern vector<Enemy*> enems;
 extern vector<Item*> itms;
+extern NodePath startMenuItems;
 extern NodePath gameModels;
 extern NodePath menuItems;
 extern NodePath optionMenuItems;

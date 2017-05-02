@@ -32,6 +32,7 @@ public:
 	//bool is_running() {return menuStatus;}
 	void menu();
 	void menuOption();
+	void menuStart();
 	//bool pause_menu;
 	//bool option_menu;
 	int menuStatus;

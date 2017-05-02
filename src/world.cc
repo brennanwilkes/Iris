@@ -17,8 +17,9 @@
 World::World(){
 	//game_running = 1;
 	//pause_menu = 0;
-	//option_menu = 0;
-	menuStatus=0;
+	//option_menu = 2;
+	//start_menu = 3;
+	menuStatus=3;
 }
 
 void World::init(){
@@ -303,8 +304,6 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	}
 }
 
-
-
 void World::apply_grav(){
 	/*if (dt <= 0.1){
 		
@@ -334,6 +333,7 @@ void World::menu(){
 		if (player.arms!=NULL){
 			player.arms->show();
 		}
+		startMenuItems.hide();
 		gameModels.show();
 		menuItems.hide();
 		optionMenuItems.hide();
@@ -347,6 +347,8 @@ void World::menu(){
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
+		startMenuItems.hide();
+
 		gameModels.hide();
 		menuItems.show();
 		optionMenuItems.hide();
@@ -359,12 +361,14 @@ void World::menu(){
 		
 	}
 	
-	else
+	else if (menuStatus==2)
 	{	
 		
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
+		startMenuItems.hide();
+
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.show();
@@ -376,15 +380,25 @@ void World::menu(){
 		
 		
 	}
-	
-	
-	
+	else
+	{
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.show();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.show();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+
 	
 }
 
 void World::menuOption(){
-
-	
 	if (menuStatus==2){
 		menuStatus=1;
 	}
@@ -397,6 +411,8 @@ void World::menuOption(){
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
+		startMenuItems.hide();
+
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.show();
@@ -414,6 +430,8 @@ void World::menuOption(){
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
+		startMenuItems.hide();
+
 		gameModels.hide();
 		menuItems.show();
 		optionMenuItems.hide();
@@ -425,3 +443,45 @@ void World::menuOption(){
 	
 }
 
+void World::menuStart(){
+	if (menuStatus==3){
+		menuStatus=0;
+	}
+	else{
+		menuStatus=3;
+	}
+	
+	if (menuStatus==0)
+	{	
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.hide();
+		gameModels.show();
+		menuItems.hide();
+		optionMenuItems.hide();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(true);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+		
+		
+		
+	}
+	
+	if (menuStatus==3)
+	{
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.show();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.hide();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+	
+}
