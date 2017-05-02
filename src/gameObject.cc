@@ -24,9 +24,9 @@ void GameObject::init(){
 	
 	coll_grav -> add_collider(rayModel, model);
 	
-	coll_grav->set_gravity(10.0);
+	coll_grav->set_gravity(25.0);
 	//coll_grav->set_offset(30);
-	coll_grav->set_reach(3.0);
+	//coll_grav->set_reach(30.0);
 	
 	GameObject::gtrav.add_collider(rayModel, coll_grav);
 

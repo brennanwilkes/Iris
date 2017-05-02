@@ -30,7 +30,7 @@ void Player::tick() {
 			cout<<model<<" speed "<<coll_grav->get_velocity()<<endl;
 			cout<<model<<" health "<<health<<endl;
 			
-			coll_grav->set_velocity(0.0);
+			//coll_grav->set_velocity(0.0);
 		}
 		/*cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
 		cout<<model<<" speed "<<coll_grav->get_impact_velocity()<<endl;
