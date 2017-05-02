@@ -78,7 +78,7 @@ void Item::tick(){
 		gravFrame=0;
 		GameObject::tick(1,0);
 	}
-	//cout<<model<<" "<<coll_grav->get_airborne_height()<<endl;
+	cout<<model<<" "<<coll_grav->get_airborne_height()<<endl;
 	if (getxV()!=0){
 		//if(coll_grav->is_on_ground()){
 		if (getxV()<=2 && getxV()>=-2){
