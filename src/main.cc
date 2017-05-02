@@ -745,6 +745,9 @@ int main(int argc, char *argv[]) {
 	romar.anim_collection.loop("Armature.1", true);
 	
 	
+	
+	player.model.set_pos(player.model.get_x(),player.model.get_y(),player.model.get_z()+25);
+	
 
 	/*
 	Enemy sebastian;
@@ -872,6 +875,9 @@ int main(int argc, char *argv[]) {
 	player.health=50;
 	int temptickcount=0;
 
+	
+	float shift;
+	
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread))
@@ -895,6 +901,22 @@ int main(int argc, char *argv[]) {
 
 			if(temptickcount>=2){
 				world.tick();
+			}
+			else{
+				/*if(temptickcount==0){
+					shift=1;
+				}
+				else{
+					shift=-1;
+				}
+				for (unsigned int i=0;i<itms.size();i++){
+					itms[i]->model.set_fluid_x(itms[i]->model.get_x()+(5*shift));
+					itms[i]->model.set_fluid_x(itms[i]->model.get_y()+(5*shift));
+				}
+				for (unsigned int i=0;i<enems.size();i++){
+					enems[i]->model.set_fluid_x(enems[i]->model.get_x()+(5*shift));
+					enems[i]->model.set_fluid_x(enems[i]->model.get_y()+(5*shift));
+				}*/
 			}
 
 			if (player.health<=0){
@@ -968,8 +990,8 @@ void nothing(const Event* eventPtr, void* dataPtr){
 
 void jump(const Event* eventPtr, void* dataPtr){
 	if (world.menuStatus==0){
-		cout<<player.coll_grav->get_airborne_height()<<" "<<player.coll_grav->get_velocity()<<endl;
-		if(player.doublejump || player.coll_grav->get_airborne_height()<0.1)
+		cout<<player.coll_grav->get_airborne_height()<<" "<<player.coll_grav->is_on_ground()<<" "<<player.coll_grav->get_velocity()<<endl;
+		if(player.doublejump || player.coll_grav->is_on_ground())
 		{
 			world.gameSounds.femaleGrunt7->play();
 			if (player.doublejump){
@@ -979,6 +1001,7 @@ void jump(const Event* eventPtr, void* dataPtr){
 				player.coll_grav->set_velocity(25.0);
 			}
 		}
+		player.coll_grav->set_velocity(25.0);
 		world.tickCount=121;
 		
 		

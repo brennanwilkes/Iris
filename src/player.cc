@@ -23,7 +23,7 @@ void Player::tick() {
 	}
 	
 	if (coll_grav->get_velocity()<-50.0){
-		if(coll_grav->get_airborne_height()<2.0){
+		if(coll_grav->is_on_ground()){
 			health=health+((coll_grav->get_velocity()+50.0)/2.0);
 			
 			cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;

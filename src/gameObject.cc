@@ -15,7 +15,7 @@ void GameObject::init(){
 	PT(CollisionNode) c_Node;
 	
 	c_Node = new CollisionNode("Ground_coll_ray");
-	c_Node -> add_solid(new CollisionRay(0, 0, -3, 0, 0, -1));
+	c_Node -> add_solid(new CollisionRay(0, 0, 10, 0, 0, -1));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	rayModel = model.attach_new_node(c_Node);
@@ -26,7 +26,7 @@ void GameObject::init(){
 	
 	coll_grav->set_gravity(10.0);
 	//coll_grav->set_offset(30);
-	
+	coll_grav->set_reach(3.0);
 	
 	GameObject::gtrav.add_collider(rayModel, coll_grav);
 
