@@ -39,6 +39,25 @@ void Player::tick() {
 	
 	//GameObject::tick(); 
 	ptrav.traverse(window -> get_render());
+	
+	if(gameLevels.size()>0){
+		for (unsigned int i=0;i<gameLevels[player.lvlid]->exits.size();i++){
+			if (player.model.get_x() >= gameLevels[player.lvlid]->exits[i].x1 && player.model.get_x() <= gameLevels[player.lvlid]->exits[i].x2){
+				if (player.model.get_y() >= gameLevels[player.lvlid]->exits[i].y1 && player.model.get_y() <= gameLevels[player.lvlid]->exits[i].y2){
+					if (player.model.get_z() >= gameLevels[player.lvlid]->exits[i].z1 && player.model.get_z() <= gameLevels[player.lvlid]->exits[i].z2){
+						cout<<"Level change!"<<endl;
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 }
 
 void Player::init() {
@@ -144,6 +163,9 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	w->get_render().set_fog(hitFog);
 	
 	ground = false;
+	
+	lvlid=0;
+	
 	
 }
 
