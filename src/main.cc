@@ -880,7 +880,7 @@ int main(int argc, char *argv[]) {
 	int temptickcount=0;
 
 	
-	float shift;
+	//float shift;
 	gameModels.hide();
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
@@ -1133,8 +1133,8 @@ void onE(const Event* eventPtr, void* dataPtr){
 		player.qtrav_shoot.traverse(window -> get_render());
 		if (player.qcoll_shoot -> get_num_entries() > 0){
 			player.qcoll_shoot->sort_entries();
-			//cout<<player.qcoll_shoot -> get_entry(0) -> get_into_node() -> get_name()<<endl;
-			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Coll_Sphere"){
+			cout<<player.qcoll_shoot -> get_entry(0) -> get_into_node() -> get_name()<<endl;
+			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Interaction_Sphere"){
 				//player.qcoll_shoot -> sort_entries();
 				player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
 			}
@@ -1299,7 +1299,7 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 							
 							//cout << player.qcoll_shoot -> get_entry(0) -> get_into_node() -> get_name() << " hit!" << endl;
 							
-							if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Enemy_sphere"){
+							if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Interaction_Model"){
 								
 								// WE NEED MAPS LOL WITH TAGS
 								for (unsigned int i = 0; i < enems.size(); i++){
@@ -1313,7 +1313,7 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 									//if (enems[i]->sphereModel.get_child(0).is_empty()) cout << "Ohes noes!" << endl;
 									
 									
-									if (enems[i]->sphereModel.node()==player.qcoll_shoot -> get_entry(0) ->get_into_node()){
+									if (enems[i]->sphereModelTwo.node()==player.qcoll_shoot -> get_entry(0) ->get_into_node()){
 										
 										float xd,yd,zd,td;
 										
@@ -1357,12 +1357,12 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 									}
 								}
 							}
-							else if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Coll_Sphere"){
+							else if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Interaction_Sphere"){
 								//hit item
 								// WE NEED MAPS LOL WITH TAGS
 								//cout<<"hit"<<endl;
 								for (unsigned int h = 0; h < itms.size(); h++){
-									if (itms[h]->sphereModel.node()==player.qcoll_shoot -> get_entry(0) ->get_into_node()){
+									if (itms[h]->sphereModelTwo.node()==player.qcoll_shoot -> get_entry(0) ->get_into_node()){
 										float xd,yd,zd,td;
 										
 										xd=itms[h]->model.get_x();

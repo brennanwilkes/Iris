@@ -138,7 +138,7 @@ void Enemy::bas_mov(float dis){
 		
 		//cout<<qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()<<endl;
 		
-		if (qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()!="Coll_Sphere"){
+		if (qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()!="Interaction_Sphere"){
 			return;
 		}
 

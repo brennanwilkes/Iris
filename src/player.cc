@@ -248,7 +248,7 @@ void Player::coll_set_up(){
 
 bool Player::pick_up(PandaNode* itm,vector<Item*> &itms){
 	for (unsigned int i = 0; i < itms.size(); i++){
-		if(itm == itms[i] -> sphereModel.node()){
+		if(itm == itms[i] -> sphereModelTwo.node()){
 			int trans=0;
 			if (player.mode){
 				trans=20;

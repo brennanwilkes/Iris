@@ -181,26 +181,32 @@ void World::draw(){
 
 	if (player.hitbox){
 		player.sphereModel.show();
+		player.sphereModelTwo.show();
 		player.rayModel.show();
 		for (unsigned int ij=0;ij<itms.size();ij++){
 			itms[ij]->sphereModel.show();
+			itms[ij]->sphereModelTwo.show();
 			itms[ij]->rayModel.show();
 		}
 		for (unsigned int ij=0;ij<enems.size();ij++){
 			enems[ij]->sphereModel.show();
+			enems[ij]->sphereModelTwo.show();
 			enems[ij]->rayModel.show();
 			
 		}
 	}
 	else{
 		player.sphereModel.hide();
+		player.sphereModelTwo.hide();
 		player.rayModel.hide();
 		for (unsigned int ij=0;ij<itms.size();ij++){
 			itms[ij]->sphereModel.hide();
+			itms[ij]->sphereModelTwo.hide();
 			itms[ij]->rayModel.hide();
 		}
 		for (unsigned int ij=0;ij<enems.size();ij++){
 			enems[ij]->sphereModel.hide();
+			enems[ij]->sphereModelTwo.hide();
 			enems[ij]->rayModel.hide();
 			
 		}
