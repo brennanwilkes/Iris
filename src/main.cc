@@ -954,7 +954,6 @@ int main(int argc, char *argv[]) {
 			
 			
 			world.draw();
-			cout<<Pis.model.get_z()<<" "<<Pis2.model.get_z()<<endl;
 			
 		}
 		else if(world.menuStatus==1){
