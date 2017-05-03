@@ -124,7 +124,7 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	
 	model = w -> load_model(pf->get_models(),dir+"Assets/Iris/Iris.egg");
 	model.set_scale(0.5);
-	model.set_pos(0, 0, 10);
+	model.set_pos(0, 0, 2);
 	model.set_hpr(0, 0, 0);
 	model.set_shader_auto();
 	model.reparent_to(*parent);
