@@ -84,7 +84,31 @@ void Enemy::tick(int m) {
 	
 }
 
-void Enemy::init() {GameObject::init();}
+void Enemy::init() {
+	GameObject::init();
+	
+	
+	
+	
+	PT(CollisionNode) c_Node;
+	//For collisions
+	c_Node = new CollisionNode("Coll_Sphere");
+	c_Node -> add_solid(new CollisionSphere(0, 0, 0, 2.0));
+	c_Node -> set_from_collide_mask(BitMask32::bit(0));
+	c_Node -> set_into_collide_mask(BitMask32::all_off());
+	sphereModel = model.attach_new_node(c_Node);
+	sphereModel.set_color(255,0,0,1.0);
+	coll_push -> add_collider(sphereModel, model);
+	GameObject::ptrav.add_collider(sphereModel, coll_push);
+	
+	
+	
+	
+	
+	sphereModel.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z()+5);
+	sphereModelTwo.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z());
+	sphereModelTwo.set_scale(1.5);
+}
 
 bool Enemy::check_sight(){
 	

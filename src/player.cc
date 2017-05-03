@@ -41,7 +41,7 @@ void Player::tick() {
 	//GameObject::tick(); 
 	ptrav.traverse(window -> get_render());
 	if(totaltickcount%60 == 0){
-		if(gameLevels.size()>player.lvlid){
+		if(gameLevels.size()>(unsigned int)player.lvlid){
 			for (unsigned int i=0;i<gameLevels[player.lvlid]->exits.size();i++){
 				if (player.model.get_x() >= gameLevels[player.lvlid]->exits[i].x1 && player.model.get_x() <= gameLevels[player.lvlid]->exits[i].x2){
 					if (player.model.get_y() >= gameLevels[player.lvlid]->exits[i].y1 && player.model.get_y() <= gameLevels[player.lvlid]->exits[i].y2){
@@ -79,7 +79,20 @@ void Player::init() {
 	
 	GameObject::init();
 	
+	PT(CollisionNode) c_Node;
+	//For collisions
+	c_Node = new CollisionNode("Coll_Sphere");
+	c_Node -> add_solid(new CollisionSphere(0, 0, 0, 2.0));
+	c_Node -> set_from_collide_mask(BitMask32::bit(0));
+	c_Node -> set_into_collide_mask(BitMask32::all_off());
+	sphereModel = model.attach_new_node(c_Node);
+	sphereModel.set_color(255,0,0,1.0);
+	coll_push -> add_collider(sphereModel, model);
+	GameObject::ptrav.add_collider(sphereModel, coll_push);
+	
+	
 	sphereModel.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z()+5);
+	sphereModelTwo.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z());
 	
 }
 

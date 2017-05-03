@@ -720,10 +720,10 @@ int main(int argc, char *argv[]) {
 	
 		
 	
-	HealthItem Pill('c',0,0,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",100.0,1);
+	HealthItem Pill('c',10,0,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",100.0,1);
 	itms.push_back(&Pill);
 	
-	Item Ammo('a',5,0,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",35.0,10);
+	Item Ammo('a',0,5,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",35.0,10);
 	itms.push_back(&Ammo);
 	
 	FoodItem cheese('c',55,0,20,1.0f,1.0f, mydir+"blenderFiles/cheese.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/cheeseicon.png",25.0,5);
@@ -886,13 +886,15 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread))
 	{
-		if(temptickcount<=2){
-			temptickcount++;
-		}
 		// Things to do every frame
 		// Keybinds should not go here.
 		if (world.menuStatus==0)
 		{
+			
+			if(temptickcount<=10){
+				temptickcount++;
+			}
+			
 			player.volumeNodePath.show();
 			player.weightNodePath.show();
 			//Main Game
@@ -903,26 +905,10 @@ int main(int argc, char *argv[]) {
 			world.move(keys.keybinds);
 			
 
-			if(temptickcount>=2){
+			if(temptickcount>=10){		//buffer zone for loading
 				world.tick();
 			}
-			else{
-				/*if(temptickcount==0){
-					shift=1;
-				}
-				else{
-					shift=-1;
-				}
-				for (unsigned int i=0;i<itms.size();i++){
-					itms[i]->model.set_fluid_x(itms[i]->model.get_x()+(5*shift));
-					itms[i]->model.set_fluid_x(itms[i]->model.get_y()+(5*shift));
-				}
-				for (unsigned int i=0;i<enems.size();i++){
-					enems[i]->model.set_fluid_x(enems[i]->model.get_x()+(5*shift));
-					enems[i]->model.set_fluid_x(enems[i]->model.get_y()+(5*shift));
-				}*/
-			}
-
+			
 			if (player.health<=0){
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				player.death(itms,&entityModels);
@@ -1299,7 +1285,10 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 							
 							//cout << player.qcoll_shoot -> get_entry(0) -> get_into_node() -> get_name() << " hit!" << endl;
 							
-							if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Interaction_Model"){
+							
+							if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Interaction_Sphere"){
+								bool enem=false;
+								
 								
 								// WE NEED MAPS LOL WITH TAGS
 								for (unsigned int i = 0; i < enems.size(); i++){
@@ -1312,9 +1301,11 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 									//cout << "enems[i] -> model child: " << enems[i] -> sphereModel.get_child(0) << endl;
 									//if (enems[i]->sphereModel.get_child(0).is_empty()) cout << "Ohes noes!" << endl;
 									
+									//cout<<i<<" "<<enems[i]->sphereModelTwo.node()<<" - "<<player.qcoll_shoot -> get_entry(0) ->get_into_node()<<endl;
 									
 									if (enems[i]->sphereModelTwo.node()==player.qcoll_shoot -> get_entry(0) ->get_into_node()){
 										
+										enem=true;
 										float xd,yd,zd,td;
 										
 										xd=enems[i]->model.get_x();
@@ -1356,31 +1347,35 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 										
 									}
 								}
-							}
-							else if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Interaction_Sphere"){
-								//hit item
-								// WE NEED MAPS LOL WITH TAGS
-								//cout<<"hit"<<endl;
-								for (unsigned int h = 0; h < itms.size(); h++){
-									if (itms[h]->sphereModelTwo.node()==player.qcoll_shoot -> get_entry(0) ->get_into_node()){
-										float xd,yd,zd,td;
+								if (!enem){
+									//hit item
+									// WE NEED MAPS LOL WITH TAGS
+									
+									for (unsigned int h = 0; h < itms.size(); h++){
+										if (itms[h]->sphereModelTwo.node()==player.qcoll_shoot -> get_entry(0) ->get_into_node()){
+											float xd,yd,zd,td;
 										
-										xd=itms[h]->model.get_x();
-										yd=itms[h]->model.get_y();
-										zd=itms[h]->model.get_z();
+											xd=itms[h]->model.get_x();
+											yd=itms[h]->model.get_y();
+											zd=itms[h]->model.get_z();
 										
-										xd=xd-player.model.get_x();
-										yd=yd-player.model.get_y();
-										zd=zd-player.model.get_z();
+											xd=xd-player.model.get_x();
+											yd=yd-player.model.get_y();
+											zd=zd-player.model.get_z();
 				
-										td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
-										dmg=(dmg/(pow(td,rngM)/100.0));
-										itms[h]->accel(dmg*xd/100.0,dmg*yd/100.0,0.0);
+											td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
+											dmg=(dmg/(pow(td,rngM)/100.0));
+											itms[h]->accel(dmg*xd/100.0,dmg*yd/100.0,0.0);
 										
+										}
 									}
 								}
 								
 							}
+							//else if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Interaction_Sphere"){
+							//	
+							//	
+							//}
 							//cout<<player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()<<endl;
 							
 		
