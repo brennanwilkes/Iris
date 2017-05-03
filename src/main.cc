@@ -734,9 +734,13 @@ int main(int argc, char *argv[]) {
 	Bat.weapon_init(15,1.0,1.0,0,0,1);
 	itms.push_back(&Bat);
 	
-	WeaponObject Pis('g',25,0,25,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,0.25f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
+	WeaponObject Pis('g',25,0,20,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
 	Pis.weapon_init(8,1.0,1.0,0,64,1);	
 	itms.push_back(&Pis);
+	
+	WeaponObject Pis2('g',22,3,20,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
+	Pis2.weapon_init(8,1.0,1.0,0,64,1);	
+	itms.push_back(&Pis2);
 	
 	
 	HealthItem Pill('c',10,0,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",100.0,1);
@@ -950,7 +954,7 @@ int main(int argc, char *argv[]) {
 			
 			
 			world.draw();
-			
+			cout<<Pis.model.get_z()<<" "<<Pis2.model.get_z()<<endl;
 			
 		}
 		else if(world.menuStatus==1){
@@ -1137,6 +1141,7 @@ void onE(const Event* eventPtr, void* dataPtr){
 		player.qtrav_shoot.traverse(window -> get_render());
 		if (player.qcoll_shoot -> get_num_entries() > 0){
 			player.qcoll_shoot->sort_entries();
+			cout<<player.qcoll_shoot -> get_entry(0) -> get_into_node() -> get_name()<<endl;
 			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Interaction_Sphere"){
 				//player.qcoll_shoot -> sort_entries();
 				player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
