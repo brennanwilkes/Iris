@@ -56,8 +56,14 @@ bool Level::file_exists(string filename){
 	struct stat buffer;
 	return (stat(filename.c_str(), &buffer) == 0);
 }
-Level::Level(int idd){
+Level::Level(int idd,float sx,float sy,float sz){
 	id=idd;
+	
+	spawn_x=sx;
+	spawn_y=sy;
+	spawn_z=sz;
+	
+	
 }
 
 ChangeRegion::ChangeRegion(float xx1,float xx2,float yy1,float yy2,float zz1,float zz2,int lvlidd){

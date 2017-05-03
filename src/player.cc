@@ -260,6 +260,7 @@ void Player::coll_set_up(){
 
 
 bool Player::pick_up(PandaNode* itm,vector<Item*> &itms){
+	cout<<"HARDER DADDY"<<endl;
 	for (unsigned int i = 0; i < itms.size(); i++){
 		if(itm == itms[i] -> sphereModelTwo.node()){
 			int trans=0;
@@ -312,14 +313,15 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> &itms){
 	
 	
 }
-bool Player::drop(int itr,vector<Item*> itms,NodePath* parent){
+bool Player::drop(int itr,vector<Item*> &itms,NodePath* parent){
 	if ((unsigned int)itr >= 0 && (unsigned int)itr < inventory.size()){
 		itms.push_back(inventory[itr]);
 		player.removeItem(itr);
-		cout<<model.get_pos()<<endl;
+		//cout<<model.get_pos()<<endl;
 		itms.back() -> model.reparent_to(*parent);
 		itms.back() -> model.set_pos(model.get_pos().get_x(),model.get_pos().get_y(),model.get_pos().get_z()+5);
 		itms.back() -> model.show();
+		itms.back() -> sphereModelTwo.show();
 		itms.back() -> setVel(0,0,0);
 		return true;
 	}
@@ -369,7 +371,7 @@ void Player::play_anim(){
 	
 	
 }
-void Player::death(vector<Item*> v,NodePath* parent){
+void Player::death(vector<Item*> &v,NodePath* parent){
 	float r,r2,r3;
 	unsigned int send_nudes=inventory.size();
 	for (unsigned int i=0;i<send_nudes;i++){
@@ -390,6 +392,11 @@ void Player::death(vector<Item*> v,NodePath* parent){
 	player.arms=&player.empty_arms;
 	player.mainHand=NULL;
 	calc_arms();
+	
+	player.model.set_x(gameLevels[player.lvlid]->spawn_x);
+	player.model.set_y(gameLevels[player.lvlid]->spawn_y);
+	player.model.set_z(gameLevels[player.lvlid]->spawn_z);
+	
 }
 void Player::calc_arms(){
 	

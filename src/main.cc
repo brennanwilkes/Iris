@@ -708,7 +708,7 @@ int main(int argc, char *argv[]) {
 	
 	//Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,int zzz,int xxx,int yyy,float rad,int zzzz)
 	
-	Level testlevel(0);
+	Level testlevel(0,0,0,5);
 	
 	ChangeRegion testregion(-10,10,-10,10,2,10,1);
 	
@@ -734,9 +734,13 @@ int main(int argc, char *argv[]) {
 	Bat.weapon_init(15,1.0,1.0,0,0,1);
 	itms.push_back(&Bat);
 	
-	WeaponObject Pis('g',25,0,25,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,0.25f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
+	WeaponObject Pis('g',25,0,20,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
 	Pis.weapon_init(8,1.0,1.0,0,64,1);	
 	itms.push_back(&Pis);
+	
+	WeaponObject Pis2('g',22,3,20,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
+	Pis2.weapon_init(8,1.0,1.0,0,64,1);	
+	itms.push_back(&Pis2);
 	
 	
 	HealthItem Pill('c',10,0,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",100.0,1);
@@ -950,7 +954,6 @@ int main(int argc, char *argv[]) {
 			
 			
 			world.draw();
-			
 			
 		}
 		else if(world.menuStatus==1){

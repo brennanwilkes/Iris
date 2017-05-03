@@ -35,7 +35,12 @@ public:
 	bool file_exists(std::string file); // Checks if a file exists
 	int id;
 	
-	Level(int idd);
+	
+	float spawn_x;
+	float spawn_y;
+	float spawn_z;
+	
+	Level(int idd,float sx,float sy,float sz);
 	
 	vector<ChangeRegion> exits;
 	
