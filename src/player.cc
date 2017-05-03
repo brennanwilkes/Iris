@@ -392,6 +392,11 @@ void Player::death(vector<Item*> v,NodePath* parent){
 	player.arms=&player.empty_arms;
 	player.mainHand=NULL;
 	calc_arms();
+	
+	player.model.set_x(gameLevels[player.lvlid]->spawn_x);
+	player.model.set_y(gameLevels[player.lvlid]->spawn_y);
+	player.model.set_z(gameLevels[player.lvlid]->spawn_z);
+	
 }
 void Player::calc_arms(){
 	

@@ -708,7 +708,7 @@ int main(int argc, char *argv[]) {
 	
 	//Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,int zzz,int xxx,int yyy,float rad,int zzzz)
 	
-	Level testlevel(0);
+	Level testlevel(0,0,0,5);
 	
 	ChangeRegion testregion(-10,10,-10,10,2,10,1);
 	
