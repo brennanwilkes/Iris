@@ -103,7 +103,7 @@ public:
 	int deaths;
 	int kills;
 	
-	void death(vector<Item*> v,NodePath* parent);
+	void death(vector<Item*> &v,NodePath* parent);
 	
 	
 	void set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string dir);
