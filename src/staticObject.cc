@@ -15,7 +15,7 @@ StaticObject::StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent
 	
 	NodePath coll_node = model.find("**/+CollisionNode");
 	if (!coll_node.is_empty()){
-		coll_node.node() -> set_into_collide_mask(BitMask32::bit(0));
+		coll_node.node() -> set_into_collide_mask(BitMask32::all_on());
 	}
 	
 }

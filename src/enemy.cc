@@ -262,28 +262,30 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 
 void Enemy::coll_set_up(int dist){
 	//qcoll_pickup = new CollisionHandlerQueue;
-
+	
 	PT(CollisionNode) c_Node;
-	c_Node = new CollisionNode("Enemy_sphere");
+	
+	
+	//c_Node = new CollisionNode("Enemy_sphere");
 	//c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
 	
 	//c_Node = model.find("**/courseGeometry");
 	//courseGeometry.setCollideMask(BitMask32.bit(0))
 	
-	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
-	c_Node -> set_from_collide_mask(BitMask32::bit(0));
-	c_Node -> set_into_collide_mask(BitMask32::bit(0));
-	sphereModel = model.attach_new_node(c_Node);
+	//c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
+	//c_Node -> set_from_collide_mask(BitMask32::bit(0));
+	//c_Node -> set_into_collide_mask(BitMask32::bit(0));
+	//sphereModel = model.attach_new_node(c_Node);
 
 	//sphereModel.show();
-	coll_push -> add_collider(sphereModel, model);
-	ptrav.add_collider(sphereModel, coll_push);
-
+	//coll_push -> add_collider(sphereModel, model);
+	//ptrav.add_collider(sphereModel, coll_push);
+	
 
 	qcoll_shoot = new CollisionHandlerQueue;
 	c_Node = new CollisionNode("AI_Shoot");
 	c_Node -> add_solid(new CollisionRay(0, 0, 2, 0, dist, 0));
-	c_Node -> set_from_collide_mask(BitMask32::bit(0));
+	c_Node -> set_from_collide_mask(BitMask32::bit(1));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	shootRayModel = model.attach_new_node(c_Node);
 	shootRayModel.set_pos(0,0,0);

@@ -39,6 +39,7 @@ public:
 	std::string filename;
 	
 	NodePath sphereModel;
+	NodePath sphereModelTwo;
 	NodePath rayModel;
 	
 	PT(CollisionHandlerGravity) coll_grav;

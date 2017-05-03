@@ -48,8 +48,11 @@ void Player::tick() {
 						if (player.model.get_z() >= gameLevels[player.lvlid]->exits[i].z1 && player.model.get_z() <= gameLevels[player.lvlid]->exits[i].z2){
 							cout<<"Level change!"<<endl;
 							
+							//gameLevels[player.lvlid]->save("Saves/"+player.savefilename+"/"+to_string(player.lvlid)+".isf");
+							
 							player.lvlid = gameLevels[player.lvlid]->exits[i].lvlid;
 							
+							//gameLevels[player.lvlid]->load("Story/"+to_string(player.lvlid)+".isf");
 							
 							
 							
@@ -228,7 +231,7 @@ void Player::coll_set_up(){
 	qcoll_shoot = new CollisionHandlerQueue;
 	c_Node = new CollisionNode("Player_Shoot");
 	c_Node -> add_solid(new CollisionRay(0, 0, 0, 0, 1, 0));
-	c_Node -> set_from_collide_mask(BitMask32::bit(0));
+	c_Node -> set_from_collide_mask(BitMask32::bit(1));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	shootRayModel = camera.attach_new_node(c_Node);
 	shootRayModel.show();

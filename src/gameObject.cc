@@ -19,24 +19,28 @@ void GameObject::init(){
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	rayModel = model.attach_new_node(c_Node);
-	
-	
-	
 	coll_grav -> add_collider(rayModel, model);
-	
 	coll_grav->set_gravity(50.0);
-	//coll_grav->set_offset(30);
-	//coll_grav->set_reach(-3.0);
-	
 	GameObject::gtrav.add_collider(rayModel, coll_grav);
-
+	
+	
+	//For collisions
 	c_Node = new CollisionNode("Coll_Sphere");
 	c_Node -> add_solid(new CollisionSphere(0, 0, 0, 2.0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(0));
-	c_Node -> set_into_collide_mask(BitMask32::bit(0));
+	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	sphereModel = model.attach_new_node(c_Node);
 	coll_push -> add_collider(sphereModel, model);
 	GameObject::ptrav.add_collider(sphereModel, coll_push);
+	
+	
+	//For obj interaction
+	c_Node = new CollisionNode("Coll_Sphere_Two");
+	c_Node -> add_solid(new CollisionSphere(0, 0, 0, 2.0));
+	c_Node -> set_from_collide_mask(BitMask32::all_off());
+	c_Node -> set_into_collide_mask(BitMask32::bit(1));
+	sphereModelTwo = model.attach_new_node(c_Node);
+	
 	
 	zV=0;
 	xV=0;

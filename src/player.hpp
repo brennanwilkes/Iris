@@ -118,6 +118,7 @@ public:
 	
 	
 	int lvlid;
+	string savefilename;
 	
 	
 	int totaltickcount;
