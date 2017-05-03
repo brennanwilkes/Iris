@@ -1137,7 +1137,6 @@ void onE(const Event* eventPtr, void* dataPtr){
 		player.qtrav_shoot.traverse(window -> get_render());
 		if (player.qcoll_shoot -> get_num_entries() > 0){
 			player.qcoll_shoot->sort_entries();
-			cout<<player.qcoll_shoot -> get_entry(0) -> get_into_node() -> get_name()<<endl;
 			if (player.qcoll_shoot -> get_entry(0) ->get_into_node()->get_name()=="Interaction_Sphere"){
 				//player.qcoll_shoot -> sort_entries();
 				player.pick_up(player.qcoll_shoot -> get_entry(0) -> get_into_node(), itms);
