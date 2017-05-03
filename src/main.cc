@@ -444,14 +444,38 @@ int main(int argc, char *argv[]) {
 	bnp.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+StartGameButton->get_id()] = StartGameButton;
 
+	PGButton* loadGameButton;
+	loadGameButton = new PGButton("loadGameButton");
+	loadGameButton -> setup("Load Game");
+	NodePath bnp2 = window -> get_pixel_2d().attach_new_node(loadGameButton);
+	bnp2.set_scale(0.1);
+	bnp2.set_pos(xs + 0.1, 0, 0.65);
+	bnp2.reparent_to(startMenuItems);
+	keys.buttonIndex["click-mouse1-"+loadGameButton->get_id()] = loadGameButton;
+
 	PGButton* realQuitButton;
 	realQuitButton = new PGButton("QuitButton");
 	realQuitButton -> setup("Quit");
 	NodePath defbutNPk = window -> get_pixel_2d().attach_new_node(realQuitButton);
 	defbutNPk.set_scale(0.1);
-	defbutNPk.set_pos(xs+0.1,0, 0.65);
+	defbutNPk.set_pos(xs+0.1,0, 0.45);
 	defbutNPk.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+realQuitButton->get_id()] = realQuitButton;
+
+	
+	PT(Texture) tex_hellothere;
+	CardMaker cm_hellothere("cardMaker");
+	PT(PandaNode) rc_hellothere = cm_hellothere.generate();
+	NodePath nd_hellothere(rc_hellothere);
+	nd_hellothere = window -> get_aspect_2d().attach_new_node(rc_hellothere);
+	nd_hellothere.set_transparency(TransparencyAttrib::M_alpha, 1);
+	//nd_hellothere.set_scale(2.0);
+	nd_hellothere.set_pos(-.50, 0,-0.5);
+	nd_hellothere.reparent_to(startMenuItems);
+	
+	tex_hellothere=TexturePool::load_texture(mydir+"Assets/Hellothere.jpg");
+	nd_hellothere.set_texture(tex_hellothere);
+	nd_hellothere.show();
 
 
 	// Menu items
@@ -463,6 +487,7 @@ int main(int argc, char *argv[]) {
 	defbutNP.set_pos(xs+0.1,0, 0.25);
 	defbutNP.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+QuitButton->get_id()] = QuitButton;
+
 
 	PGButton* HitTogButton;
 	HitTogButton = new PGButton("HitTogButton");
@@ -491,13 +516,20 @@ int main(int argc, char *argv[]) {
 	defbutNP5.set_scale(0.1);
 	defbutNP5.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP5.reparent_to(menuItems);
+	
 	NodePath defbutNP6 = window -> get_pixel_2d().attach_new_node(OptionTogButton);
 	defbutNP6.set_scale(0.1);
 	defbutNP6.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP6.reparent_to(optionMenuItems);
+	/*
+	NodePath defbutNP7 = window -> get_pixel_2d().attach_new_node(OptionTogButton);
+	defbutNP7.set_scale(0.1);
+	defbutNP7.set_pos(xs + 0.1, 0, 0.65);
+	defbutNP7.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+OptionTogButton->get_id()] = OptionTogButton;
+	*/
 
-
+	//Option Menu Items
 	for (unsigned int i=0; i<keys.keybindItems.size(); i++){
 		PGButton* butt;
 		butt = new PGButton("Bind"+keys.keybindItems.at(i));
@@ -512,6 +544,7 @@ int main(int argc, char *argv[]) {
 	}
 
 
+	//Status bar items
 	PT(Texture) redTex=TexturePool::load_texture(mydir+"Assets/Red.png");
 	PT(Texture) greenTex=TexturePool::load_texture(mydir+"Assets/Blue.png");
 	PT(Texture) blueTex=TexturePool::load_texture(mydir+"Assets/Green.png");
@@ -545,8 +578,9 @@ int main(int argc, char *argv[]) {
 	WaterNode.show();
 	WaterNode.reparent_to(Bars);
 	WaterNode.set_texture(greenTex);
-	
-	
+
+
+	//HUD info items
 	player.ammoNode = new TextNode("ammoNode");
 	player.ammoNode->set_text("0");
 	player.ammoNodePath = window->get_aspect_2d().attach_new_node(player.ammoNode);
@@ -559,7 +593,6 @@ int main(int argc, char *argv[]) {
 	player.ammoNodePath2.set_scale(0.04);
 	player.ammoNodePath2.set_pos(xs+0.6,0, -0.9);
 
-	
 	player.weightNode = new TextNode("weightNode");
 	player.weightNode->set_text("0");
 	player.weightNodePath = window->get_aspect_2d().attach_new_node(player.weightNode);
@@ -598,14 +631,7 @@ int main(int argc, char *argv[]) {
 	defbutNP3.reparent_to(menuItems);
 	*/
 	
-	
 
-	
-	
-	
-	
-
-	
 	// Setup, feeding the constructor with (bool vertical,float lenght,float width,float bevel)
 	Slider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
 	Slider->set_range(0,1);
@@ -615,7 +641,6 @@ int main(int argc, char *argv[]) {
 	Slider->setup_slider(true,1,0.05,false);
 	NodePath SliderNP=window->get_aspect_2d().attach_new_node(Slider);
 	SliderNP.set_pos(0.15,0,0);
-	
 	SliderNP.reparent_to(menuItems);
 	
 
@@ -627,6 +652,7 @@ int main(int argc, char *argv[]) {
 	
 
 	//////////////////////////////////////////////
+
 	PGButton* InvButton1;
 	InvButton1 = new PGButton("InvButton1");
 	InvButton1 -> setup(blank_plane);
@@ -641,7 +667,7 @@ int main(int argc, char *argv[]) {
 	keys.buttonIndex["click-mouse1-"+InvButton1->get_id()] = InvButton1;
 
 	//////////////////////////////////////////////
-	
+
 	PGButton* InvButton2;
 	InvButton2 = new PGButton("InvButton2");
 	InvButton2 -> setup(blank_plane);
@@ -656,7 +682,7 @@ int main(int argc, char *argv[]) {
 	keys.buttonIndex["click-mouse1-"+InvButton2->get_id()] = InvButton2;
 
 	//////////////////////////////////////////////
-	
+
 	PGButton* InvButton3;
 	InvButton3 = new PGButton("InvButton3");
 	InvButton3 -> setup(blank_plane);
@@ -696,29 +722,22 @@ int main(int argc, char *argv[]) {
 	ak47.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak47);
 	
-	
 	WeaponObject ak48('g',37,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
 	ak48.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak48);
-	
-	
 	
 	WeaponObject ak49('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
 	ak49.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak49);
 	
-	
 	WeaponObject Bat('g',15,0,20,1.0f,1.0f, mydir+"Model/Baseballbat.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/baticon.png",15.0,2);
 	Bat.weapon_init(15,1.0,1.0,0,0,1);
 	itms.push_back(&Bat);
-	
-	
 	
 	WeaponObject Pis('g',25,0,25,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,0.25f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
 	Pis.weapon_init(8,1.0,1.0,0,64,1);	
 	itms.push_back(&Pis);
 	
-		
 	
 	HealthItem Pill('c',10,0,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",100.0,1);
 	itms.push_back(&Pill);
@@ -741,7 +760,6 @@ int main(int argc, char *argv[]) {
 	romar.init();
 	romar.coll_set_up(1000);
 	enems.push_back(&romar);
-	
 
 	window->load_model(romar.model, mydir + "Assets/INSECT/insect-Idle.egg");
 	auto_bind(romar.model.node(), romar.anim_collection);
@@ -825,7 +843,6 @@ int main(int argc, char *argv[]) {
 	nd_crosshair.set_scale(0.5);
 	nd_crosshair.set_pos(-0.25, 0 ,-0.25);
 	
-	
 	tex_crosshair=TexturePool::load_texture(mydir+"Assets/CrossHair.png");
 	nd_crosshair.set_texture(tex_crosshair);
 	
@@ -857,16 +874,16 @@ int main(int argc, char *argv[]) {
 	keys.wildKeys["reload"] = &onR;
 	keys.wildKeys["drop"] = &drop;
 
-	window -> get_panda_framework() -> define_key(StartGameButton->get_click_event(keys.keybinds["use"].first ), "Start Game", &startGame, NULL);
-	window -> get_panda_framework() -> define_key(realQuitButton->get_click_event(keys.keybinds["use"].first ), "quit button press", &sys_exit, realQuitButton);
-	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(keys.keybinds["use"].first ), "menu button press", &startGame, QuitButton);
+	window -> get_panda_framework() -> define_key(StartGameButton->get_click_event(keys.keybinds["use"].first ), "Start game button press", &startGame, NULL);
+	window -> get_panda_framework() -> define_key(realQuitButton->get_click_event(keys.keybinds["use"].first ), "Quit button press", &sys_exit, realQuitButton);
+	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(keys.keybinds["use"].first ), "Menu button press", &startGame, QuitButton);
 	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hit button press", &toggleHitBox, HitTogButton);
-	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(keys.keybinds["use"].first ), "Double button press", &toggleDoubleJump, DoubleTogButton);
-	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option button press", &toggleOptionMenu, OptionTogButton);
+	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(keys.keybinds["use"].first ), "Double jump button press", &toggleDoubleJump, DoubleTogButton);
+	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton);
 	
-	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory slot press", &invPress, &blankTex);
-	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(keys.keybinds["use"].first ), "Inventory slot press", &invPress, &blankTex);
-	window -> get_panda_framework() -> define_key(InvButton3->get_click_event(keys.keybinds["use"].first ), "Inventory slot press", &invPress, &blankTex);
+	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory 1 slot press", &invPress, &blankTex);
+	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(keys.keybinds["use"].first ), "Inventory 2 slot press", &invPress, &blankTex);
+	window -> get_panda_framework() -> define_key(InvButton3->get_click_event(keys.keybinds["use"].first ), "Inventory 3 slot press", &invPress, &blankTex);
 	
 	
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -973,6 +990,7 @@ int main(int argc, char *argv[]) {
 void startGame(const Event* eventPtr, void* dataPtr){
 	world.menuStart();
 }
+
 void sys_exit(const Event* eventPtr, void* dataPtr){
 	exit(0);
 }

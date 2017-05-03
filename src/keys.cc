@@ -72,3 +72,10 @@ Keys::Keys(){
 		allKeys.push_back(KeyboardButton::ascii_key(i));
 	}
 }
+/*
+Keys::~Keys(){
+	for (unsigned i=0; i<keybindMenu.size(); i++){
+		delete keybindMenu.at(i);
+	}
+}
+*/

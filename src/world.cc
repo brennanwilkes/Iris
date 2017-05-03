@@ -29,8 +29,6 @@ void World::init(){
 }
 
 void World::tick(){
-
-	
 	player.tick();
 	
 	GameObject::gtrav.traverse(window -> get_render());
@@ -56,10 +54,8 @@ void World::tick(){
 			player.arms->hide();
 		}
 	}
-	
 
 
-	
 	//RECOIL
 	if (player.recoil_frames>0){
 		float ranR=rand()/(float)RAND_MAX;
@@ -110,8 +106,7 @@ void World::tick(){
 		
 	}
 	
-	
-	
+
 	tickCount++;
 	if (tickCount>120){
 		float ran=rand()/(float)RAND_MAX;
@@ -139,12 +134,9 @@ void World::tick(){
 		if (player.water<1){
 			player.water=1;
 		}
-		
-		
 		tickCount=0;
 	}
 }
-
 
 void World::draw(){
 	float tx(0),ty(0);
@@ -470,9 +462,6 @@ void World::menuStart(){
 		props.set_cursor_hidden(true);
 		props.set_mouse_mode(WindowProperties::M_confined);
 		window -> get_graphics_window() -> request_properties(props);
-		
-		
-		
 	}
 	
 	if (menuStatus==3)
