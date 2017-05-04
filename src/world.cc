@@ -15,12 +15,13 @@
 #include <cstdlib>
 
 World::World(){
-	//game_running = 1;
-	//pause_menu = 0;
+	//game_running = 0;
+	//pause_menu = 1;
 	//option_menu = 2;
 	//start_menu = 3;
-	//startoptionmenu = 4;
-	menuStatus=3;
+	//option_menu_start = 4;
+	menuStatus = 3;
+	//ms = {ms_game, ms_pause, ms_option, ms_start, ms_optionfromstart};
 }
 
 void World::init(){
@@ -337,14 +338,14 @@ void World::apply_grav(){
 }
 
 void World::menu(){
-	if (menuStatus==0){
-		menuStatus=1;
+	if (menuStatus==ms_game){
+		menuStatus=ms_pause;
 	}
 	else{
-		menuStatus=0;
+		menuStatus=ms_game;
 	}
 	
-	if (menuStatus==0)
+	if (menuStatus==ms_game)
 	{
 		if (player.arms!=NULL){
 			player.arms->show();
@@ -358,7 +359,7 @@ void World::menu(){
 		props.set_mouse_mode(WindowProperties::M_confined);
 		window -> get_graphics_window() -> request_properties(props);
 	}
-	else if (menuStatus==1)
+	else if (menuStatus==ms_pause)
 	{	
 		if (player.arms!=NULL){
 			player.arms->hide();
@@ -377,7 +378,7 @@ void World::menu(){
 		
 	}
 	
-	else if (menuStatus==2)
+	else if (menuStatus==ms_option)
 	{	
 		
 		if (player.arms!=NULL){
@@ -415,21 +416,21 @@ void World::menu(){
 }
 
 void World::menuOption(){
-	if (menuStatus==2){
-		menuStatus=1;
+	if (menuStatus==ms_option){
+		menuStatus=ms_pause;
 	}
-	else if (menuStatus ==1){
-		menuStatus=2;
+	else if (menuStatus ==ms_pause){
+		menuStatus=ms_option;
 	}
 	
-	if (menuStatus == 3){
-		menuStatus = 4;
+	if (menuStatus == ms_start){
+		menuStatus = ms_optionfromstart;
 	}
-	else if (menuStatus ==4){
-		menuStatus = 3;
+	else if (menuStatus == ms_optionfromstart){
+		menuStatus = ms_start;
 	}
 
-	if (menuStatus==4)
+	if (menuStatus==ms_optionfromstart)
 	{	
 		if (player.arms!=NULL){
 			player.arms->hide();
@@ -443,7 +444,7 @@ void World::menuOption(){
 		props.set_mouse_mode(WindowProperties::M_absolute);
 		window -> get_graphics_window() -> request_properties(props);
 	}
-	if (menuStatus==3)
+	if (menuStatus==ms_start)
 	{	
 		if (player.arms!=NULL){
 			player.arms->hide();
@@ -457,7 +458,7 @@ void World::menuOption(){
 		props.set_mouse_mode(WindowProperties::M_absolute);
 		window -> get_graphics_window() -> request_properties(props);
 	}
-	if (menuStatus==2)
+	if (menuStatus==ms_option)
 	{	
 		if (player.arms!=NULL){
 			player.arms->hide();
@@ -472,7 +473,7 @@ void World::menuOption(){
 		window -> get_graphics_window() -> request_properties(props);
 	}
 	
-	if (menuStatus==1)
+	if (menuStatus==ms_pause)
 	{
 		if (player.arms!=NULL){
 			player.arms->hide();
@@ -490,14 +491,14 @@ void World::menuOption(){
 }
 
 void World::menuStart(){
-	if (menuStatus==3){
-		menuStatus=0;
+	if (menuStatus==ms_start){
+		menuStatus=ms_game;
 	}
 	else{
-		menuStatus=3;
+		menuStatus=ms_start;
 	}
 	
-	if (menuStatus==0)
+	if (menuStatus==ms_game)
 	{	
 		if (player.arms!=NULL){
 			player.arms->hide();
@@ -512,7 +513,7 @@ void World::menuStart(){
 		window -> get_graphics_window() -> request_properties(props);
 	}
 	
-	if (menuStatus==3)
+	if (menuStatus==ms_start)
 	{
 		if (player.arms!=NULL){
 			player.arms->hide();
