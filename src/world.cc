@@ -54,7 +54,24 @@ void World::tick(){
 			player.arms->hide();
 		}
 	}
-
+	
+	
+	if (player.pullout!=-1){
+		if (player.pullout==0){
+			player.pistol_collection.play("Armature.2");
+		}
+		else if(player.pullout==2){
+			player.bat_collection.play("Armature.2");
+		}
+		else if(player.pullout==10){
+			player.ak_collection.play("Armature.2");
+		}
+		/*else if(player.pullout==11){
+			player.ak_collection.play("Armature.2");
+		}*/
+		
+		player.pullout=-1;
+	}
 
 	//RECOIL
 	if (player.recoil_frames>0){

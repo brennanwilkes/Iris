@@ -120,6 +120,8 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	deaths=0;
 	xp=0.0;
 	
+	pullout=-1;
+	
 	totaltickcount=0;
 	
 	model = w -> load_model(pf->get_models(),dir+"Assets/Iris/Iris.egg");
@@ -367,6 +369,9 @@ void Player::play_anim(){
 	}
 	if (player.mainHand->id==10){
 		ak_collection.play("Armature");
+	}
+	if (player.mainHand->id==11){
+	
 	}
 	
 	

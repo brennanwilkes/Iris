@@ -381,18 +381,31 @@ int main(int argc, char *argv[]) {
 	player.pistol_collection.play("Armature");
 	
 	
+	window->load_model(player.pistol_arms, mydir + "Assets/Iris/FirstPersonViewModel-pull_out_pistol.egg");
+	auto_bind(player.pistol_arms.node(), player.pistol_collection);
+	//player.pistol_collection.play("Armature");
+	
+	
 	window->load_model(player.bat_arms, mydir + "Assets/Iris/fpvBat-atttack.egg");
 	auto_bind(player.bat_arms.node(), player.bat_collection);
 	player.bat_collection.play("Armature");
+	
+	window->load_model(player.bat_arms, mydir + "Assets/Iris/fpvBat-pull_out_bat.egg");
+	auto_bind(player.bat_arms.node(), player.bat_collection);
+	
 	
 	
 	window->load_model(player.empty_arms, mydir + "Assets/Iris/EmptyHands-Idle.egg");
 	auto_bind(player.empty_arms.node(), player.empty_collection);
 	player.empty_collection.play("Armature");
 	
+	
 	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvak47-fire.egg");
 	auto_bind(player.ak_arms.node(), player.ak_collection);
-	player.ak_collection.play("Armaturblender how to seperate a meshe");
+	player.ak_collection.play("Armature");
+	
+	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvBat-pull_out_bat.egg");
+	auto_bind(player.ak_arms.node(), player.ak_collection);
 	
 	
 	// the name of an animation is preceded in the .egg file with <BunBdle>:
@@ -729,6 +742,13 @@ int main(int argc, char *argv[]) {
 	WeaponObject ak49('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
 	ak49.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak49);
+	
+	
+	//WeaponObject nedgev('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,11);
+	//nedgev.weapon_init(24,25.0,1.0,0,64,1);
+	//itms.push_back(&nedgev);
+	
+	
 	
 	WeaponObject Bat('g',15,0,20,1.0f,1.0f, mydir+"Model/Baseballbat.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/baticon.png",15.0,2);
 	Bat.weapon_init(15,1.0,1.0,0,0,1);
@@ -1073,6 +1093,10 @@ void invPress(const Event* eventPtr, void* dataPtr){
 	if ((int)player.inventory.size()>t){
 		player.mainHand=player.inventory[si+t];
 		player.handDisplay.set_texture(player.inventory[si+t]->imgTex);
+		if(player.mainHand->type=='g'){
+			player.pullout=player.mainHand->id;
+		}
+		
 	}
 	else{
 		player.mainHand=NULL;
@@ -1169,9 +1193,11 @@ void onR(const Event* eventPtr, void* dataPtr){
 				player.mainHand->amount=player.mainHand->max_amount;
 				if (player.mainHand->id==10){
 					world.gameSounds.akReloadSound->play();
+					player.ak_collection.play("Armature.2");
 				}
 				else if (player.mainHand->id==0){
 					world.gameSounds.pistolReloadSound->play();
+					player.pistol_collection.play("Armature.2");
 				}
 				
 			}
@@ -1274,7 +1300,8 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 					float rngM=1.0;
 					
 					if (player.mainHand->id==0){
-						frameGunCount = player.pistol_collection.get_frame()-player.pistol_collection.get_num_frames();			
+						frameGunCount = player.pistol_collection.get_frame()-player.pistol_collection.get_num_frames();		
+						//cout<<player.pistol_collection.get_frame()<<" "<<player.pistol_collection.get_num_frames()<<endl;	
 						dmg=10;
 						rngM=1.05;
 					}
