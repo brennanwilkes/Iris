@@ -448,6 +448,21 @@ int main(int argc, char *argv[]) {
 	// Start Menu items
 	float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
 
+	PT(Texture) tex_hellothere;
+	CardMaker cm_hellothere("cardMaker");
+	PT(PandaNode) rc_hellothere = cm_hellothere.generate();
+	NodePath nd_hellothere(rc_hellothere);
+	nd_hellothere = window -> get_aspect_2d().attach_new_node(rc_hellothere);
+	nd_hellothere.set_transparency(TransparencyAttrib::M_alpha, 1);
+	//nd_hellothere.set_scale(2.0);
+	nd_hellothere.set_pos(-.50, 0,-0.5);
+	nd_hellothere.reparent_to(startMenuItems);
+	
+	tex_hellothere=TexturePool::load_texture(mydir+"Assets/Hellothere.jpg");
+	nd_hellothere.set_texture(tex_hellothere);
+	nd_hellothere.show();
+
+ 
 	PGButton* StartGameButton;
 	StartGameButton = new PGButton("StartGameButton");
 	StartGameButton -> setup("Start Game");
@@ -471,24 +486,18 @@ int main(int argc, char *argv[]) {
 	realQuitButton -> setup("Quit");
 	NodePath defbutNPk = window -> get_pixel_2d().attach_new_node(realQuitButton);
 	defbutNPk.set_scale(0.1);
-	defbutNPk.set_pos(xs+0.1,0, 0.45);
+	defbutNPk.set_pos(xs+0.1,0, 0.25);
 	defbutNPk.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+realQuitButton->get_id()] = realQuitButton;
 
-	
-	PT(Texture) tex_hellothere;
-	CardMaker cm_hellothere("cardMaker");
-	PT(PandaNode) rc_hellothere = cm_hellothere.generate();
-	NodePath nd_hellothere(rc_hellothere);
-	nd_hellothere = window -> get_aspect_2d().attach_new_node(rc_hellothere);
-	nd_hellothere.set_transparency(TransparencyAttrib::M_alpha, 1);
-	//nd_hellothere.set_scale(2.0);
-	nd_hellothere.set_pos(-.50, 0,-0.5);
-	nd_hellothere.reparent_to(startMenuItems);
-	
-	tex_hellothere=TexturePool::load_texture(mydir+"Assets/Hellothere.jpg");
-	nd_hellothere.set_texture(tex_hellothere);
-	nd_hellothere.show();
+	PGButton* OptionTogButton3;
+	OptionTogButton3 = new PGButton("OptionTogButton");
+	OptionTogButton3 -> setup("Toggle Option Menu");
+	NodePath defbutNP7 = window -> get_pixel_2d().attach_new_node(OptionTogButton3);
+	defbutNP7.set_scale(0.1);
+	defbutNP7.set_pos(xs + 0.1, 0, 0.45);
+	defbutNP7.reparent_to(startMenuItems);
+	keys.buttonIndex["click-mouse1-"+OptionTogButton3->get_id()] = OptionTogButton3;
 
 
 	// Menu items
@@ -511,7 +520,6 @@ int main(int argc, char *argv[]) {
 	defbutNP3.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+HitTogButton->get_id()] = HitTogButton;
 
-
 	PGButton* DoubleTogButton;
 	DoubleTogButton = new PGButton("DoubleTogButton");
 	DoubleTogButton -> setup("Toggle Double Jump");
@@ -521,7 +529,6 @@ int main(int argc, char *argv[]) {
 	defbutNP4.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+DoubleTogButton->get_id()] = DoubleTogButton;
 
-
 	PGButton* OptionTogButton;
 	OptionTogButton = new PGButton("OptionTogButton");
 	OptionTogButton -> setup("Toggle Option Menu");
@@ -529,20 +536,17 @@ int main(int argc, char *argv[]) {
 	defbutNP5.set_scale(0.1);
 	defbutNP5.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP5.reparent_to(menuItems);
-	
-	NodePath defbutNP6 = window -> get_pixel_2d().attach_new_node(OptionTogButton);
+
+
+	//Option Menu Items
+	PGButton* OptionTogButton2;
+	OptionTogButton2 = new PGButton("OptionTogButton");
+	OptionTogButton2 -> setup("Toggle Option Menu");
+	NodePath defbutNP6 = window -> get_pixel_2d().attach_new_node(OptionTogButton2);
 	defbutNP6.set_scale(0.1);
 	defbutNP6.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP6.reparent_to(optionMenuItems);
-	/*
-	NodePath defbutNP7 = window -> get_pixel_2d().attach_new_node(OptionTogButton);
-	defbutNP7.set_scale(0.1);
-	defbutNP7.set_pos(xs + 0.1, 0, 0.65);
-	defbutNP7.reparent_to(startMenuItems);
-	keys.buttonIndex["click-mouse1-"+OptionTogButton->get_id()] = OptionTogButton;
-	*/
 
-	//Option Menu Items
 	for (unsigned int i=0; i<keys.keybindItems.size(); i++){
 		PGButton* butt;
 		butt = new PGButton("Bind"+keys.keybindItems.at(i));
@@ -904,6 +908,9 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hit button press", &toggleHitBox, HitTogButton);
 	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(keys.keybinds["use"].first ), "Double jump button press", &toggleDoubleJump, DoubleTogButton);
 	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton);
+
+	window -> get_panda_framework() -> define_key(OptionTogButton2->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton2);
+	window -> get_panda_framework() -> define_key(OptionTogButton3->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton3);
 	
 	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory 1 slot press", &invPress, &blankTex);
 	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(keys.keybinds["use"].first ), "Inventory 2 slot press", &invPress, &blankTex);

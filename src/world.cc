@@ -19,6 +19,7 @@ World::World(){
 	//pause_menu = 0;
 	//option_menu = 2;
 	//start_menu = 3;
+	//startoptionmenu = 4;
 	menuStatus=3;
 }
 
@@ -417,17 +418,23 @@ void World::menuOption(){
 	if (menuStatus==2){
 		menuStatus=1;
 	}
-	else{
+	else if (menuStatus ==1){
 		menuStatus=2;
 	}
 	
-	if (menuStatus==2)
+	if (menuStatus == 3){
+		menuStatus = 4;
+	}
+	else if (menuStatus ==4){
+		menuStatus = 3;
+	}
+
+	if (menuStatus==4)
 	{	
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
 		startMenuItems.hide();
-
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.show();
@@ -435,9 +442,34 @@ void World::menuOption(){
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
 		window -> get_graphics_window() -> request_properties(props);
-		
-		
-		
+	}
+	if (menuStatus==3)
+	{	
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.show();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.hide();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+	if (menuStatus==2)
+	{	
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.hide();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.show();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
 	}
 	
 	if (menuStatus==1)
@@ -446,7 +478,6 @@ void World::menuOption(){
 			player.arms->hide();
 		}
 		startMenuItems.hide();
-
 		gameModels.hide();
 		menuItems.show();
 		optionMenuItems.hide();
