@@ -623,7 +623,13 @@ int main(int argc, char *argv[]) {
 	player.volumeNodePath = window->get_aspect_2d().attach_new_node(player.volumeNode);
 	player.volumeNodePath.set_scale(0.07);
 	player.volumeNodePath.set_pos(xs+0.8,0, -0.98);
-	
+
+	PT(TextNode)fpsNode = new TextNode("fpsNode");
+	fpsNode->set_text("0");
+	NodePath fpsNodePath= window->get_aspect_2d().attach_new_node(fpsNode);
+	fpsNodePath.set_scale(0.07);
+	fpsNodePath.set_pos(xs,0, -0.98);
+
 	
 				//This is example code for fancy buttons. Dont delete
 	/*
@@ -933,8 +939,16 @@ int main(int argc, char *argv[]) {
 	gameModels.hide();
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
+	int frameDelay=0;
 	while(framework.do_frame(current_thread))
 	{
+		if (frameDelay>30){
+			fpsNode->set_text(to_string((int)(1/world.dt))+" fps");
+			fpsNodePath.show();
+			frameDelay =0;
+		}
+		frameDelay++;
+
 		// Things to do every frame
 		// Keybinds should not go here.
 		if (world.menuStatus==world.ms_game)
@@ -943,7 +957,6 @@ int main(int argc, char *argv[]) {
 			if(temptickcount<=10){
 				temptickcount++;
 			}
-			
 			player.volumeNodePath.show();
 			player.weightNodePath.show();
 			//Main Game
