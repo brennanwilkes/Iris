@@ -456,6 +456,8 @@ int main(int argc, char *argv[]) {
 	nd_hellothere.set_transparency(TransparencyAttrib::M_alpha, 1);
 	//nd_hellothere.set_scale(2.0);
 	nd_hellothere.set_pos(-.50, 0,-0.5);
+	//nd_hellothere.set_pos(xs+1, 0,0);
+
 	nd_hellothere.reparent_to(startMenuItems);
 	
 	tex_hellothere=TexturePool::load_texture(mydir+"Assets/Hellothere.jpg");
@@ -870,11 +872,10 @@ int main(int argc, char *argv[]) {
 	nd_crosshair.set_transparency(TransparencyAttrib::M_alpha, 1);
 	nd_crosshair.set_scale(0.5);
 	nd_crosshair.set_pos(-0.25, 0 ,-0.25);
-	
+	//nd_crosshair.reparent_to(gameModels);
 	tex_crosshair=TexturePool::load_texture(mydir+"Assets/CrossHair.png");
 	nd_crosshair.set_texture(tex_crosshair);
 	
-	nd_crosshair.show();
 	
 	
 	
@@ -936,7 +937,7 @@ int main(int argc, char *argv[]) {
 	{
 		// Things to do every frame
 		// Keybinds should not go here.
-		if (world.menuStatus==0)
+		if (world.menuStatus==world.ms_game)
 		{
 			
 			if(temptickcount<=10){
@@ -981,14 +982,16 @@ int main(int argc, char *argv[]) {
 			
 			
 			world.draw();
-			
+			nd_crosshair.show();
+
 		}
-		else if(world.menuStatus==1){
+		else if(world.menuStatus==world.ms_pause){
 			player.volumeNodePath.hide();
 			player.weightNodePath.hide();
 			player.ammoNodePath.hide();
 			player.ammoNodePath2.hide();
 			Bars.hide();
+			nd_crosshair.hide();
 		}
 		else{
 			player.handDisplay.hide();
@@ -997,12 +1000,8 @@ int main(int argc, char *argv[]) {
 			player.ammoNodePath.hide();
 			player.ammoNodePath2.hide();
 			Bars.hide();
+			nd_crosshair.hide();
 		}
-		/*else if (world.menuStatus!=0){
-			//pause menu
-			Bars.hide();
-			
-		}*/
 		
 		world.dt = globalClock -> get_real_time() - world.preTime;
 		world.preTime = globalClock -> get_real_time();
