@@ -13,6 +13,7 @@ class Keys{
 public: //will do enum later
 	Keys();
 	//~Keys();
+	int mouseSens;
 	map <std::string, pair<ButtonHandle, bool> > keybinds; //world.move
 	map <std::string, void(*)(const Event* , void*)> wildKeys; //window -> get_panda_framework() -> define_key
 
@@ -20,7 +21,6 @@ public: //will do enum later
 	vector <PGButton*> keybindMenu;
 
 	vector<ButtonHandle> allKeys;
-
 
 	map <std::string, PGButton*> buttonIndex;
 private:

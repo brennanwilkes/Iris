@@ -100,6 +100,8 @@ NodePath startMenuItems;
 NodePath menuItems;
 NodePath optionMenuItems;
 PT(PGSliderBar) Slider=new PGSliderBar("MySliderBar");;
+PT(PGSliderBar) mouseSlider=new PGSliderBar("mouseSliderBar");;
+
 vector<Level*> gameLevels;
 
 int scene;
@@ -124,6 +126,8 @@ int getMenuSliderInd();
 void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt);
 
 void rebindButton(const Event* eventPtr, void* dataPtr);
+void rebindMouseSens(const Event* eventPtr, void* dataPtr);
+
 void startGame(const Event* eventPtr, void* dataPtr);
 
 int main(int argc, char *argv[]) {
@@ -562,7 +566,27 @@ int main(int argc, char *argv[]) {
 		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
 	}
 
+	// Setup, feeding the constructor with (bool vertical,float lenght,float width,float bevel)
+	mouseSlider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
+	mouseSlider->set_range(0,1);
+	mouseSlider->set_value(0);
+	 
+	// Setup scroll bar (the 'moving thumb button' including left and right button)
+	mouseSlider->setup_slider(true,1,0.05,false);
+	NodePath mouseSliderNP = window->get_aspect_2d().attach_new_node(mouseSlider);
+	mouseSliderNP.set_pos(xs+2.5,0,.25);
+	mouseSliderNP.reparent_to(optionMenuItems);
 
+	PGButton* mouseSensBut;
+	mouseSensBut = new PGButton("mouseSensBut");
+	mouseSensBut -> setup("Change mouse sens");
+	NodePath defbutNPmous = window -> get_pixel_2d().attach_new_node(mouseSensBut);
+	defbutNPmous.set_scale(0.1);
+	defbutNPmous.set_pos(xs + 1.6, 0, 0.85);
+	defbutNPmous.reparent_to(optionMenuItems);
+
+
+	
 	//Status bar items
 	PT(Texture) redTex=TexturePool::load_texture(mydir+"Assets/Red.png");
 	PT(Texture) greenTex=TexturePool::load_texture(mydir+"Assets/Blue.png");
@@ -914,10 +938,12 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(keys.keybinds["use"].first ), "Menu button press", &startGame, QuitButton);
 	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hit button press", &toggleHitBox, HitTogButton);
 	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(keys.keybinds["use"].first ), "Double jump button press", &toggleDoubleJump, DoubleTogButton);
-	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton);
 
+	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton);
 	window -> get_panda_framework() -> define_key(OptionTogButton2->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton2);
 	window -> get_panda_framework() -> define_key(OptionTogButton3->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton3);
+	window -> get_panda_framework() -> define_key(mouseSensBut->get_click_event(keys.keybinds["use"].first ), "Mousebind button press", &rebindMouseSens, mouseSensBut);
+
 	
 	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory 1 slot press", &invPress, &blankTex);
 	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(keys.keybinds["use"].first ), "Inventory 2 slot press", &invPress, &blankTex);
@@ -933,13 +959,13 @@ int main(int argc, char *argv[]) {
 	
 	player.health=50;
 	int temptickcount=0;
+	int frameDelay=0;
 
 	
 	//float shift;
 	gameModels.hide();
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
-	int frameDelay=0;
 	while(framework.do_frame(current_thread))
 	{
 		if (frameDelay>30){
@@ -951,9 +977,8 @@ int main(int argc, char *argv[]) {
 
 		// Things to do every frame
 		// Keybinds should not go here.
-		if (world.menuStatus==world.ms_game)
-		{
-			
+		if (world.menuStatus==world.ms_game){
+
 			if(temptickcount<=10){
 				temptickcount++;
 			}
@@ -1038,7 +1063,7 @@ void sys_exit(const Event* eventPtr, void* dataPtr){
 }
 
 void jump(const Event* eventPtr, void* dataPtr){
-	if (world.menuStatus==0){
+	if (world.menuStatus==world.ms_game){
 		cout<<player.coll_grav->get_airborne_height()<<" "<<player.coll_grav->is_on_ground()<<" "<<player.coll_grav->get_velocity()<<endl;
 		if(player.doublejump || player.coll_grav->is_on_ground())
 		{
@@ -1058,7 +1083,7 @@ void jump(const Event* eventPtr, void* dataPtr){
 }
 
 void toggle(const Event* eventPtr, void* dataPtr){
-	if(world.menuStatus==0){
+	if(world.menuStatus==world.ms_game){
 		player.mode = 1 - player.mode;
 	
 		if (player.arms!=NULL){
@@ -1160,12 +1185,17 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 	}
 }
 
+void rebindMouseSens(const Event* eventPtr, void* dataPtr){
+	keys.mouseSens = mouseSlider->get_value()*10;
+	cout << keys.mouseSens << endl;
+
+}
 void menu(const Event* eventPtr, void* dataPtr){
 	world.menu();
 }
 
 void drop(const Event* eventPtr, void* dataPtr){
-	if (world.menuStatus==0){
+	if (world.menuStatus==world.ms_game){
 		if(player.mainHand==NULL){
 			cout<<"empty"<<endl;
 		}
@@ -1179,7 +1209,7 @@ void drop(const Event* eventPtr, void* dataPtr){
 }
 
 void onE(const Event* eventPtr, void* dataPtr){
-	if(world.menuStatus==0){
+	if(world.menuStatus==world.ms_game){
 		player.qtrav_shoot.traverse(window -> get_render());
 		if (player.qcoll_shoot -> get_num_entries() > 0){
 			player.qcoll_shoot->sort_entries();
@@ -1205,7 +1235,7 @@ void onE(const Event* eventPtr, void* dataPtr){
 }
 
 void onR(const Event* eventPtr, void* dataPtr){
-	if (player.mainHand!=NULL && world.menuStatus==0){
+	if (player.mainHand!=NULL && world.menuStatus==world.ms_game){
 		if (player.mainHand->type=='g'){
 			if (player.mainHand->tot_ammo-(player.mainHand->max_amount-player.mainHand->amount)>0){
 				player.mainHand->tot_ammo-=(player.mainHand->max_amount-player.mainHand->amount);
@@ -1239,7 +1269,7 @@ int getMenuSliderInd(){
 }
 
 void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){
-	if (world.menuStatus==1){
+	if (world.menuStatus==world.ms_pause){
 	
 		PGFrameStyle sb=fs->get_frame_style(0); // frame_style(0): ready state
 		sb.set_type(PGFrameStyle::T_flat);
@@ -1303,7 +1333,7 @@ void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){
 }
 
 void onMouse1(const Event* eventPtr, void* dataPtr){
-	if (world.menuStatus==0 && player.mode==0){
+	if (world.menuStatus==world.ms_game && player.mode==0){
 		if (player.mainHand!=NULL){
 			if (player.mainHand->type=='c'){		//Consumable item
 				player.mainHand->action1();

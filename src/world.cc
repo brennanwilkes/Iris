@@ -15,13 +15,8 @@
 #include <cstdlib>
 
 World::World(){
-	//game_running = 0;
-	//pause_menu = 1;
-	//option_menu = 2;
-	//start_menu = 3;
-	//option_menu_start = 4;
 	menuStatus = 3;
-	//ms = {ms_game, ms_pause, ms_option, ms_start, ms_optionfromstart};
+	//ms = {ms_game=0, ms_pause=1, ms_option=2, ms_start=3, ms_optionfromstart=4};
 }
 
 void World::init(){
@@ -121,8 +116,7 @@ void World::tick(){
 		}*/
 		
 		world.gameSounds.walkSound3->play();
-		
-		
+
 	}
 	
 
@@ -194,12 +188,12 @@ void World::draw(){
 		player.sphereModel.show();
 		player.sphereModelTwo.show();
 		player.rayModel.show();
-		for (unsigned int ij=0;ij<itms.size();ij++){
+		for (unsigned ij=0;ij<itms.size();ij++){
 			itms[ij]->sphereModel.show();
 			itms[ij]->sphereModelTwo.show();
 			itms[ij]->rayModel.show();
 		}
-		for (unsigned int ij=0;ij<enems.size();ij++){
+		for (unsigned ij=0;ij<enems.size();ij++){
 			enems[ij]->sphereModel.show();
 			enems[ij]->sphereModelTwo.show();
 			enems[ij]->rayModel.show();
@@ -210,12 +204,12 @@ void World::draw(){
 		player.sphereModel.hide();
 		player.sphereModelTwo.hide();
 		player.rayModel.hide();
-		for (unsigned int ij=0;ij<itms.size();ij++){
+		for (unsigned ij=0;ij<itms.size();ij++){
 			itms[ij]->sphereModel.hide();
 			itms[ij]->sphereModelTwo.hide();
 			itms[ij]->rayModel.hide();
 		}
-		for (unsigned int ij=0;ij<enems.size();ij++){
+		for (unsigned ij=0;ij<enems.size();ij++){
 			enems[ij]->sphereModel.hide();
 			enems[ij]->sphereModelTwo.hide();
 			enems[ij]->rayModel.hide();
@@ -245,13 +239,15 @@ void World::get_keys(MouseWatcher* mw, map <std::string, pair<ButtonHandle, bool
 }
 
 void World::look(WindowFramework *win){
+	Keys keys;
+
 	GraphicsWindow *gw = win -> get_graphics_window();
 	if (gw)
 	{
 		int dx = (gw -> get_properties().get_x_size() / 2) - gw -> get_pointer(0).get_x();
 		int dy = (gw -> get_properties().get_y_size() / 2) - gw -> get_pointer(0).get_y();
-		
-		player.camera.set_hpr(player.camera.get_hpr().get_x()+ dx * 0.03, player.camera.get_hpr().get_y() + dy * 0.03, 0);
+		//cout <<keys.mouseSens << endl;
+		player.camera.set_hpr(player.camera.get_hpr().get_x()+ dx * 0.03 * (keys.mouseSens+1), player.camera.get_hpr().get_y() + dy * 0.03 * (keys.mouseSens+1), 0);
 		gw -> move_pointer(0, gw -> get_properties().get_x_size() / 2, gw -> get_properties().get_y_size() / 2);
 	}
 }
