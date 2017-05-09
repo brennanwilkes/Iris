@@ -14,7 +14,7 @@ void Player::tick() {
 	
 	if (tint>0){
 		model.clear_color_scale();
-		model.set_color_scale(1.0,1-tint,1-tint,1.0);		
+		model.set_color_scale(1.0,1-tint,1-tint,1.0);
 		tint-=0.05;
 		//cout<<tint<<endl;
 		if (tint<0){
@@ -119,6 +119,8 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	kills=0;
 	deaths=0;
 	xp=0.0;
+	
+	pullout=-1;
 	
 	totaltickcount=0;
 	
@@ -367,6 +369,9 @@ void Player::play_anim(){
 	}
 	if (player.mainHand->id==10){
 		ak_collection.play("Armature");
+	}
+	if (player.mainHand->id==11){
+	
 	}
 	
 	

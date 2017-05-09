@@ -15,7 +15,6 @@ public:
 	World();
 	float preTime;
 	float dt;
-	
 	int tickCount;
 	
 	void init		();
@@ -29,13 +28,12 @@ public:
 	
 	Sounds gameSounds;
 	
-	//bool is_running() {return menuStatus;}
 	void menu();
 	void menuOption();
 	void menuStart();
-	//bool pause_menu;
-	//bool option_menu;
 	int menuStatus;
+	enum ms  {ms_game, ms_pause, ms_option, ms_start, ms_optionfromstart};
+
 //	static AsyncTask::DoneStatus	addToTime		(GenericAsyncTask* task, void* data);
 //	static AsyncTask::DoneStatus	CamLookTask		(GenericAsyncTask* task, void* data);
 //	static AsyncTask::DoneStatus	SpinCameraTask	(GenericAsyncTask* task, void* data);

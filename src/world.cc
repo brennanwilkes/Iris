@@ -15,11 +15,8 @@
 #include <cstdlib>
 
 World::World(){
-	//game_running = 1;
-	//pause_menu = 0;
-	//option_menu = 2;
-	//start_menu = 3;
-	menuStatus=3;
+	menuStatus = 3;
+	//ms = {ms_game=0, ms_pause=1, ms_option=2, ms_start=3, ms_optionfromstart=4};
 }
 
 void World::init(){
@@ -54,7 +51,24 @@ void World::tick(){
 			player.arms->hide();
 		}
 	}
-
+	
+	
+	if (player.pullout!=-1){
+		if (player.pullout==0){
+			player.pistol_collection.play("Armature.2");
+		}
+		else if(player.pullout==2){
+			player.bat_collection.play("Armature.2");
+		}
+		else if(player.pullout==10){
+			player.ak_collection.play("Armature.2");
+		}
+		/*else if(player.pullout==11){
+			player.ak_collection.play("Armature.2");
+		}*/
+		
+		player.pullout=-1;
+	}
 
 	//RECOIL
 	if (player.recoil_frames>0){
@@ -102,8 +116,7 @@ void World::tick(){
 		}*/
 		
 		world.gameSounds.walkSound3->play();
-		
-		
+
 	}
 	
 
@@ -175,12 +188,12 @@ void World::draw(){
 		player.sphereModel.show();
 		player.sphereModelTwo.show();
 		player.rayModel.show();
-		for (unsigned int ij=0;ij<itms.size();ij++){
+		for (unsigned ij=0;ij<itms.size();ij++){
 			itms[ij]->sphereModel.show();
 			itms[ij]->sphereModelTwo.show();
 			itms[ij]->rayModel.show();
 		}
-		for (unsigned int ij=0;ij<enems.size();ij++){
+		for (unsigned ij=0;ij<enems.size();ij++){
 			enems[ij]->sphereModel.show();
 			enems[ij]->sphereModelTwo.show();
 			enems[ij]->rayModel.show();
@@ -191,12 +204,12 @@ void World::draw(){
 		player.sphereModel.hide();
 		player.sphereModelTwo.hide();
 		player.rayModel.hide();
-		for (unsigned int ij=0;ij<itms.size();ij++){
+		for (unsigned ij=0;ij<itms.size();ij++){
 			itms[ij]->sphereModel.hide();
 			itms[ij]->sphereModelTwo.hide();
 			itms[ij]->rayModel.hide();
 		}
-		for (unsigned int ij=0;ij<enems.size();ij++){
+		for (unsigned ij=0;ij<enems.size();ij++){
 			enems[ij]->sphereModel.hide();
 			enems[ij]->sphereModelTwo.hide();
 			enems[ij]->rayModel.hide();
@@ -226,13 +239,15 @@ void World::get_keys(MouseWatcher* mw, map <std::string, pair<ButtonHandle, bool
 }
 
 void World::look(WindowFramework *win){
+	Keys keys;
+
 	GraphicsWindow *gw = win -> get_graphics_window();
 	if (gw)
 	{
 		int dx = (gw -> get_properties().get_x_size() / 2) - gw -> get_pointer(0).get_x();
 		int dy = (gw -> get_properties().get_y_size() / 2) - gw -> get_pointer(0).get_y();
-		
-		player.camera.set_hpr(player.camera.get_hpr().get_x()+ dx * 0.03, player.camera.get_hpr().get_y() + dy * 0.03, 0);
+		//cout <<keys.mouseSens << endl;
+		player.camera.set_hpr(player.camera.get_hpr().get_x()+ dx * 0.03 * (keys.mouseSens+1), player.camera.get_hpr().get_y() + dy * 0.03 * (keys.mouseSens+1), 0);
 		gw -> move_pointer(0, gw -> get_properties().get_x_size() / 2, gw -> get_properties().get_y_size() / 2);
 	}
 }
@@ -274,7 +289,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	}
 	
 	if (keybinds["sprint"].second){
-		walk=5;
+		walk=3;
 		player.speed=12;
 	}
 	
@@ -293,8 +308,8 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	
 	
 	// Move the player
-	player.model.set_fluid_x(player.model.get_x() + dx * dt * 15 * walk);
-	player.model.set_fluid_y(player.model.get_y() + dy * dt * 15 * walk);
+	player.model.set_fluid_x(player.model.get_x() + (dx * dt * 5 * walk));
+	player.model.set_fluid_y(player.model.get_y() + (dy * dt * 5 * walk));
 	
 	if (dx != 0  || dy != 0)
 	{
@@ -319,14 +334,14 @@ void World::apply_grav(){
 }
 
 void World::menu(){
-	if (menuStatus==0){
-		menuStatus=1;
+	if (menuStatus==ms_game){
+		menuStatus=ms_pause;
 	}
 	else{
-		menuStatus=0;
+		menuStatus=ms_game;
 	}
 	
-	if (menuStatus==0)
+	if (menuStatus==ms_game)
 	{
 		if (player.arms!=NULL){
 			player.arms->show();
@@ -340,7 +355,7 @@ void World::menu(){
 		props.set_mouse_mode(WindowProperties::M_confined);
 		window -> get_graphics_window() -> request_properties(props);
 	}
-	else if (menuStatus==1)
+	else if (menuStatus==ms_pause)
 	{	
 		if (player.arms!=NULL){
 			player.arms->hide();
@@ -359,7 +374,7 @@ void World::menu(){
 		
 	}
 	
-	else if (menuStatus==2)
+	else if (menuStatus==ms_option)
 	{	
 		
 		if (player.arms!=NULL){
@@ -397,20 +412,26 @@ void World::menu(){
 }
 
 void World::menuOption(){
-	if (menuStatus==2){
-		menuStatus=1;
+	if (menuStatus==ms_option){
+		menuStatus=ms_pause;
 	}
-	else{
-		menuStatus=2;
+	else if (menuStatus ==ms_pause){
+		menuStatus=ms_option;
 	}
 	
-	if (menuStatus==2)
+	if (menuStatus == ms_start){
+		menuStatus = ms_optionfromstart;
+	}
+	else if (menuStatus == ms_optionfromstart){
+		menuStatus = ms_start;
+	}
+
+	if (menuStatus==ms_optionfromstart)
 	{	
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
 		startMenuItems.hide();
-
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.show();
@@ -418,18 +439,42 @@ void World::menuOption(){
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
 		window -> get_graphics_window() -> request_properties(props);
-		
-		
-		
+	}
+	if (menuStatus==ms_start)
+	{	
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.show();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.hide();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+	if (menuStatus==ms_option)
+	{	
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.hide();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.show();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
 	}
 	
-	if (menuStatus==1)
+	if (menuStatus==ms_pause)
 	{
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
 		startMenuItems.hide();
-
 		gameModels.hide();
 		menuItems.show();
 		optionMenuItems.hide();
@@ -442,14 +487,14 @@ void World::menuOption(){
 }
 
 void World::menuStart(){
-	if (menuStatus==3){
-		menuStatus=0;
+	if (menuStatus==ms_start){
+		menuStatus=ms_game;
 	}
 	else{
-		menuStatus=3;
+		menuStatus=ms_start;
 	}
 	
-	if (menuStatus==0)
+	if (menuStatus==ms_game)
 	{	
 		if (player.arms!=NULL){
 			player.arms->hide();
@@ -464,7 +509,7 @@ void World::menuStart(){
 		window -> get_graphics_window() -> request_properties(props);
 	}
 	
-	if (menuStatus==3)
+	if (menuStatus==ms_start)
 	{
 		if (player.arms!=NULL){
 			player.arms->hide();

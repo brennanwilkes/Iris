@@ -100,6 +100,8 @@ NodePath startMenuItems;
 NodePath menuItems;
 NodePath optionMenuItems;
 PT(PGSliderBar) Slider=new PGSliderBar("MySliderBar");;
+PT(PGSliderBar) mouseSlider=new PGSliderBar("mouseSliderBar");;
+
 vector<Level*> gameLevels;
 
 int scene;
@@ -124,6 +126,8 @@ int getMenuSliderInd();
 void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt);
 
 void rebindButton(const Event* eventPtr, void* dataPtr);
+void rebindMouseSens(const Event* eventPtr, void* dataPtr);
+
 void startGame(const Event* eventPtr, void* dataPtr);
 
 int main(int argc, char *argv[]) {
@@ -150,114 +154,7 @@ int main(int argc, char *argv[]) {
 	framework.set_window_title("GAME");
 	
 	
-	world.gameSounds.AM = AudioManager::create_AudioManager();
-	world.gameSounds.akFireSound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/akFire.wav");
-	world.gameSounds.akFireSound->set_volume(0.25);
-	world.gameSounds.akEmptySound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/akEmpty.wav");
-	world.gameSounds.akEmptySound->set_volume(0.75);
-	world.gameSounds.akReloadSound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/akReload.wav");
-	world.gameSounds.akReloadSound->set_volume(0.75);
-	
-	
-	
-	world.gameSounds.pistolFireSound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/pistolFire.wav");
-	world.gameSounds.pistolFireSound->set_volume(0.25);
-	world.gameSounds.pistolEmptySound = world.gameSounds.akEmptySound;
-	world.gameSounds.pistolEmptySound->set_volume(0.75);
-	world.gameSounds.pistolReloadSound = world.gameSounds.akReloadSound;
-	world.gameSounds.pistolReloadSound->set_volume(0.75);
-	
-	world.gameSounds.batFireSound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/batFire.wav");
-	world.gameSounds.batFireSound->set_volume(0.5);
-	
-	
-	world.gameSounds.ricochetSound1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-1.wav");
-	world.gameSounds.ricochetSound1->set_volume(0.25);
-	world.gameSounds.ricochetSound2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-2.wav");
-	world.gameSounds.ricochetSound2->set_volume(0.25);
-	world.gameSounds.ricochetSound3 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-3.wav");
-	world.gameSounds.ricochetSound3->set_volume(0.25);
-	world.gameSounds.ricochetSound4 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-4.wav");
-	world.gameSounds.ricochetSound4->set_volume(0.25);
-	world.gameSounds.ricochetSound5 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-5.wav");
-	world.gameSounds.ricochetSound5->set_volume(0.25);
-	world.gameSounds.ricochetSound6 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/ricochet-6.wav");
-	world.gameSounds.ricochetSound6->set_volume(0.25);
-	
-	world.gameSounds.walkSound1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk1.wav");
-	world.gameSounds.walkSound1->set_volume(1.0);
-	world.gameSounds.walkSound2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk2.wav");
-	world.gameSounds.walkSound2->set_volume(1.0);
-	world.gameSounds.walkSound3 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk3.wav");
-	world.gameSounds.walkSound3->set_volume(1.0);
-	world.gameSounds.walkSound4 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk4.wav");
-	world.gameSounds.walkSound4->set_volume(1.0);
-	world.gameSounds.walkSound5 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk5.wav");
-	world.gameSounds.walkSound5->set_volume(1.0);
-	world.gameSounds.walkSound6 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk6.wav");
-	world.gameSounds.walkSound6->set_volume(1.0);
-	
-	world.gameSounds.bulletHitSound1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/bulletHit.wav");
-	world.gameSounds.bulletHitSound1->set_volume(1.0);
-	world.gameSounds.bulletHitSound2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/bulletHit2.wav");
-	world.gameSounds.bulletHitSound2->set_volume(1.0);
-	
-	world.gameSounds.bulletCasingFallSound = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/BulletCasingFall.wav");
-	world.gameSounds.bulletCasingFallSound->set_volume(1.0);
-	
-	world.gameSounds.femaleGrunt1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt1.wav");
-	world.gameSounds.femaleGrunt1->set_volume(1.0);
-	world.gameSounds.femaleGrunt2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt2.wav");
-	world.gameSounds.femaleGrunt2->set_volume(1.0);
-	world.gameSounds.femaleGrunt3 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt3.wav");
-	world.gameSounds.femaleGrunt3->set_volume(1.0);
-	world.gameSounds.femaleGrunt4 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt4.wav");
-	world.gameSounds.femaleGrunt4->set_volume(1.0);
-	world.gameSounds.femaleGrunt5 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt5.wav");
-	world.gameSounds.femaleGrunt5->set_volume(1.0);
-	world.gameSounds.femaleGrunt6 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt6.wav");
-	world.gameSounds.femaleGrunt6->set_volume(1.0);
-	world.gameSounds.femaleGrunt7 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/female-grunt7.wav");
-	world.gameSounds.femaleGrunt7->set_volume(1.0);
-	
-	
-	world.gameSounds.scream1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/scream1.wav");
-	world.gameSounds.scream1->set_volume(1.0);
-	world.gameSounds.scream2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/scream2.wav");
-	world.gameSounds.scream2->set_volume(1.0);
-	world.gameSounds.scream3 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/scream3.wav");
-	world.gameSounds.scream3->set_volume(1.0);
-	world.gameSounds.scream4 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/scream4.wav");
-	world.gameSounds.scream4->set_volume(1.0);
-	
-	
-	world.gameSounds.glass = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/glass.wav");
-	world.gameSounds.glass->set_volume(1.0);
-	
-	world.gameSounds.heyShout = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/heyShout.wav");
-	world.gameSounds.heyShout->set_volume(1.0);
-	
-	world.gameSounds.hiss = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/hiss.wav");
-	world.gameSounds.hiss->set_volume(1.0);
-	
-	world.gameSounds.impact = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/impact.wav");
-	world.gameSounds.impact->set_volume(1.0);
-	
-	world.gameSounds.Snarl = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/Snarl.wav");
-	world.gameSounds.Snarl->set_volume(1.0);
-	world.gameSounds.Snarl2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/Snarl2.wav");
-	world.gameSounds.Snarl2->set_volume(1.0);
-	
-	world.gameSounds.walkSand = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/walk-sand.wav");
-	world.gameSounds.walkSand->set_volume(1.0);
-	
-	world.gameSounds.wood1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/wood1.wav");
-	world.gameSounds.wood1->set_volume(1.0);
-	world.gameSounds.wood2 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/wood2.wav");
-	world.gameSounds.wood2->set_volume(1.0);
-	
-	world.gameSounds.background1 = world.gameSounds.AM->get_sound(mydir+"Assets/Sounds/background1.wav");
-	world.gameSounds.background1->set_volume(0.25);
+	world.gameSounds.setup(mydir);
 	
 	
 	
@@ -381,18 +278,31 @@ int main(int argc, char *argv[]) {
 	player.pistol_collection.play("Armature");
 	
 	
+	window->load_model(player.pistol_arms, mydir + "Assets/Iris/FirstPersonViewModel-pull_out_pistol.egg");
+	auto_bind(player.pistol_arms.node(), player.pistol_collection);
+	//player.pistol_collection.play("Armature");
+	
+	
 	window->load_model(player.bat_arms, mydir + "Assets/Iris/fpvBat-atttack.egg");
 	auto_bind(player.bat_arms.node(), player.bat_collection);
 	player.bat_collection.play("Armature");
+	
+	window->load_model(player.bat_arms, mydir + "Assets/Iris/fpvBat-pull_out_bat.egg");
+	auto_bind(player.bat_arms.node(), player.bat_collection);
+	
 	
 	
 	window->load_model(player.empty_arms, mydir + "Assets/Iris/EmptyHands-Idle.egg");
 	auto_bind(player.empty_arms.node(), player.empty_collection);
 	player.empty_collection.play("Armature");
 	
+	
 	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvak47-fire.egg");
 	auto_bind(player.ak_arms.node(), player.ak_collection);
-	player.ak_collection.play("Armaturblender how to seperate a meshe");
+	player.ak_collection.play("Armature");
+	
+	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvBat-pull_out_bat.egg");
+	auto_bind(player.ak_arms.node(), player.ak_collection);
 	
 	
 	// the name of an animation is preceded in the .egg file with <BunBdle>:
@@ -415,9 +325,9 @@ int main(int argc, char *argv[]) {
 	//vector<string> Dir ={"Assets/starea/lag_.egg"};
 	//vector<NodePath> ND;
 
-	vector<string> Dir = {"Assets/Stage/Terrain_C.egg","Assets/Stage/SkyBox.egg","Assets/Stage/Grave.egg","Assets/Stage/Building_C.egg","Assets/Stage/Stone_C.egg","Assets/Stage/Ramp_C.egg","Assets/Stage/Stairs_C.egg","Assets/sphere/sphere.egg"};
+	//vector<string> Dir = {"Assets/Stage/Terrain_C.egg","Assets/Stage/SkyBox.egg","Assets/Stage/Grave.egg","Assets/Stage/Building_C.egg","Assets/Stage/Stone_C.egg","Assets/Stage/Ramp_C.egg","Assets/Stage/Stairs_C.egg","Assets/sphere/sphere.egg"};
 	
-	//vector<string> Dir = {"Assets/starea/lag_.egg"};
+	vector<string> Dir = {"Assets/starea/lag_.egg"};
 
 	vector<StaticObject> ND;
 	for(auto x:Dir)
@@ -435,6 +345,23 @@ int main(int argc, char *argv[]) {
 	// Start Menu items
 	float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
 
+	PT(Texture) tex_hellothere;
+	CardMaker cm_hellothere("cardMaker");
+	PT(PandaNode) rc_hellothere = cm_hellothere.generate();
+	NodePath nd_hellothere(rc_hellothere);
+	nd_hellothere = window -> get_aspect_2d().attach_new_node(rc_hellothere);
+	nd_hellothere.set_transparency(TransparencyAttrib::M_alpha, 1);
+	//nd_hellothere.set_scale(2.0);
+	nd_hellothere.set_pos(-.50, 0,-0.5);
+	//nd_hellothere.set_pos(xs+1, 0,0);
+
+	nd_hellothere.reparent_to(startMenuItems);
+	
+	tex_hellothere=TexturePool::load_texture(mydir+"Assets/Hellothere.jpg");
+	nd_hellothere.set_texture(tex_hellothere);
+	nd_hellothere.show();
+
+ 
 	PGButton* StartGameButton;
 	StartGameButton = new PGButton("StartGameButton");
 	StartGameButton -> setup("Start Game");
@@ -458,24 +385,18 @@ int main(int argc, char *argv[]) {
 	realQuitButton -> setup("Quit");
 	NodePath defbutNPk = window -> get_pixel_2d().attach_new_node(realQuitButton);
 	defbutNPk.set_scale(0.1);
-	defbutNPk.set_pos(xs+0.1,0, 0.45);
+	defbutNPk.set_pos(xs+0.1,0, 0.25);
 	defbutNPk.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+realQuitButton->get_id()] = realQuitButton;
 
-	
-	PT(Texture) tex_hellothere;
-	CardMaker cm_hellothere("cardMaker");
-	PT(PandaNode) rc_hellothere = cm_hellothere.generate();
-	NodePath nd_hellothere(rc_hellothere);
-	nd_hellothere = window -> get_aspect_2d().attach_new_node(rc_hellothere);
-	nd_hellothere.set_transparency(TransparencyAttrib::M_alpha, 1);
-	//nd_hellothere.set_scale(2.0);
-	nd_hellothere.set_pos(-.50, 0,-0.5);
-	nd_hellothere.reparent_to(startMenuItems);
-	
-	tex_hellothere=TexturePool::load_texture(mydir+"Assets/Hellothere.jpg");
-	nd_hellothere.set_texture(tex_hellothere);
-	nd_hellothere.show();
+	PGButton* OptionTogButton3;
+	OptionTogButton3 = new PGButton("OptionTogButton");
+	OptionTogButton3 -> setup("Toggle Option Menu");
+	NodePath defbutNP7 = window -> get_pixel_2d().attach_new_node(OptionTogButton3);
+	defbutNP7.set_scale(0.1);
+	defbutNP7.set_pos(xs + 0.1, 0, 0.45);
+	defbutNP7.reparent_to(startMenuItems);
+	keys.buttonIndex["click-mouse1-"+OptionTogButton3->get_id()] = OptionTogButton3;
 
 
 	// Menu items
@@ -498,7 +419,6 @@ int main(int argc, char *argv[]) {
 	defbutNP3.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+HitTogButton->get_id()] = HitTogButton;
 
-
 	PGButton* DoubleTogButton;
 	DoubleTogButton = new PGButton("DoubleTogButton");
 	DoubleTogButton -> setup("Toggle Double Jump");
@@ -508,7 +428,6 @@ int main(int argc, char *argv[]) {
 	defbutNP4.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+DoubleTogButton->get_id()] = DoubleTogButton;
 
-
 	PGButton* OptionTogButton;
 	OptionTogButton = new PGButton("OptionTogButton");
 	OptionTogButton -> setup("Toggle Option Menu");
@@ -516,20 +435,17 @@ int main(int argc, char *argv[]) {
 	defbutNP5.set_scale(0.1);
 	defbutNP5.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP5.reparent_to(menuItems);
-	
-	NodePath defbutNP6 = window -> get_pixel_2d().attach_new_node(OptionTogButton);
+
+
+	//Option Menu Items
+	PGButton* OptionTogButton2;
+	OptionTogButton2 = new PGButton("OptionTogButton");
+	OptionTogButton2 -> setup("Toggle Option Menu");
+	NodePath defbutNP6 = window -> get_pixel_2d().attach_new_node(OptionTogButton2);
 	defbutNP6.set_scale(0.1);
 	defbutNP6.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP6.reparent_to(optionMenuItems);
-	/*
-	NodePath defbutNP7 = window -> get_pixel_2d().attach_new_node(OptionTogButton);
-	defbutNP7.set_scale(0.1);
-	defbutNP7.set_pos(xs + 0.1, 0, 0.65);
-	defbutNP7.reparent_to(startMenuItems);
-	keys.buttonIndex["click-mouse1-"+OptionTogButton->get_id()] = OptionTogButton;
-	*/
 
-	//Option Menu Items
 	for (unsigned int i=0; i<keys.keybindItems.size(); i++){
 		PGButton* butt;
 		butt = new PGButton("Bind"+keys.keybindItems.at(i));
@@ -543,7 +459,27 @@ int main(int argc, char *argv[]) {
 		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
 	}
 
+	// Setup, feeding the constructor with (bool vertical,float lenght,float width,float bevel)
+	mouseSlider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
+	mouseSlider->set_range(0,1);
+	mouseSlider->set_value(0);
+	 
+	// Setup scroll bar (the 'moving thumb button' including left and right button)
+	mouseSlider->setup_slider(true,1,0.05,false);
+	NodePath mouseSliderNP = window->get_aspect_2d().attach_new_node(mouseSlider);
+	mouseSliderNP.set_pos(xs+2.5,0,.25);
+	mouseSliderNP.reparent_to(optionMenuItems);
 
+	PGButton* mouseSensBut;
+	mouseSensBut = new PGButton("mouseSensBut");
+	mouseSensBut -> setup("Change mouse sens");
+	NodePath defbutNPmous = window -> get_pixel_2d().attach_new_node(mouseSensBut);
+	defbutNPmous.set_scale(0.1);
+	defbutNPmous.set_pos(xs + 1.6, 0, 0.85);
+	defbutNPmous.reparent_to(optionMenuItems);
+
+
+	
 	//Status bar items
 	PT(Texture) redTex=TexturePool::load_texture(mydir+"Assets/Red.png");
 	PT(Texture) greenTex=TexturePool::load_texture(mydir+"Assets/Blue.png");
@@ -604,7 +540,13 @@ int main(int argc, char *argv[]) {
 	player.volumeNodePath = window->get_aspect_2d().attach_new_node(player.volumeNode);
 	player.volumeNodePath.set_scale(0.07);
 	player.volumeNodePath.set_pos(xs+0.8,0, -0.98);
-	
+
+	PT(TextNode)fpsNode = new TextNode("fpsNode");
+	fpsNode->set_text("0");
+	NodePath fpsNodePath= window->get_aspect_2d().attach_new_node(fpsNode);
+	fpsNodePath.set_scale(0.07);
+	fpsNodePath.set_pos(xs,0, -0.98);
+
 	
 				//This is example code for fancy buttons. Dont delete
 	/*
@@ -730,6 +672,13 @@ int main(int argc, char *argv[]) {
 	ak49.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak49);
 	
+	
+	//WeaponObject nedgev('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,11);
+	//nedgev.weapon_init(24,25.0,1.0,0,64,1);
+	//itms.push_back(&nedgev);
+	
+	
+	
 	WeaponObject Bat('g',15,0,20,1.0f,1.0f, mydir+"Model/Baseballbat.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/baticon.png",15.0,2);
 	Bat.weapon_init(15,1.0,1.0,0,0,1);
 	itms.push_back(&Bat);
@@ -846,11 +795,10 @@ int main(int argc, char *argv[]) {
 	nd_crosshair.set_transparency(TransparencyAttrib::M_alpha, 1);
 	nd_crosshair.set_scale(0.5);
 	nd_crosshair.set_pos(-0.25, 0 ,-0.25);
-	
+	//nd_crosshair.reparent_to(gameModels);
 	tex_crosshair=TexturePool::load_texture(mydir+"Assets/CrossHair.png");
 	nd_crosshair.set_texture(tex_crosshair);
 	
-	nd_crosshair.show();
 	
 	
 	
@@ -883,7 +831,12 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(keys.keybinds["use"].first ), "Menu button press", &startGame, QuitButton);
 	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hit button press", &toggleHitBox, HitTogButton);
 	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(keys.keybinds["use"].first ), "Double jump button press", &toggleDoubleJump, DoubleTogButton);
+
 	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton);
+	window -> get_panda_framework() -> define_key(OptionTogButton2->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton2);
+	window -> get_panda_framework() -> define_key(OptionTogButton3->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton3);
+	window -> get_panda_framework() -> define_key(mouseSensBut->get_click_event(keys.keybinds["use"].first ), "Mousebind button press", &rebindMouseSens, mouseSensBut);
+
 	
 	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory 1 slot press", &invPress, &blankTex);
 	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(keys.keybinds["use"].first ), "Inventory 2 slot press", &invPress, &blankTex);
@@ -899,6 +852,7 @@ int main(int argc, char *argv[]) {
 	
 	player.health=50;
 	int temptickcount=0;
+	int frameDelay=0;
 
 	
 	//float shift;
@@ -907,15 +861,20 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread))
 	{
+		if (frameDelay>30){
+			fpsNode->set_text(to_string((int)(1/world.dt))+" fps");
+			fpsNodePath.show();
+			frameDelay =0;
+		}
+		frameDelay++;
+
 		// Things to do every frame
 		// Keybinds should not go here.
-		if (world.menuStatus==0)
-		{
-			
+		if (world.menuStatus==world.ms_game){
+
 			if(temptickcount<=10){
 				temptickcount++;
 			}
-			
 			player.volumeNodePath.show();
 			player.weightNodePath.show();
 			//Main Game
@@ -954,14 +913,16 @@ int main(int argc, char *argv[]) {
 			
 			
 			world.draw();
-			
+			nd_crosshair.show();
+
 		}
-		else if(world.menuStatus==1){
+		else if(world.menuStatus==world.ms_pause){
 			player.volumeNodePath.hide();
 			player.weightNodePath.hide();
 			player.ammoNodePath.hide();
 			player.ammoNodePath2.hide();
 			Bars.hide();
+			nd_crosshair.hide();
 		}
 		else{
 			player.handDisplay.hide();
@@ -970,12 +931,8 @@ int main(int argc, char *argv[]) {
 			player.ammoNodePath.hide();
 			player.ammoNodePath2.hide();
 			Bars.hide();
+			nd_crosshair.hide();
 		}
-		/*else if (world.menuStatus!=0){
-			//pause menu
-			Bars.hide();
-			
-		}*/
 		
 		world.dt = globalClock -> get_real_time() - world.preTime;
 		world.preTime = globalClock -> get_real_time();
@@ -999,7 +956,7 @@ void sys_exit(const Event* eventPtr, void* dataPtr){
 }
 
 void jump(const Event* eventPtr, void* dataPtr){
-	if (world.menuStatus==0){
+	if (world.menuStatus==world.ms_game){
 		cout<<player.coll_grav->get_airborne_height()<<" "<<player.coll_grav->is_on_ground()<<" "<<player.coll_grav->get_velocity()<<endl;
 		if(player.doublejump || player.coll_grav->is_on_ground())
 		{
@@ -1019,7 +976,7 @@ void jump(const Event* eventPtr, void* dataPtr){
 }
 
 void toggle(const Event* eventPtr, void* dataPtr){
-	if(world.menuStatus==0){
+	if(world.menuStatus==world.ms_game){
 		player.mode = 1 - player.mode;
 	
 		if (player.arms!=NULL){
@@ -1073,6 +1030,10 @@ void invPress(const Event* eventPtr, void* dataPtr){
 	if ((int)player.inventory.size()>t){
 		player.mainHand=player.inventory[si+t];
 		player.handDisplay.set_texture(player.inventory[si+t]->imgTex);
+		if(player.mainHand->type=='g'){
+			player.pullout=player.mainHand->id;
+		}
+		
 	}
 	else{
 		player.mainHand=NULL;
@@ -1117,12 +1078,17 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 	}
 }
 
+void rebindMouseSens(const Event* eventPtr, void* dataPtr){
+	keys.mouseSens = mouseSlider->get_value()*10;
+	cout << keys.mouseSens << endl;
+
+}
 void menu(const Event* eventPtr, void* dataPtr){
 	world.menu();
 }
 
 void drop(const Event* eventPtr, void* dataPtr){
-	if (world.menuStatus==0){
+	if (world.menuStatus==world.ms_game){
 		if(player.mainHand==NULL){
 			cout<<"empty"<<endl;
 		}
@@ -1136,7 +1102,7 @@ void drop(const Event* eventPtr, void* dataPtr){
 }
 
 void onE(const Event* eventPtr, void* dataPtr){
-	if(world.menuStatus==0){
+	if(world.menuStatus==world.ms_game){
 		player.qtrav_shoot.traverse(window -> get_render());
 		if (player.qcoll_shoot -> get_num_entries() > 0){
 			player.qcoll_shoot->sort_entries();
@@ -1162,16 +1128,18 @@ void onE(const Event* eventPtr, void* dataPtr){
 }
 
 void onR(const Event* eventPtr, void* dataPtr){
-	if (player.mainHand!=NULL && world.menuStatus==0){
+	if (player.mainHand!=NULL && world.menuStatus==world.ms_game){
 		if (player.mainHand->type=='g'){
 			if (player.mainHand->tot_ammo-(player.mainHand->max_amount-player.mainHand->amount)>0){
 				player.mainHand->tot_ammo-=(player.mainHand->max_amount-player.mainHand->amount);
 				player.mainHand->amount=player.mainHand->max_amount;
 				if (player.mainHand->id==10){
 					world.gameSounds.akReloadSound->play();
+					player.ak_collection.play("Armature.2");
 				}
 				else if (player.mainHand->id==0){
 					world.gameSounds.pistolReloadSound->play();
+					player.pistol_collection.play("Armature.2");
 				}
 				
 			}
@@ -1194,7 +1162,7 @@ int getMenuSliderInd(){
 }
 
 void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){
-	if (world.menuStatus==1){
+	if (world.menuStatus==world.ms_pause){
 	
 		PGFrameStyle sb=fs->get_frame_style(0); // frame_style(0): ready state
 		sb.set_type(PGFrameStyle::T_flat);
@@ -1258,7 +1226,7 @@ void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt){
 }
 
 void onMouse1(const Event* eventPtr, void* dataPtr){
-	if (world.menuStatus==0 && player.mode==0){
+	if (world.menuStatus==world.ms_game && player.mode==0){
 		if (player.mainHand!=NULL){
 			if (player.mainHand->type=='c'){		//Consumable item
 				player.mainHand->action1();
@@ -1274,7 +1242,8 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 					float rngM=1.0;
 					
 					if (player.mainHand->id==0){
-						frameGunCount = player.pistol_collection.get_frame()-player.pistol_collection.get_num_frames();			
+						frameGunCount = player.pistol_collection.get_frame()-player.pistol_collection.get_num_frames();		
+						//cout<<player.pistol_collection.get_frame()<<" "<<player.pistol_collection.get_num_frames()<<endl;	
 						dmg=10;
 						rngM=1.05;
 					}

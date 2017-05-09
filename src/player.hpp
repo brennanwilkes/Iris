@@ -123,6 +123,8 @@ public:
 	
 	int totaltickcount;
 	
+	int pullout;
+	
 	
 private:
 	//vector<Item> inventory;
