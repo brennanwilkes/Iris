@@ -432,9 +432,9 @@ int main(int argc, char *argv[]) {
 	//vector<string> Dir ={"Assets/starea/lag_.egg"};
 	//vector<NodePath> ND;
 
-	vector<string> Dir = {"Assets/Stage/Terrain_C.egg","Assets/Stage/SkyBox.egg","Assets/Stage/Grave.egg","Assets/Stage/Building_C.egg","Assets/Stage/Stone_C.egg","Assets/Stage/Ramp_C.egg","Assets/Stage/Stairs_C.egg","Assets/sphere/sphere.egg"};
+	//vector<string> Dir = {"Assets/Stage/Terrain_C.egg","Assets/Stage/SkyBox.egg","Assets/Stage/Grave.egg","Assets/Stage/Building_C.egg","Assets/Stage/Stone_C.egg","Assets/Stage/Ramp_C.egg","Assets/Stage/Stairs_C.egg","Assets/sphere/sphere.egg"};
 	
-	//vector<string> Dir = {"Assets/starea/lag_.egg"};
+	vector<string> Dir = {"Assets/starea/lag_.egg"};
 
 	vector<StaticObject> ND;
 	for(auto x:Dir)

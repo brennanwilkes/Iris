@@ -289,7 +289,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	}
 	
 	if (keybinds["sprint"].second){
-		walk=5;
+		walk=3;
 		player.speed=12;
 	}
 	
@@ -308,8 +308,8 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	
 	
 	// Move the player
-	player.model.set_fluid_x(player.model.get_x() + dx * dt * 15 * walk);
-	player.model.set_fluid_y(player.model.get_y() + dy * dt * 15 * walk);
+	player.model.set_fluid_x(player.model.get_x() + (dx * dt * 5 * walk));
+	player.model.set_fluid_y(player.model.get_y() + (dy * dt * 5 * walk));
 	
 	if (dx != 0  || dy != 0)
 	{
