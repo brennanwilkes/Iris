@@ -301,13 +301,16 @@ int main(int argc, char *argv[]) {
 	auto_bind(player.ak_arms.node(), player.ak_collection);
 	player.ak_collection.play("Armature");
 	
+	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvak47-pull_out_gun.egg");
+	auto_bind(player.ak_arms.node(), player.ak_collection);
+	
 	window->load_model(player.negev_arms, mydir + "Assets/Iris/negev-fire.egg");
 	auto_bind(player.negev_arms.node(), player.negev_collection);
 	player.negev_collection.play("Armature");
 	
-	
-	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvak47-pull_out_gun.egg");
-	auto_bind(player.ak_arms.node(), player.ak_collection);
+	window->load_model(player.negev_arms, mydir + "Assets/Iris/negev-pull_out_gun.egg");
+	auto_bind(player.negev_arms.node(), player.negev_collection);	
+
 	
 	
 	// the name of an animation is preceded in the .egg file with <BunBdle>:
@@ -680,8 +683,8 @@ int main(int argc, char *argv[]) {
 	*/
 	
 	
-	WeaponObject nedgev('g',39,0,20,1.0f,1.0f, mydir+"Assets/Iris/negev.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,11);
-	nedgev.weapon_init(24,25.0,1.0,0,64,1);
+	WeaponObject nedgev('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/negevitem.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/negevicon.png",140.0,11);
+	nedgev.weapon_init(140,27.0,1.0,0,560,1);
 	itms.push_back(&nedgev);
 	
 	
@@ -1147,7 +1150,10 @@ void onR(const Event* eventPtr, void* dataPtr){
 				}
 				else if (player.mainHand->id==11){
 					world.gameSounds.akReloadSound->play();
-					player.negev_collection.play("Armature.2");
+					
+					
+					
+					player.negev_collection.play("Armature.002.2");
 				}
 				else if (player.mainHand->id==0){
 					world.gameSounds.pistolReloadSound->play();

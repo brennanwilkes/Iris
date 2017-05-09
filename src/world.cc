@@ -63,9 +63,9 @@ void World::tick(){
 		else if(player.pullout==10){
 			player.ak_collection.play("Armature.2");
 		}
-		/*else if(player.pullout==11){
-			player.ak_collection.play("Armature.2");
-		}*/
+		else if(player.pullout==11){
+			player.negev_collection.play("Armature.002.2");
+		}
 		
 		player.pullout=-1;
 	}

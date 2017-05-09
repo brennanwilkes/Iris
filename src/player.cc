@@ -381,6 +381,7 @@ void Player::play_anim(){
 	}
 	if (player.mainHand->id==11){
 		//cout<<negev_collection.get_anim_name(0)<<endl;
+		//cout<<negev_collection.get_anim_name(1)<<endl;
 		negev_collection.play("Armature.002");
 	}
 	
