@@ -28,12 +28,9 @@ public:
 	
 	Sounds gameSounds;
 	
-	//bool is_running() {return menuStatus;}
 	void menu();
 	void menuOption();
 	void menuStart();
-	//bool pause_menu;
-	//bool option_menu;
 	int menuStatus;
 	enum ms  {ms_game, ms_pause, ms_option, ms_start, ms_optionfromstart};
 
