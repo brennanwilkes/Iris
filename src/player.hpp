@@ -93,11 +93,13 @@ public:
 	AnimControlCollection bat_collection;
 	AnimControlCollection empty_collection;
 	AnimControlCollection ak_collection;
+	AnimControlCollection negev_collection;
 	
 	NodePath pistol_arms;
 	NodePath bat_arms;
 	NodePath empty_arms;
 	NodePath ak_arms;
+	NodePath negev_arms;
 	
 	float xp;
 	int deaths;

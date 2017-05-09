@@ -301,7 +301,12 @@ int main(int argc, char *argv[]) {
 	auto_bind(player.ak_arms.node(), player.ak_collection);
 	player.ak_collection.play("Armature");
 	
-	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvBat-pull_out_bat.egg");
+	window->load_model(player.negev_arms, mydir + "Assets/Iris/negev-fire.egg");
+	auto_bind(player.negev_arms.node(), player.negev_collection);
+	player.negev_collection.play("Armature");
+	
+	
+	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvak47-pull_out_gun.egg");
 	auto_bind(player.ak_arms.node(), player.ak_collection);
 	
 	
@@ -675,7 +680,7 @@ int main(int argc, char *argv[]) {
 	*/
 	
 	
-	WeaponObject nedgev('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,11);
+	WeaponObject nedgev('g',39,0,20,1.0f,1.0f, mydir+"Assets/Iris/negev.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,11);
 	nedgev.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&nedgev);
 	
@@ -990,6 +995,7 @@ void toggle(const Event* eventPtr, void* dataPtr){
 				player.pistol_arms.hide();
 				player.bat_arms.hide();
 				player.ak_arms.hide();
+				player.negev_arms.hide();
 			}
 		}
 	}
@@ -1139,6 +1145,10 @@ void onR(const Event* eventPtr, void* dataPtr){
 					world.gameSounds.akReloadSound->play();
 					player.ak_collection.play("Armature.2");
 				}
+				else if (player.mainHand->id==11){
+					world.gameSounds.akReloadSound->play();
+					player.negev_collection.play("Armature.2");
+				}
 				else if (player.mainHand->id==0){
 					world.gameSounds.pistolReloadSound->play();
 					player.pistol_collection.play("Armature.2");
@@ -1256,6 +1266,11 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 					}
 					else if(player.mainHand->id==10){
 						frameGunCount = player.ak_collection.get_frame()-player.ak_collection.get_num_frames();
+						dmg=15;
+						rngM=1.005;
+					}
+					else if(player.mainHand->id==11){
+						frameGunCount = player.negev_collection.get_frame()-player.negev_collection.get_num_frames();
 						dmg=15;
 						rngM=1.005;
 					}
@@ -1411,6 +1426,9 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 						}
 						
 						if (player.mainHand->id==10){
+							world.gameSounds.akFireSound->play();
+						}
+						else if (player.mainHand->id==11){
 							world.gameSounds.akFireSound->play();
 						}
 						else if (player.mainHand->id==0){

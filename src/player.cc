@@ -167,6 +167,15 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	//arms_shown = false;
 	ak_arms.hide();
 	
+	negev_arms = w -> load_model(pf->get_models(),dir+"Assets/Iris/negev.egg");
+	negev_arms.set_scale(0.5);
+	negev_arms.set_pos(0.2, 0.7, -0.57);
+	negev_arms.set_hpr(0, 0, 0);
+	negev_arms.set_shader_auto();
+	negev_arms.reparent_to(camera);
+	//arms_shown = false;
+	negev_arms.hide();
+	
 	
 	//cout<<dir<<endl;
 	
@@ -371,7 +380,8 @@ void Player::play_anim(){
 		ak_collection.play("Armature");
 	}
 	if (player.mainHand->id==11){
-	
+		//cout<<negev_collection.get_anim_name(0)<<endl;
+		negev_collection.play("Armature.002");
 	}
 	
 	
@@ -418,6 +428,7 @@ void Player::calc_arms(){
 	bat_arms.hide();
 	empty_arms.hide();
 	ak_arms.hide();
+	negev_arms.hide();
 	if (arms!=NULL){
 		arms->hide();
 	}
@@ -455,6 +466,11 @@ void Player::calc_arms(){
 				if (mainHand->id==10){
 					on=true;
 					arms=&ak_arms;
+
+				}
+				if (mainHand->id==11){
+					on=true;
+					arms=&negev_arms;
 
 				}
 		
