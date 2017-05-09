@@ -63,9 +63,9 @@ void World::tick(){
 		else if(player.pullout==10){
 			player.ak_collection.play("Armature.2");
 		}
-		/*else if(player.pullout==11){
-			player.ak_collection.play("Armature.2");
-		}*/
+		else if(player.pullout==11){
+			player.negev_collection.play("Armature.002.2");
+		}
 		
 		player.pullout=-1;
 	}
@@ -79,6 +79,12 @@ void World::tick(){
 		
 		ranR-=1.5;
 		ranR*=2;
+		
+		if(player.mainHand!=NULL){
+			if(player.mainHand->id==11){
+				ranR*=3;
+			}
+		}
 		
 		player.camera.set_p(player.camera,player.recoil_mult*ranR);
 		player.camera.set_h(player.camera,player.recoil_mult*ranR);
