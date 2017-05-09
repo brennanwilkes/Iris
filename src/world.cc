@@ -80,6 +80,12 @@ void World::tick(){
 		ranR-=1.5;
 		ranR*=2;
 		
+		if(player.mainHand!=NULL){
+			if(player.mainHand->id==11){
+				ranR*=3;
+			}
+		}
+		
 		player.camera.set_p(player.camera,player.recoil_mult*ranR);
 		player.camera.set_h(player.camera,player.recoil_mult*ranR);
 	}

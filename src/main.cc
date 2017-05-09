@@ -325,9 +325,9 @@ int main(int argc, char *argv[]) {
 	//vector<string> Dir ={"Assets/starea/lag_.egg"};
 	//vector<NodePath> ND;
 
-	//vector<string> Dir = {"Assets/Stage/Terrain_C.egg","Assets/Stage/SkyBox.egg","Assets/Stage/Grave.egg","Assets/Stage/Building_C.egg","Assets/Stage/Stone_C.egg","Assets/Stage/Ramp_C.egg","Assets/Stage/Stairs_C.egg","Assets/sphere/sphere.egg"};
+	vector<string> Dir = {"Assets/Stage/Terrain_C.egg","Assets/Stage/SkyBox.egg","Assets/Stage/Grave.egg","Assets/Stage/Building_C.egg","Assets/Stage/Stone_C.egg","Assets/Stage/Ramp_C.egg","Assets/Stage/Stairs_C.egg","Assets/sphere/sphere.egg"};
 	
-	vector<string> Dir = {"Assets/starea/lag_.egg"};
+	//vector<string> Dir = {"Assets/starea/lag_.egg"};
 
 	vector<StaticObject> ND;
 	for(auto x:Dir)
@@ -664,6 +664,7 @@ int main(int argc, char *argv[]) {
 	ak47.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak47);
 	
+	/*
 	WeaponObject ak48('g',37,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
 	ak48.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak48);
@@ -671,11 +672,12 @@ int main(int argc, char *argv[]) {
 	WeaponObject ak49('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
 	ak49.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak49);
+	*/
 	
 	
-	//WeaponObject nedgev('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,11);
-	//nedgev.weapon_init(24,25.0,1.0,0,64,1);
-	//itms.push_back(&nedgev);
+	WeaponObject nedgev('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,11);
+	nedgev.weapon_init(24,25.0,1.0,0,64,1);
+	itms.push_back(&nedgev);
 	
 	
 	
