@@ -3,6 +3,7 @@
 
 #include "nodePath.h"
 #include "audioManager.h"
+#include <string>
 
 class Sounds{
 public:
@@ -73,6 +74,9 @@ public:
 	
 	
 	PT(AudioSound) background1;
+	
+	
+	void setup(string mydir);
 	
 private:
 
