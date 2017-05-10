@@ -23,10 +23,10 @@ Keys::Keys(){
 	keybinds["sprint"] = std::make_pair( KeyboardButton::shift(), false);
 	keybinds["zoomOut"] = std::make_pair(KeyboardButton::ascii_key('-'), false);
 	keybinds["zoomIn"] = std::make_pair(KeyboardButton::ascii_key('='), false);
-	string nums = "1234567890";
+	/*string nums = "1234567890";
 	for (auto i: nums){
 		keybinds["inv"+i] = std::make_pair(KeyboardButton::ascii_key(i), false);
-	}
+	}*/
 	
 	for (auto k: keybinds){
 		keybindItems.push_back(k.first);
