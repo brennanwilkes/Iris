@@ -313,7 +313,7 @@ void Enemy::coll_set_up(int dist){
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	shootRayModel = model.attach_new_node(c_Node);
 	shootRayModel.set_pos(0,0,0);
-	shootRayModel.show();
+	shootRayModel.hide();
 	qtrav_shoot.add_collider(shootRayModel, qcoll_shoot);
 
 	

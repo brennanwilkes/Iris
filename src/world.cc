@@ -323,6 +323,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
 			player.main_collection.play("Armature");
 		}
+		
 		player.model.set_hpr(player.camera.get_hpr().get_x(), 0, 0);
 	}
 	else{
