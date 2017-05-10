@@ -379,7 +379,7 @@ void Player::play_anim(){
 	if (player.mainHand->id==10){
 		ak_collection.play("Armature");
 	}
-	if (player.mainHand->id==11){
+	if (player.mainHand->id==11 && player.negev_collection.get_frame()>1 ){
 		//cout<<negev_collection.get_anim_name(0)<<endl;
 		//cout<<negev_collection.get_anim_name(1)<<endl;
 		negev_collection.play("Armature.002");

@@ -295,7 +295,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	}
 	
 	if (keybinds["sprint"].second){
-		walk=3;
+		walk=4;
 		player.speed=12;
 	}
 	
@@ -319,8 +319,19 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	
 	if (dx != 0  || dy != 0)
 	{
+		cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
+		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
+			player.main_collection.play("Armature");
+		}
 		player.model.set_hpr(player.camera.get_hpr().get_x(), 0, 0);
 	}
+	else{
+		cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
+		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
+			player.main_collection.play("Armature.2");
+		}
+	}
+	
 }
 
 void World::apply_grav(){

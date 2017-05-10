@@ -309,8 +309,17 @@ int main(int argc, char *argv[]) {
 	player.negev_collection.play("Armature");
 	
 	window->load_model(player.negev_arms, mydir + "Assets/Iris/negev-pull_out_gun.egg");
-	auto_bind(player.negev_arms.node(), player.negev_collection);	
-
+	auto_bind(player.negev_arms.node(), player.negev_collection);
+	
+	
+	
+	window->load_model(player.model, mydir + "Assets/Iris/Iris-walk.egg");
+	auto_bind(player.model.node(), player.main_collection);	
+	player.main_collection.play("Armature");
+	
+	window->load_model(player.model, mydir + "Assets/Iris/Iris-Idle.egg");
+	auto_bind(player.model.node(), player.main_collection);	
+	player.main_collection.play("Armature.2");
 	
 	
 	// the name of an animation is preceded in the .egg file with <BunBdle>:
@@ -1139,6 +1148,12 @@ void onE(const Event* eventPtr, void* dataPtr){
 }
 
 void onR(const Event* eventPtr, void* dataPtr){
+	
+	
+	//player.main_collection.play("Armature");
+	//return;
+	
+	
 	if (player.mainHand!=NULL && world.menuStatus==world.ms_game){
 		if (player.mainHand->type=='g'){
 			if (player.mainHand->tot_ammo-(player.mainHand->max_amount-player.mainHand->amount)>0){
