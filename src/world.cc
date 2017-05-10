@@ -73,20 +73,19 @@ void World::tick(){
 	//RECOIL
 	if (player.recoil_frames>0){
 		float ranR=rand()/(float)RAND_MAX;
-		
-		ranR++;
+		ranR*=2;
+		ranR-=1;
 		player.recoil_frames--;
 		
-		ranR-=1.5;
-		ranR*=2;
+		//ranR*=1.4;
 		
 		if(player.mainHand!=NULL){
 			if(player.mainHand->id==11){
-				ranR*=3;
+				ranR*=2;
 			}
 		}
 		
-		player.camera.set_p(player.camera,player.recoil_mult*ranR);
+		player.camera.set_p(player.camera,player.recoil_mult*pow(pow(ranR,2),0.5));
 		player.camera.set_h(player.camera,player.recoil_mult*ranR);
 	}
 
@@ -244,16 +243,15 @@ void World::get_keys(MouseWatcher* mw, map <std::string, pair<ButtonHandle, bool
 			(k.second).second = false;
 }
 
-void World::look(WindowFramework *win){
-	Keys keys;
+void World::look(WindowFramework *win, float mouseSens){
 
 	GraphicsWindow *gw = win -> get_graphics_window();
 	if (gw)
 	{
 		int dx = (gw -> get_properties().get_x_size() / 2) - gw -> get_pointer(0).get_x();
 		int dy = (gw -> get_properties().get_y_size() / 2) - gw -> get_pointer(0).get_y();
-		//cout <<keys.mouseSens << endl;
-		player.camera.set_hpr(player.camera.get_hpr().get_x()+ dx * 0.03 * (keys.mouseSens+1), player.camera.get_hpr().get_y() + dy * 0.03 * (keys.mouseSens+1), 0);
+
+		player.camera.set_hpr(player.camera.get_hpr().get_x()+ dx * 0.03 * (mouseSens+1), player.camera.get_hpr().get_y() + dy * 0.03 * (mouseSens+1), 0);
 		gw -> move_pointer(0, gw -> get_properties().get_x_size() / 2, gw -> get_properties().get_y_size() / 2);
 	}
 }
@@ -319,7 +317,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	
 	if (dx != 0  || dy != 0)
 	{
-		cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
+		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
 		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
 			player.main_collection.play("Armature");
 		}
@@ -327,7 +325,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 		player.model.set_hpr(player.camera.get_hpr().get_x(), 0, 0);
 	}
 	else{
-		cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
+		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
 		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
 			player.main_collection.play("Armature.2");
 		}

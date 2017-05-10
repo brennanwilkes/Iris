@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
 
 	// Set up framework
 	framework.open_framework(argc, argv);
-	framework.set_window_title("GAME");
+	framework.set_window_title("Iris alpha");
 	
 	
 	world.gameSounds.setup(mydir);
@@ -177,7 +177,7 @@ int main(int argc, char *argv[]) {
 	mouseWatcher = (MouseWatcher*)window -> get_mouse().node();
 	
 	//loadscreen
-	float xss = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
+	float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
 	
 	PT(Texture) wts;
 	CardMaker cms("cardMaker");
@@ -185,10 +185,8 @@ int main(int argc, char *argv[]) {
 	NodePath NNS(readycards);
 	NNS = window -> get_aspect_2d().attach_new_node(readycards);
 	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
-	NNS.set_scale(1);
-	NNS.set_pos(xss,0, 0);
-	
-	
+	NNS.set_pos(xs,0,0);
+	NNS.set_scale(window->get_render(),1);
 	wts=TexturePool::load_texture(mydir+"Assets/loadscreen-temp.png");
 	NNS.set_texture(wts);
 	
@@ -359,8 +357,13 @@ int main(int argc, char *argv[]) {
 	
 	player.coll_set_up();
 
+
 	// Start Menu items
-	float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
+	//float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
+	PGButton* StartGameButton;
+	PGButton* loadGameButton;
+	PGButton* realQuitButton;
+	PGButton* OptionTogButton3;
 
 	PT(Texture) tex_hellothere;
 	CardMaker cm_hellothere("cardMaker");
@@ -368,18 +371,12 @@ int main(int argc, char *argv[]) {
 	NodePath nd_hellothere(rc_hellothere);
 	nd_hellothere = window -> get_aspect_2d().attach_new_node(rc_hellothere);
 	nd_hellothere.set_transparency(TransparencyAttrib::M_alpha, 1);
-	//nd_hellothere.set_scale(2.0);
-	nd_hellothere.set_pos(-.50, 0,-0.5);
-	//nd_hellothere.set_pos(xs+1, 0,0);
-
+	nd_hellothere.set_pos(-0.5, 0,-0.5);
 	nd_hellothere.reparent_to(startMenuItems);
-	
+	nd_hellothere.set_scale(window->get_render(),1);
 	tex_hellothere=TexturePool::load_texture(mydir+"Assets/Hellothere.jpg");
 	nd_hellothere.set_texture(tex_hellothere);
-	nd_hellothere.show();
 
- 
-	PGButton* StartGameButton;
 	StartGameButton = new PGButton("StartGameButton");
 	StartGameButton -> setup("Start Game");
 	NodePath bnp = window -> get_pixel_2d().attach_new_node(StartGameButton);
@@ -388,7 +385,6 @@ int main(int argc, char *argv[]) {
 	bnp.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+StartGameButton->get_id()] = StartGameButton;
 
-	PGButton* loadGameButton;
 	loadGameButton = new PGButton("loadGameButton");
 	loadGameButton -> setup("Load Game");
 	NodePath bnp2 = window -> get_pixel_2d().attach_new_node(loadGameButton);
@@ -397,7 +393,6 @@ int main(int argc, char *argv[]) {
 	bnp2.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+loadGameButton->get_id()] = loadGameButton;
 
-	PGButton* realQuitButton;
 	realQuitButton = new PGButton("QuitButton");
 	realQuitButton -> setup("Quit");
 	NodePath defbutNPk = window -> get_pixel_2d().attach_new_node(realQuitButton);
@@ -406,7 +401,6 @@ int main(int argc, char *argv[]) {
 	defbutNPk.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+realQuitButton->get_id()] = realQuitButton;
 
-	PGButton* OptionTogButton3;
 	OptionTogButton3 = new PGButton("OptionTogButton");
 	OptionTogButton3 -> setup("Toggle Option Menu");
 	NodePath defbutNP7 = window -> get_pixel_2d().attach_new_node(OptionTogButton3);
@@ -417,7 +411,11 @@ int main(int argc, char *argv[]) {
 
 
 	// Menu items
-	PGButton* QuitButton;
+	PT(PGButton) QuitButton;
+	PGButton* HitTogButton;
+	PGButton* DoubleTogButton;
+	PGButton* OptionTogButton;
+
 	QuitButton = new PGButton("MenuButton");
 	QuitButton -> setup("Main Menu");
 	NodePath defbutNP = window -> get_pixel_2d().attach_new_node(QuitButton);
@@ -427,7 +425,6 @@ int main(int argc, char *argv[]) {
 	keys.buttonIndex["click-mouse1-"+QuitButton->get_id()] = QuitButton;
 
 
-	PGButton* HitTogButton;
 	HitTogButton = new PGButton("HitTogButton");
 	HitTogButton -> setup("Toggle Hit Boxes");
 	NodePath defbutNP3 = window -> get_pixel_2d().attach_new_node(HitTogButton);
@@ -436,7 +433,6 @@ int main(int argc, char *argv[]) {
 	defbutNP3.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+HitTogButton->get_id()] = HitTogButton;
 
-	PGButton* DoubleTogButton;
 	DoubleTogButton = new PGButton("DoubleTogButton");
 	DoubleTogButton -> setup("Toggle Double Jump");
 	NodePath defbutNP4 = window -> get_pixel_2d().attach_new_node(DoubleTogButton);
@@ -445,7 +441,6 @@ int main(int argc, char *argv[]) {
 	defbutNP4.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+DoubleTogButton->get_id()] = DoubleTogButton;
 
-	PGButton* OptionTogButton;
 	OptionTogButton = new PGButton("OptionTogButton");
 	OptionTogButton -> setup("Toggle Option Menu");
 	NodePath defbutNP5 = window -> get_pixel_2d().attach_new_node(OptionTogButton);
@@ -456,6 +451,8 @@ int main(int argc, char *argv[]) {
 
 	//Option Menu Items
 	PGButton* OptionTogButton2;
+	PGButton* mouseSensBut;
+
 	OptionTogButton2 = new PGButton("OptionTogButton");
 	OptionTogButton2 -> setup("Toggle Option Menu");
 	NodePath defbutNP6 = window -> get_pixel_2d().attach_new_node(OptionTogButton2);
@@ -487,7 +484,6 @@ int main(int argc, char *argv[]) {
 	mouseSliderNP.set_pos(xs+2.5,0,.25);
 	mouseSliderNP.reparent_to(optionMenuItems);
 
-	PGButton* mouseSensBut;
 	mouseSensBut = new PGButton("mouseSensBut");
 	mouseSensBut -> setup("Change mouse sens");
 	NodePath defbutNPmous = window -> get_pixel_2d().attach_new_node(mouseSensBut);
@@ -584,10 +580,10 @@ int main(int argc, char *argv[]) {
 	MyStyle.set_texture(ButtonInactive); MyButton->set_frame_style(3,MyStyle);
 	
 	
-	NodePath defbutNP3 = window->get_aspect_2d().attach_new_node(MyButton);
-	defbutNP3.set_scale(0.1);
-	defbutNP3.set_pos(xs+0.1,0, 0.45);
-	defbutNP3.reparent_to(menuItems);
+	NodePath defbutNPa = window->get_aspect_2d().attach_new_node(MyButton);
+	defbutNPa.set_scale(0.1);
+	defbutNPa.set_pos(xs+0.1,0, 0.45);
+	defbutNPa.reparent_to(menuItems);
 	*/
 	
 
@@ -677,7 +673,7 @@ int main(int argc, char *argv[]) {
 	
 	
 	
-	WeaponObject ak47('g',35,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
+	WeaponObject ak47('g',35,0,20,8.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
 	ak47.weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(&ak47);
 	
@@ -692,7 +688,7 @@ int main(int argc, char *argv[]) {
 	*/
 	
 	
-	WeaponObject nedgev('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/negevitem.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/negevicon.png",140.0,11);
+	WeaponObject nedgev('g',39,0,20,17.0f,2.0f, mydir+"blenderFiles/negevitem.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/negevicon.png",140.0,11);
 	nedgev.weapon_init(140,27.0,1.0,0,560,1);
 	itms.push_back(&nedgev);
 	
@@ -900,7 +896,7 @@ int main(int argc, char *argv[]) {
 			player.handDisplay.show();
 			
 			world.get_keys(mouseWatcher, keys.keybinds); // updates keybinds held status . THIS SHOULD BE DONE FIRST
-			world.look(window);
+			world.look(window, keys.mouseSens);
 			world.move(keys.keybinds);
 			
 
@@ -1099,10 +1095,9 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 }
 
 void rebindMouseSens(const Event* eventPtr, void* dataPtr){
-	keys.mouseSens = mouseSlider->get_value()*10;
-	cout << keys.mouseSens << endl;
-
+	keys.mouseSens = mouseSlider->get_value()*2.0;
 }
+
 void menu(const Event* eventPtr, void* dataPtr){
 	world.menu();
 }

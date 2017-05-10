@@ -27,9 +27,9 @@ void Player::tick() {
 		if(coll_grav->is_on_ground()){
 			health=health+((coll_grav->get_velocity()+50.0)/2.0);
 			
-			cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
-			cout<<model<<" speed "<<coll_grav->get_velocity()<<endl;
-			cout<<model<<" health "<<health<<endl;
+			//cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
+			//cout<<model<<" speed "<<coll_grav->get_velocity()<<endl;
+			//cout<<model<<" health "<<health<<endl;
 			
 			//coll_grav->set_velocity(0.0);
 		}
@@ -271,7 +271,7 @@ void Player::coll_set_up(){
 
 
 bool Player::pick_up(PandaNode* itm,vector<Item*> &itms){
-	cout<<"HARDER DADDY"<<endl;
+	//cout<<"HARDER DADDY"<<endl;
 	for (unsigned int i = 0; i < itms.size(); i++){
 		if(itm == itms[i] -> sphereModelTwo.node()){
 			int trans=0;

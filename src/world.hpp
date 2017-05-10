@@ -22,7 +22,7 @@ public:
 	void tick		();
 	void draw		();
 	void get_keys	(MouseWatcher* mw, map <std::string, pair<ButtonHandle, bool> >&keybinds);
-	void look		(WindowFramework *win);
+	void look		(WindowFramework *win, float mouseSens);
 	void move 		(map <std::string, pair<ButtonHandle, bool> > &keybinds);
 	void apply_grav	();
 	
