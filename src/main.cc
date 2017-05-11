@@ -845,6 +845,9 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(keys.keybinds["inv4"].first.get_name(), "inv4", &invHotkey, &blankTex);
 	window -> get_panda_framework() -> define_key(keys.keybinds["inv5"].first.get_name(), "inv5", &invHotkey, &blankTex);
 	window -> get_panda_framework() -> define_key(keys.keybinds["inv6"].first.get_name(), "inv6", &invHotkey, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["inv7"].first.get_name(), "inv7", &invHotkey, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["inv8"].first.get_name(), "inv8", &invHotkey, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["inv9"].first.get_name(), "inv9", &invHotkey, &blankTex);
 
 	window -> get_panda_framework() -> define_key("h", "hide_arms", hide_arms, NULL);
 
