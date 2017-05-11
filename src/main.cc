@@ -78,7 +78,7 @@ https://www.panda3d.org/manual/index.php/Common_State_Changes
 #include "healthItem.hpp"
 #include "enemy.hpp"
 #include "keys.hpp"
-
+#include "level.hpp"
 #include "global.hpp"
 
 #include "load_prc_file.h"
@@ -834,10 +834,10 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
 	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", &jump, NULL);
 	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "cameraToggle", &toggle, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, &blankTex);
 	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "pickup", &onE, NULL);
 	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "reload", &onR, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, NULL);
+	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
 
 	window -> get_panda_framework() -> define_key(keys.keybinds["inv1"].first.get_name(), "inv1", &invHotkey, &blankTex);
 	window -> get_panda_framework() -> define_key(keys.keybinds["inv2"].first.get_name(), "inv2", &invHotkey, &blankTex);

@@ -315,19 +315,28 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	player.model.set_fluid_x(player.model.get_x() + (dx * dt * 5 * walk));
 	player.model.set_fluid_y(player.model.get_y() + (dy * dt * 5 * walk));
 	
+	/*
+	for (int i=0;i<player.main_collection.get_num_anims();i++){
+		cout<<player.main_collection.get_anim_name(i)<<endl;
+	}
+	*/
+	
+	
 	if (dx != 0  || dy != 0)
 	{
 		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
 		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
 			player.main_collection.play("Armature");
 		}
-		
+		//cout<<"walk"<<endl;
 		player.model.set_hpr(player.camera.get_hpr().get_x(), 0, 0);
 	}
 	else{
+		//cout<<"idle"<<endl;
 		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
 		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
 			player.main_collection.play("Armature.2");
+			//cout<<"start idle"<<endl;
 		}
 	}
 	
