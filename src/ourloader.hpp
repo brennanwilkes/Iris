@@ -1,5 +1,5 @@
-#ifndef LOADER_H
-#define LOADER_H
+#ifndef OURLOADER_H
+#define OURLOADER_H
 
 // Our files
 #include "player.hpp"
@@ -19,7 +19,7 @@
 
 #include "nodePath.h"
 
-class Loader{
+class OurLoader{
 public:
 	void load_level(Level L);
 	

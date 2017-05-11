@@ -1,8 +1,8 @@
-#include "loader.hpp"
+#include "ourloader.hpp"
 
-void Loader::load_level(Level L){
+void OurLoader::load_level(Level L){
 	//map<string,NodePath> model_vector = L.models;
-	
+	/*
 	for (auto i:L.models){
 		
 		//	i.second	=	NodePath
@@ -29,5 +29,5 @@ void Loader::load_level(Level L){
 			
 		}
 	}
-	
+	*/
 }
