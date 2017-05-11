@@ -78,7 +78,7 @@ https://www.panda3d.org/manual/index.php/Common_State_Changes
 #include "healthItem.hpp"
 #include "enemy.hpp"
 #include "keys.hpp"
-
+#include "level.hpp"
 #include "global.hpp"
 
 #include "load_prc_file.h"
