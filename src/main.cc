@@ -114,6 +114,7 @@ void toggle(const Event* eventPtr, void* dataPtr);
 void toggleHitBox(const Event* eventPtr, void* dataPtr);
 void toggleDoubleJump(const Event* eventPtr, void* dataPtr);
 void toggleOptionMenu(const Event* eventPtr, void* dataPtr);
+void invHotkey(const Event* eventPtr, void* dataPtr);
 void invPress(const Event* eventPtr, void* dataPtr);
 void jump(const Event* eventPtr, void* dataPtr);
 void menu(const Event* eventPtr, void* dataPtr);
@@ -164,7 +165,7 @@ int main(int argc, char *argv[]) {
 	
 	props = window -> get_graphics_window() -> get_properties();
 	props.set_cursor_hidden(false);
-	props.set_mouse_mode(WindowProperties::M_confined);
+	props.set_mouse_mode(WindowProperties::M_absolute);
 	window -> get_graphics_window() -> request_properties(props);
 
 	
@@ -495,7 +496,7 @@ int main(int argc, char *argv[]) {
 	mouseSensBut -> setup("Change mouse sens");
 	NodePath defbutNPmous = window -> get_pixel_2d().attach_new_node(mouseSensBut);
 	defbutNPmous.set_scale(0.1);
-	defbutNPmous.set_pos(xs + 1.6, 0, 0.85);
+	defbutNPmous.set_pos(xs+0.1*(17/8*8+1), 0, 0.85);
 	defbutNPmous.reparent_to(optionMenuItems);
 
 
@@ -833,10 +834,17 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
 	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", &jump, NULL);
 	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "cameraToggle", &toggle, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, NULL);
 	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "pickup", &onE, NULL);
 	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "reload", &onR, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, NULL);
+
+	window -> get_panda_framework() -> define_key(keys.keybinds["inv1"].first.get_name(), "inv1", &invHotkey, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["inv2"].first.get_name(), "inv2", &invHotkey, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["inv3"].first.get_name(), "inv3", &invHotkey, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["inv4"].first.get_name(), "inv4", &invHotkey, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["inv5"].first.get_name(), "inv5", &invHotkey, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["inv6"].first.get_name(), "inv6", &invHotkey, &blankTex);
 
 	window -> get_panda_framework() -> define_key("h", "hide_arms", hide_arms, NULL);
 
@@ -1064,6 +1072,23 @@ void invPress(const Event* eventPtr, void* dataPtr){
 	}
 }
 
+void invHotkey(const Event* eventPtr, void* dataPtr){
+	int t = stoi(eventPtr->get_name());
+	//fix this bit to use indices
+	player.handInd=t-1;//(atoi(tag));
+	if ((int)player.inventory.size()>=t){
+		player.mainHand=player.inventory[t-1];
+		player.handDisplay.set_texture(player.inventory[t-1]->imgTex);
+		if(player.mainHand->type=='g'){
+			player.pullout=player.mainHand->id;
+		}
+	}
+	else{
+		player.mainHand=NULL;
+		player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(dataPtr)));
+	}
+}
+
 void hide_arms(const Event* eventPtr, void* dataPtr){
 	player.arms_shown = !player.arms_shown;
 	if (player.arms!=NULL){
@@ -1104,6 +1129,7 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 void rebindMouseSens(const Event* eventPtr, void* dataPtr){
 	keys.mouseSens = mouseSlider->get_value()*2.0;
 }
+
 
 void menu(const Event* eventPtr, void* dataPtr){
 	world.menu();
@@ -1150,7 +1176,6 @@ void onE(const Event* eventPtr, void* dataPtr){
 }
 
 void onR(const Event* eventPtr, void* dataPtr){
-	
 	
 	//player.main_collection.play("Armature");
 	//return;

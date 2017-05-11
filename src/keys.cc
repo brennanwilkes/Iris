@@ -23,10 +23,10 @@ Keys::Keys(){
 	keybinds["sprint"] = std::make_pair( KeyboardButton::shift(), false);
 	keybinds["zoomOut"] = std::make_pair(KeyboardButton::ascii_key('-'), false);
 	keybinds["zoomIn"] = std::make_pair(KeyboardButton::ascii_key('='), false);
-	/*string nums = "1234567890";
+	string nums = "123456";
 	for (auto i: nums){
-		keybinds["inv"+i] = std::make_pair(KeyboardButton::ascii_key(i), false);
-	}*/
+		keybinds["inv"+to_string(i-48)] = std::make_pair(KeyboardButton::ascii_key(i), false);
+	}
 	
 	for (auto k: keybinds){
 		keybindItems.push_back(k.first);
@@ -73,7 +73,7 @@ Keys::Keys(){
 		KeyboardButton::scroll_lock(),
 		KeyboardButton::print_screen(),
 	};
-	string alphabet = "qwertyuiop[]asdfghjkl;'zxcvbnm,./-=`\\";
+	string alphabet = "7890qwertyuiop[]asdfghjkl;'zxcvbnm,./-=`\\";
 	for (auto i: alphabet){
 		allKeys.push_back(KeyboardButton::ascii_key(i));
 	}
@@ -85,3 +85,4 @@ Keys::~Keys(){
 	}
 }
 */
+
