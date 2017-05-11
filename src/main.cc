@@ -320,6 +320,13 @@ int main(int argc, char *argv[]) {
 	player.main_collection.play("Armature.2");
 	
 	
+	
+	
+	window->load_model(player.empty_arms, mydir + "Assets/Iris/EmptyHands-Idle.egg");
+	auto_bind(player.empty_arms.node(), player.empty_collection);
+	player.empty_collection.loop_all(true);//"Armature");
+	
+	
 	// the name of an animation is preceded in the .egg file with <BunBdle>:
 	// loop a specific animation
 	//anim_collection.loop("Armature", true);
