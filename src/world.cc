@@ -325,7 +325,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	if (dx != 0  || dy != 0)
 	{
 		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
-		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
+		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1 || player.main_collection.which_anim_playing()=="idle"){
 			player.main_collection.play("walk");
 		}
 		//cout<<"walk"<<endl;
@@ -334,7 +334,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	else{
 		//cout<<"idle"<<endl;
 		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
-		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
+		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1 || player.main_collection.which_anim_playing()=="walk"){
 			player.main_collection.play("idle");
 			//cout<<"start idle"<<endl;
 		}
