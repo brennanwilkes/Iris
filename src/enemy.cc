@@ -1,6 +1,7 @@
 #include "global.hpp"
 #include "enemy.hpp"
 #include "gameObject.hpp"
+#include <auto_bind.h>
 
 Enemy::Enemy() : GameObject() {}
 
@@ -57,12 +58,12 @@ void Enemy::tick(int m) {
 	bas_mov(3);
 	if (running){
 		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1){// || lastframe==anim_collection.get_frame()){	
-			anim_collection.loop("Armature.2",true);
+			anim_collection.loop("walk",true);
 		}
 	}
 	else{
 		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1){//|| lastframe==anim_collection.get_frame()){	
-			anim_collection.loop("Armature.1",true);
+			anim_collection.loop("idle",true);
 		}
 	}
 	
@@ -281,6 +282,28 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 	
 	
 	setVel(0,0,0);
+	
+	
+	
+	AnimControlCollection name_collection;
+	
+	
+	NodePath animNp1 = w->load_model(model, mydir + "Assets/INSECT/insect-Idle.egg");
+	auto_bind(model.node(), name_collection);
+	PT(AnimControl) animPtr = name_collection.get_anim(0);
+	anim_collection.store_anim(animPtr, "idle");
+	string animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp1.detach_node();
+	anim_collection.play("idle");
+	NodePath animNp2 = w->load_model(model, mydir + "Assets/INSECT/insect-Move.egg");
+	auto_bind(model.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	anim_collection.store_anim(animPtr, "walk");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp2.detach_node();
+	anim_collection.play("walk");
 	
 }
 

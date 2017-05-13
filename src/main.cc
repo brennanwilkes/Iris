@@ -681,11 +681,7 @@ int main(int argc, char *argv[]) {
 	romar.coll_set_up(1000);
 	enems.push_back(&romar);
 
-	window->load_model(romar.model, mydir + "Assets/INSECT/insect-Idle.egg");
-	auto_bind(romar.model.node(), romar.anim_collection);
-	window->load_model(romar.model, mydir + "Assets/INSECT/insect-Move.egg");
-	auto_bind(romar.model.node(), romar.anim_collection);
-	romar.anim_collection.loop("Armature.1", true);
+	
 	
 	
 	
