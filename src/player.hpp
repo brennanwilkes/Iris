@@ -89,6 +89,8 @@ public:
 	
 	NodePath sphereModelTracker;
 	
+	AnimControlCollection name_collection;
+	
 	AnimControlCollection main_collection;
 	AnimControlCollection pistol_collection;
 	AnimControlCollection bat_collection;

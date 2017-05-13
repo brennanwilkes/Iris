@@ -1135,18 +1135,15 @@ void onR(const Event* eventPtr, void* dataPtr){
 				player.mainHand->amount=player.mainHand->max_amount;
 				if (player.mainHand->id==10){
 					world.gameSounds.akReloadSound->play();
-					player.ak_collection.play("Armature.2");
+					player.ak_collection.play("ak_reload");
 				}
 				else if (player.mainHand->id==11){
 					world.gameSounds.akReloadSound->play();
-					
-					
-					
-					player.negev_collection.play("Armature.002.2");
+					player.negev_collection.play("negev_reload");
 				}
 				else if (player.mainHand->id==0){
 					world.gameSounds.pistolReloadSound->play();
-					player.pistol_collection.play("Armature.2");
+					player.pistol_collection.play("pistol_reload");
 				}
 				
 			}

@@ -55,16 +55,16 @@ void World::tick(){
 	
 	if (player.pullout!=-1){
 		if (player.pullout==0){
-			player.pistol_collection.play("Armature.2");
+			player.pistol_collection.play("pistol_reload");
 		}
 		else if(player.pullout==2){
-			player.bat_collection.play("Armature.2");
+			player.bat_collection.play("bat_reload");
 		}
 		else if(player.pullout==10){
-			player.ak_collection.play("Armature.2");
+			player.ak_collection.play("ak_reload");
 		}
 		else if(player.pullout==11){
-			player.negev_collection.play("Armature.002.2");
+			player.negev_collection.play("negev_reload");
 		}
 		
 		player.pullout=-1;
@@ -326,7 +326,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	{
 		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
 		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
-			player.main_collection.play("Armature");
+			player.main_collection.play("walk");
 		}
 		//cout<<"walk"<<endl;
 		player.model.set_hpr(player.camera.get_hpr().get_x(), 0, 0);
@@ -335,7 +335,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 		//cout<<"idle"<<endl;
 		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
 		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1){
-			player.main_collection.play("Armature.2");
+			player.main_collection.play("idle");
 			//cout<<"start idle"<<endl;
 		}
 	}
