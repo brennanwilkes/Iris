@@ -1,6 +1,8 @@
 #include "global.hpp"
 #include "player.hpp"
 #include "gameObject.hpp"
+#include <animControlCollection.h>
+#include <auto_bind.h>
 
 Player::Player() : GameObject() {}
 
@@ -177,8 +179,81 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	negev_arms.hide();
 	
 	
-	//cout<<dir<<endl;
+	///////////////////////////////////////////////////////////////////////////
 	
+	
+	
+	
+	
+	
+	
+	
+	w->load_model(pistol_arms, dir + "Assets/Iris/FirstPersonViewModel-Fire.egg");
+	// don't use PT or CPT with AnimControlCollection 
+	//bind the animations to the model
+	auto_bind(pistol_arms.node(), pistol_collection);
+	pistol_collection.play("Armature");
+	
+	
+	w->load_model(pistol_arms, dir + "Assets/Iris/FirstPersonViewModel-pull_out_pistol.egg");
+	auto_bind(pistol_arms.node(), pistol_collection);
+	//player.pistol_collection.play("Armature");
+	
+	
+	w->load_model(bat_arms, dir + "Assets/Iris/fpvBat-atttack.egg");
+	auto_bind(bat_arms.node(), bat_collection);
+	bat_collection.play("Armature");
+	
+	w->load_model(bat_arms, dir + "Assets/Iris/fpvBat-pull_out_bat.egg");
+	auto_bind(bat_arms.node(), bat_collection);
+	
+	
+	
+	w->load_model(empty_arms, dir + "Assets/Iris/EmptyHands-Idle.egg");
+	auto_bind(empty_arms.node(), empty_collection);
+	empty_collection.play("Armature");
+	
+	
+	w->load_model(ak_arms, dir + "Assets/Iris/fpvak47-fire.egg");
+	auto_bind(ak_arms.node(), ak_collection);
+	ak_collection.play("Armature");
+	
+	w->load_model(ak_arms, dir + "Assets/Iris/fpvak47-pull_out_gun.egg");
+	auto_bind(ak_arms.node(), ak_collection);
+	
+	w->load_model(negev_arms, dir + "Assets/Iris/negev-fire.egg");
+	auto_bind(negev_arms.node(), negev_collection);
+	negev_collection.play("Armature");
+	
+	w->load_model(negev_arms, dir + "Assets/Iris/negev-pull_out_gun.egg");
+	auto_bind(negev_arms.node(), negev_collection);
+	
+	
+	
+	w->load_model(model, dir + "Assets/Iris/Iris-walk.egg");
+	auto_bind(model.node(), main_collection);	
+	main_collection.play("Armature");
+	
+	w->load_model(model, dir + "Assets/Iris/Iris-Idle.egg");
+	auto_bind(model.node(), main_collection);	
+	main_collection.play("Armature.2");
+	
+	
+	
+	
+	w->load_model(empty_arms, dir + "Assets/Iris/EmptyHands-Idle.egg");
+	auto_bind(empty_arms.node(), empty_collection);
+	empty_collection.loop_all(true);//"Armature");
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////
 	
 	max_food=100;
 	food=100;

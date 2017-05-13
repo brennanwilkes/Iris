@@ -270,62 +270,6 @@ int main(int argc, char *argv[]) {
 	
 	
 	
-	window->load_model(player.pistol_arms, mydir + "Assets/Iris/FirstPersonViewModel-Fire.egg");
-	// don't use PT or CPT with AnimControlCollection 
-	//bind the animations to the model
-	auto_bind(player.pistol_arms.node(), player.pistol_collection);
-	player.pistol_collection.play("Armature");
-	
-	
-	window->load_model(player.pistol_arms, mydir + "Assets/Iris/FirstPersonViewModel-pull_out_pistol.egg");
-	auto_bind(player.pistol_arms.node(), player.pistol_collection);
-	//player.pistol_collection.play("Armature");
-	
-	
-	window->load_model(player.bat_arms, mydir + "Assets/Iris/fpvBat-atttack.egg");
-	auto_bind(player.bat_arms.node(), player.bat_collection);
-	player.bat_collection.play("Armature");
-	
-	window->load_model(player.bat_arms, mydir + "Assets/Iris/fpvBat-pull_out_bat.egg");
-	auto_bind(player.bat_arms.node(), player.bat_collection);
-	
-	
-	
-	window->load_model(player.empty_arms, mydir + "Assets/Iris/EmptyHands-Idle.egg");
-	auto_bind(player.empty_arms.node(), player.empty_collection);
-	player.empty_collection.play("Armature");
-	
-	
-	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvak47-fire.egg");
-	auto_bind(player.ak_arms.node(), player.ak_collection);
-	player.ak_collection.play("Armature");
-	
-	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvak47-pull_out_gun.egg");
-	auto_bind(player.ak_arms.node(), player.ak_collection);
-	
-	window->load_model(player.negev_arms, mydir + "Assets/Iris/negev-fire.egg");
-	auto_bind(player.negev_arms.node(), player.negev_collection);
-	player.negev_collection.play("Armature");
-	
-	window->load_model(player.negev_arms, mydir + "Assets/Iris/negev-pull_out_gun.egg");
-	auto_bind(player.negev_arms.node(), player.negev_collection);
-	
-	
-	
-	window->load_model(player.model, mydir + "Assets/Iris/Iris-walk.egg");
-	auto_bind(player.model.node(), player.main_collection);	
-	player.main_collection.play("Armature");
-	
-	window->load_model(player.model, mydir + "Assets/Iris/Iris-Idle.egg");
-	auto_bind(player.model.node(), player.main_collection);	
-	player.main_collection.play("Armature.2");
-	
-	
-	
-	
-	window->load_model(player.empty_arms, mydir + "Assets/Iris/EmptyHands-Idle.egg");
-	auto_bind(player.empty_arms.node(), player.empty_collection);
-	player.empty_collection.loop_all(true);//"Armature");
 	
 	
 	// the name of an animation is preceded in the .egg file with <BunBdle>:
