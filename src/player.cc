@@ -1,6 +1,8 @@
 #include "global.hpp"
 #include "player.hpp"
 #include "gameObject.hpp"
+#include <animControlCollection.h>
+#include <auto_bind.h>
 
 Player::Player() : GameObject() {}
 
@@ -177,8 +179,101 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	negev_arms.hide();
 	
 	
-	//cout<<dir<<endl;
+	///////////////////////////////////////////////////////////////////////////
+	//PT(AnimControl) animPtr;
+	name_collection.clear_anims();
 	
+	//AnimControlCollection tempCollection;
+	NodePath animNp1 = w->load_model(pistol_arms, dir + "Assets/Iris/FirstPersonViewModel-Fire.egg");
+	auto_bind(pistol_arms.node(), name_collection);
+	PT(AnimControl) animPtr = name_collection.get_anim(0);
+	pistol_collection.store_anim(animPtr, "pistol_shoot");
+	string animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp1.detach_node();
+	pistol_collection.play("pistol_shoot");
+	NodePath animNp2 = w->load_model(pistol_arms, dir + "Assets/Iris/FirstPersonViewModel-pull_out_pistol.egg");
+	auto_bind(pistol_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	pistol_collection.store_anim(animPtr, "pistol_reload");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp2.detach_node();
+	pistol_collection.play("pistol_reload");
+	
+	NodePath animNp3 = w->load_model(bat_arms, dir + "Assets/Iris/fpvBat-atttack.egg");
+	auto_bind(bat_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	bat_collection.store_anim(animPtr, "bat_shoot");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp3.detach_node();
+	bat_collection.play("bat_shoot");
+	NodePath animNp4 = w->load_model(bat_arms, dir + "Assets/Iris/fpvBat-pull_out_bat.egg");
+	auto_bind(bat_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	bat_collection.store_anim(animPtr, "bat_reload");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp4.detach_node();
+	bat_collection.play("bat_reload");
+	
+	NodePath animNp5 = w->load_model(ak_arms, dir + "Assets/Iris/fpvak47-fire.egg");
+	auto_bind(ak_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	ak_collection.store_anim(animPtr, "ak_shoot");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp5.detach_node();
+	ak_collection.play("ak_shoot");
+	NodePath animNp6 = w->load_model(ak_arms, dir + "Assets/Iris/fpvak47-pull_out_gun.egg");
+	auto_bind(ak_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	ak_collection.store_anim(animPtr, "ak_reload");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp6.detach_node();
+	ak_collection.play("ak_reload");
+	
+	NodePath animNp7 = w->load_model(negev_arms, dir + "Assets/Iris/negev-fire.egg");
+	auto_bind(negev_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	negev_collection.store_anim(animPtr, "negev_shoot");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp7.detach_node();
+	negev_collection.play("negev_shoot");
+	NodePath animNp8 = w->load_model(negev_arms, dir + "Assets/Iris/negev-pull_out_gun.egg");
+	auto_bind(negev_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	negev_collection.store_anim(animPtr, "negev_reload");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp8.detach_node();
+	negev_collection.play("negev_reload");
+	
+	NodePath animNp9 = w->load_model(model, dir + "Assets/Iris/Iris-walk.egg");
+	auto_bind(model.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	main_collection.store_anim(animPtr, "walk");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp9.detach_node();
+	main_collection.play("walk");
+	NodePath animNp10 = w->load_model(model, dir + "Assets/Iris/Iris-Idle.egg");
+	auto_bind(model.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	main_collection.store_anim(animPtr, "idle");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp10.detach_node();
+	main_collection.play("idle");
+	
+	w->load_model(empty_arms, dir + "Assets/Iris/EmptyHands-Idle.egg");
+	auto_bind(empty_arms.node(), empty_collection);
+	empty_collection.loop_all(true);//"Armature");
+	
+	////////////////////////////////////////////////////////////////////////////////
 	
 	max_food=100;
 	food=100;
@@ -333,7 +428,12 @@ bool Player::drop(int itr,vector<Item*> &itms,NodePath* parent){
 		itms.back() -> model.set_pos(model.get_pos().get_x(),model.get_pos().get_y(),model.get_pos().get_z()+5);
 		itms.back() -> model.show();
 		itms.back() -> sphereModelTwo.show();
-		itms.back() -> setVel(0,0,0);
+		
+		float rot = player.camera.get_hpr().get_x();
+		float tx = -20.0 * sin(rot * (3.1416 / 180));
+		float ty = 20.0 * cos(rot * (3.1416 / 180));
+		//cout<<tx<<" "<<ty<<endl;
+		itms.back() -> setVel(tx,ty,0);
 		return true;
 	}
 	
@@ -371,18 +471,18 @@ void Player::removeItem(int itr){
 
 void Player::play_anim(){
 	if (player.mainHand->id==0){
-		pistol_collection.play("Armature");
+		pistol_collection.play("pistol_shoot");
 	}
 	if (player.mainHand->id==2){
-		bat_collection.play("Armature");
+		bat_collection.play("bat_shoot");
 	}
 	if (player.mainHand->id==10){
-		ak_collection.play("Armature");
+		ak_collection.play("ak_shoot");
 	}
 	if (player.mainHand->id==11 && player.negev_collection.get_frame()>1 ){
 		//cout<<negev_collection.get_anim_name(0)<<endl;
 		//cout<<negev_collection.get_anim_name(1)<<endl;
-		negev_collection.play("Armature.002");
+		negev_collection.play("negev_shoot");
 	}
 	
 	
@@ -408,6 +508,9 @@ void Player::death(vector<Item*> &v,NodePath* parent){
 	player.arms=&player.empty_arms;
 	player.mainHand=NULL;
 	calc_arms();
+	
+	
+	
 	
 	player.model.set_x(gameLevels[player.lvlid]->spawn_x);
 	player.model.set_y(gameLevels[player.lvlid]->spawn_y);

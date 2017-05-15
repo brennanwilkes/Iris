@@ -47,6 +47,7 @@ public:
 	CollisionTraverser qtrav;
 	CollisionTraverser qtrav_shoot;
 	
+	AnimControlCollection name_collection;
 	AnimControlCollection anim_collection;
 	
 	void set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string fn,float HEALTH,int xx,int yy,int zz,float dmg,int ifc,int mfc,int afc,float xpe);

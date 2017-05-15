@@ -180,18 +180,65 @@ int main(int argc, char *argv[]) {
 	//loadscreen
 	float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
 	
+	
+	
+	NodePath blank_plane = window->load_model(framework.get_models(),mydir+"Assets/plane.egg");
+	blank_plane.set_transparency(TransparencyAttrib::M_alpha, 1);
+	
+	
+
+	//////////////////////////////////////////////
+
+	/*PGButton* InvButton1;
+	InvButton1 = new PGButton("InvButton1");
+	InvButton1 -> setup(blank_plane);
+	*/
+	
+	/*
 	PT(Texture) wts;
+	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
 	CardMaker cms("cardMaker");
+	
+	
 	PT(PandaNode) readycards = cms.generate();
+	
+	//
+	
 	NodePath NNS(readycards);
+	
+	NNS.setup(blank_plane);
+	
 	NNS = window -> get_aspect_2d().attach_new_node(readycards);
 	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
 	NNS.set_pos(xs,0,0);
 	NNS.set_scale(window->get_render(),1);
-	wts=TexturePool::load_texture(mydir+"Assets/loadscreen-temp.png");
+	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
 	NNS.set_texture(wts);
 	
 	NNS.show();
+	*/
+	PT(Texture) wts;
+	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
+	
+	CardMaker cm2("cardMaker");
+	PT(PandaNode) readyCard2 = cm2.generate();
+	NodePath NNS(readyCard2);
+	
+	NNS = window -> get_aspect_2d().attach_new_node(readyCard2);
+	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
+	NNS.set_scale(2.0);
+	NNS.set_pos(xs,0,-1);
+	NNS.show();
+	NNS.set_texture(wts);
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	Thread *current_thread = Thread::get_current_thread();
 	if(framework.do_frame(current_thread))
@@ -270,62 +317,6 @@ int main(int argc, char *argv[]) {
 	
 	
 	
-	window->load_model(player.pistol_arms, mydir + "Assets/Iris/FirstPersonViewModel-Fire.egg");
-	// don't use PT or CPT with AnimControlCollection 
-	//bind the animations to the model
-	auto_bind(player.pistol_arms.node(), player.pistol_collection);
-	player.pistol_collection.play("Armature");
-	
-	
-	window->load_model(player.pistol_arms, mydir + "Assets/Iris/FirstPersonViewModel-pull_out_pistol.egg");
-	auto_bind(player.pistol_arms.node(), player.pistol_collection);
-	//player.pistol_collection.play("Armature");
-	
-	
-	window->load_model(player.bat_arms, mydir + "Assets/Iris/fpvBat-atttack.egg");
-	auto_bind(player.bat_arms.node(), player.bat_collection);
-	player.bat_collection.play("Armature");
-	
-	window->load_model(player.bat_arms, mydir + "Assets/Iris/fpvBat-pull_out_bat.egg");
-	auto_bind(player.bat_arms.node(), player.bat_collection);
-	
-	
-	
-	window->load_model(player.empty_arms, mydir + "Assets/Iris/EmptyHands-Idle.egg");
-	auto_bind(player.empty_arms.node(), player.empty_collection);
-	player.empty_collection.play("Armature");
-	
-	
-	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvak47-fire.egg");
-	auto_bind(player.ak_arms.node(), player.ak_collection);
-	player.ak_collection.play("Armature");
-	
-	window->load_model(player.ak_arms, mydir + "Assets/Iris/fpvak47-pull_out_gun.egg");
-	auto_bind(player.ak_arms.node(), player.ak_collection);
-	
-	window->load_model(player.negev_arms, mydir + "Assets/Iris/negev-fire.egg");
-	auto_bind(player.negev_arms.node(), player.negev_collection);
-	player.negev_collection.play("Armature");
-	
-	window->load_model(player.negev_arms, mydir + "Assets/Iris/negev-pull_out_gun.egg");
-	auto_bind(player.negev_arms.node(), player.negev_collection);
-	
-	
-	
-	window->load_model(player.model, mydir + "Assets/Iris/Iris-walk.egg");
-	auto_bind(player.model.node(), player.main_collection);	
-	player.main_collection.play("Armature");
-	
-	window->load_model(player.model, mydir + "Assets/Iris/Iris-Idle.egg");
-	auto_bind(player.model.node(), player.main_collection);	
-	player.main_collection.play("Armature.2");
-	
-	
-	
-	
-	window->load_model(player.empty_arms, mydir + "Assets/Iris/EmptyHands-Idle.egg");
-	auto_bind(player.empty_arms.node(), player.empty_collection);
-	player.empty_collection.loop_all(true);//"Armature");
 	
 	
 	// the name of an animation is preceded in the .egg file with <BunBdle>:
@@ -608,8 +599,6 @@ int main(int argc, char *argv[]) {
 	
 
 
-	NodePath blank_plane = window->load_model(framework.get_models(),mydir+"Assets/plane.egg");
-	blank_plane.set_transparency(TransparencyAttrib::M_alpha, 1);
 	PT(Texture) blankTex=TexturePool::load_texture(mydir+"Assets/blank_slot2.png");
 	
 	
@@ -737,11 +726,7 @@ int main(int argc, char *argv[]) {
 	romar.coll_set_up(1000);
 	enems.push_back(&romar);
 
-	window->load_model(romar.model, mydir + "Assets/INSECT/insect-Idle.egg");
-	auto_bind(romar.model.node(), romar.anim_collection);
-	window->load_model(romar.model, mydir + "Assets/INSECT/insect-Move.egg");
-	auto_bind(romar.model.node(), romar.anim_collection);
-	romar.anim_collection.loop("Armature.1", true);
+	
 	
 	
 	
@@ -924,6 +909,20 @@ int main(int argc, char *argv[]) {
 			
 			if (player.health<=0){
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
+				
+				float ranD=rand()/(float)RAND_MAX;
+				ranD*=360;
+				
+				ND.push_back(StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0.5));
+				
+				if(ranD>180){
+					ND.back().model.set_hpr(ranD,-90,0);
+				}
+				else{
+					ND.back().model.set_hpr(ranD,90,0);
+					ND.back().model.set_z(ND.back().model.get_z()+0.25);
+				}
+				
 				player.death(itms,&entityModels);
 			}
 			
@@ -1191,18 +1190,15 @@ void onR(const Event* eventPtr, void* dataPtr){
 				player.mainHand->amount=player.mainHand->max_amount;
 				if (player.mainHand->id==10){
 					world.gameSounds.akReloadSound->play();
-					player.ak_collection.play("Armature.2");
+					player.ak_collection.play("ak_reload");
 				}
 				else if (player.mainHand->id==11){
 					world.gameSounds.akReloadSound->play();
-					
-					
-					
-					player.negev_collection.play("Armature.002.2");
+					player.negev_collection.play("negev_reload");
 				}
 				else if (player.mainHand->id==0){
 					world.gameSounds.pistolReloadSound->play();
-					player.pistol_collection.play("Armature.2");
+					player.pistol_collection.play("pistol_reload");
 				}
 				
 			}

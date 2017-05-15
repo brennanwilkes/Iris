@@ -1,6 +1,7 @@
 #include "global.hpp"
 #include "enemy.hpp"
 #include "gameObject.hpp"
+#include <auto_bind.h>
 
 Enemy::Enemy() : GameObject() {}
 
@@ -54,15 +55,15 @@ void Enemy::tick(int m) {
 	}*/
 	
 	model.set_hpr((atan2(player.model.get_y()-model.get_y(),player.model.get_x()-model.get_x())*180.0/3.14159265358979323846)+90,model.get_hpr().get_y(),model.get_hpr().get_z());		
-	bas_mov(3);
+	bas_mov(0.25);
 	if (running){
-		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1){// || lastframe==anim_collection.get_frame()){	
-			anim_collection.loop("Armature.2",true);
+		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="idle"){// || lastframe==anim_collection.get_frame()){	
+			anim_collection.loop("walk",true);
 		}
 	}
 	else{
-		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1){//|| lastframe==anim_collection.get_frame()){	
-			anim_collection.loop("Armature.1",true);
+		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="walk"){//|| lastframe==anim_collection.get_frame()){	
+			anim_collection.loop("idle",true);
 		}
 	}
 	
@@ -155,14 +156,18 @@ void Enemy::bas_mov(float dis){
 	*/
 	running=false;
 	
-	if (qcoll_shoot -> get_num_entries() > 0)
+	if (qcoll_shoot -> get_num_entries() > 1)
 	{
 		
 		qcoll_shoot -> sort_entries();
+		/*cout<<endl;
+		for (int i=0;i<qcoll_shoot -> get_num_entries();i++){
+			cout<<qcoll_shoot -> get_entry(i) -> get_into_node()->get_name()<<endl;
+		}
+		cout<<endl;
+		*/
 		
-		//cout<<qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()<<endl;
-		
-		if (qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()!="Interaction_Sphere"){
+		if (qcoll_shoot -> get_entry(1) -> get_into_node()->get_name()!="Interaction_Sphere"){
 			return;
 		}
 
@@ -281,6 +286,28 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 	
 	
 	setVel(0,0,0);
+	
+	
+	
+	AnimControlCollection name_collection;
+	
+	
+	NodePath animNp1 = w->load_model(model, mydir + "Assets/INSECT/insect-Idle.egg");
+	auto_bind(model.node(), name_collection);
+	PT(AnimControl) animPtr = name_collection.get_anim(0);
+	anim_collection.store_anim(animPtr, "idle");
+	string animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp1.detach_node();
+	anim_collection.play("idle");
+	NodePath animNp2 = w->load_model(model, mydir + "Assets/INSECT/insect-Move.egg");
+	auto_bind(model.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	anim_collection.store_anim(animPtr, "walk");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp2.detach_node();
+	anim_collection.play("walk");
 	
 }
 
