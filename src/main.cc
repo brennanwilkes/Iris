@@ -779,30 +779,42 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "reload", &onR, NULL);
 	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
 
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv1"].first.get_name(), "inv1", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv2"].first.get_name(), "inv2", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv3"].first.get_name(), "inv3", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv4"].first.get_name(), "inv4", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv5"].first.get_name(), "inv5", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv6"].first.get_name(), "inv6", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv7"].first.get_name(), "inv7", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv8"].first.get_name(), "inv8", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv9"].first.get_name(), "inv9", &invHotkey, &blankTex);
+	keys.wildKeys["menu"] = &menu;
+	keys.dataPtrs["menu"] = window;
+	
+	keys.wildKeys["jump"] = &jump;
+	keys.dataPtrs["jump"] = NULL;
+
+	keys.wildKeys["cameraToggle"] = &toggle;
+	keys.dataPtrs["cameraToggle"] = NULL;
+
+	keys.wildKeys["use"] = &onMouse1;
+	keys.dataPtrs["use"] = &blankTex;
+
+	keys.wildKeys["pickup"] = &onE;
+	keys.dataPtrs["pickup"] = NULL;
+
+	keys.wildKeys["reload"] = &onR;
+	keys.dataPtrs["reload"] = NULL;
+
+	keys.wildKeys["drop"] = &drop;
+	keys.dataPtrs["drop"] = &blankTex;
+
+
+	for (int i=1; i<10; i++){
+		window -> get_panda_framework() -> define_key(keys.keybinds["inv"+to_string(i)].first.get_name(), "inv"+to_string(i), &invHotkey, &blankTex);
+		keys.wildKeys["inv"+to_string(i)] = &invHotkey;
+		keys.dataPtrs["inv"+to_string(i)] = &blankTex;
+	}
 
 	window -> get_panda_framework() -> define_key("h", "hide_arms", hide_arms, NULL);
 
-	keys.wildKeys["menu"] = &menu;
-	keys.wildKeys["jump"] = &jump;
-	keys.wildKeys["cameraToggle"] = &toggle;
-	keys.wildKeys["use"] = &onMouse1;
-	keys.wildKeys["pickup"] = &onE;
-	keys.wildKeys["reload"] = &onR;
-	keys.wildKeys["drop"] = &drop;
-
+	
 	window -> get_panda_framework() -> define_key(StartGameButton->get_click_event(keys.keybinds["use"].first ), "Start game button press", &startGame, NULL);
 	window -> get_panda_framework() -> define_key(realQuitButton->get_click_event(keys.keybinds["use"].first ), "Quit button press", &sys_exit, realQuitButton);
+	
 	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(keys.keybinds["use"].first ), "Menu button press", &startGame, QuitButton);
-	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hit button press", &toggleHitBox, HitTogButton);
+	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hitbox button press", &toggleHitBox, HitTogButton);
 	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(keys.keybinds["use"].first ), "Double jump button press", &toggleDoubleJump, DoubleTogButton);
 
 	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton);
@@ -1016,9 +1028,20 @@ void invPress(const Event* eventPtr, void* dataPtr){
 }
 
 void invHotkey(const Event* eventPtr, void* dataPtr){
-	int t = stoi(eventPtr->get_name());
+	int t=0;
+	for (int i=1; i<10; i++){
+		cout << "i" << i << " - inv" + to_string(i) << " - " <<keys.keybinds["inv" + to_string(i)].first.get_name() << " evnt " <<eventPtr->get_name()<< endl;
+		if (keys.keybinds["inv" + to_string(i)].first.get_name() == eventPtr->get_name()){
+			t = i;
+			break;
+		}
+	}
+	if (!t){
+		return;
+	}
+	//int t = stoi(eventPtr->get_name()); //int key
 	//fix this bit to use indices
-	player.handInd=t-1;//(atoi(tag));
+	player.handInd=t-1;
 	if ((int)player.inventory.size()>=t){
 		player.mainHand=player.inventory[t-1];
 		player.handDisplay.set_texture(player.inventory[t-1]->imgTex);
@@ -1057,8 +1080,8 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 					keys.buttonIndex[eventPtr->get_name()] -> setup(i+":"+ k.get_name());
 					for (auto j: keys.wildKeys){
 						if (i==(j.first)){
-							window -> get_panda_framework() -> define_key(k.get_name(), i, keys.wildKeys[i], NULL);
-							window -> get_panda_framework() -> get_event_handler().remove_hook(oldKey, keys.wildKeys[i], NULL);
+							window -> get_panda_framework() -> define_key(k.get_name(), i, keys.wildKeys[i], keys.dataPtrs[i]);
+							window -> get_panda_framework() -> get_event_handler().remove_hook(oldKey, keys.wildKeys[i], keys.dataPtrs[i]);
 							return;
 						}
 					}

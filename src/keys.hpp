@@ -16,6 +16,7 @@ public: //will do enum later
 	float mouseSens;
 	map <std::string, pair<ButtonHandle, bool> > keybinds; //world.move
 	map <std::string, void(*)(const Event* , void*)> wildKeys; //window -> get_panda_framework() -> define_key
+	map <std::string, void*> dataPtrs;
 
 	vector <string> keybindItems; //all actions ("reload", "use", etc)
 	vector <PGButton*> keybindMenu;
