@@ -909,6 +909,20 @@ int main(int argc, char *argv[]) {
 			
 			if (player.health<=0){
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
+				
+				float ranD=rand()/(float)RAND_MAX;
+				ranD*=360;
+				
+				ND.push_back(StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0.5));
+				
+				if(ranD>180){
+					ND.back().model.set_hpr(ranD,-90,0);
+				}
+				else{
+					ND.back().model.set_hpr(ranD,90,0);
+					ND.back().model.set_x(ND.back().model.get_x()+1.0);
+				}
+				
 				player.death(itms,&entityModels);
 			}
 			
