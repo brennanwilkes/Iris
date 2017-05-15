@@ -194,16 +194,20 @@ int main(int argc, char *argv[]) {
 	InvButton1 -> setup(blank_plane);
 	*/
 	
-	
+	/*
 	PT(Texture) wts;
+	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
 	CardMaker cms("cardMaker");
 	
 	
 	PT(PandaNode) readycards = cms.generate();
 	
-	//readycards->setup(blank_plane);
+	//
 	
 	NodePath NNS(readycards);
+	
+	NNS.setup(blank_plane);
+	
 	NNS = window -> get_aspect_2d().attach_new_node(readycards);
 	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
 	NNS.set_pos(xs,0,0);
@@ -212,6 +216,29 @@ int main(int argc, char *argv[]) {
 	NNS.set_texture(wts);
 	
 	NNS.show();
+	*/
+	PT(Texture) wts;
+	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
+	
+	CardMaker cm2("cardMaker");
+	PT(PandaNode) readyCard2 = cm2.generate();
+	NodePath NNS(readyCard2);
+	
+	NNS = window -> get_aspect_2d().attach_new_node(readyCard2);
+	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
+	NNS.set_scale(2.0);
+	NNS.set_pos(xs,0,-1);
+	NNS.show();
+	NNS.set_texture(wts);
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	Thread *current_thread = Thread::get_current_thread();
 	if(framework.do_frame(current_thread))

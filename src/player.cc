@@ -428,7 +428,12 @@ bool Player::drop(int itr,vector<Item*> &itms,NodePath* parent){
 		itms.back() -> model.set_pos(model.get_pos().get_x(),model.get_pos().get_y(),model.get_pos().get_z()+5);
 		itms.back() -> model.show();
 		itms.back() -> sphereModelTwo.show();
-		itms.back() -> setVel(0,0,0);
+		
+		float rot = player.camera.get_hpr().get_x();
+		float tx = -20.0 * sin(rot * (3.1416 / 180));
+		float ty = 20.0 * cos(rot * (3.1416 / 180));
+		//cout<<tx<<" "<<ty<<endl;
+		itms.back() -> setVel(tx,ty,0);
 		return true;
 	}
 	
