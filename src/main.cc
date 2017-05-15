@@ -188,35 +188,8 @@ int main(int argc, char *argv[]) {
 	
 
 	//////////////////////////////////////////////
-
-	/*PGButton* InvButton1;
-	InvButton1 = new PGButton("InvButton1");
-	InvButton1 -> setup(blank_plane);
-	*/
-	
-	/*
-	PT(Texture) wts;
-	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
-	CardMaker cms("cardMaker");
 	
 	
-	PT(PandaNode) readycards = cms.generate();
-	
-	//
-	
-	NodePath NNS(readycards);
-	
-	NNS.setup(blank_plane);
-	
-	NNS = window -> get_aspect_2d().attach_new_node(readycards);
-	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
-	NNS.set_pos(xs,0,0);
-	NNS.set_scale(window->get_render(),1);
-	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
-	NNS.set_texture(wts);
-	
-	NNS.show();
-	*/
 	PT(Texture) wts;
 	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
 	
@@ -228,12 +201,23 @@ int main(int argc, char *argv[]) {
 	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
 	NNS.set_scale(2.0);
 	NNS.set_pos(xs,0,-1);
-	NNS.show();
+	//NNS.show();
 	NNS.set_texture(wts);
+	NNS.hide();
+	
+	NodePath loadanim=window->load_model(framework.get_models(),mydir+"Assets/INSECT/insect.egg");
+	loadanim.reparent_to(window->get_render());
+	loadanim.set_pos(0,30,-3.5);
+	loadanim.show();
 	
 	
-	
-	
+	AnimControlCollection load_anim_collection;
+	NodePath loadnode = window->load_model(loadanim, mydir + "Assets/INSECT/insect-Move.egg");
+	auto_bind(loadanim.node(), load_anim_collection);
+	PT(AnimControl) animPtrLoad = load_anim_collection.get_anim(0);
+	load_anim_collection.store_anim(animPtrLoad, "load");
+	loadnode.detach_node();
+	load_anim_collection.loop("load",1);
 	
 	
 	
@@ -863,6 +847,7 @@ int main(int argc, char *argv[]) {
 	
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	NNS.hide();
+	loadanim.hide();
 	// Start the loop / gameoptionMe
 	//Thread *current_thread = Thread::get_current_thread();
 	world.init();
