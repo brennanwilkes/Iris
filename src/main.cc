@@ -180,15 +180,35 @@ int main(int argc, char *argv[]) {
 	//loadscreen
 	float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
 	
+	
+	
+	NodePath blank_plane = window->load_model(framework.get_models(),mydir+"Assets/plane.egg");
+	blank_plane.set_transparency(TransparencyAttrib::M_alpha, 1);
+	
+	
+
+	//////////////////////////////////////////////
+
+	/*PGButton* InvButton1;
+	InvButton1 = new PGButton("InvButton1");
+	InvButton1 -> setup(blank_plane);
+	*/
+	
+	
 	PT(Texture) wts;
 	CardMaker cms("cardMaker");
+	
+	
 	PT(PandaNode) readycards = cms.generate();
+	
+	//readycards->setup(blank_plane);
+	
 	NodePath NNS(readycards);
 	NNS = window -> get_aspect_2d().attach_new_node(readycards);
 	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
 	NNS.set_pos(xs,0,0);
 	NNS.set_scale(window->get_render(),1);
-	wts=TexturePool::load_texture(mydir+"Assets/loadscreen-temp.png");
+	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
 	NNS.set_texture(wts);
 	
 	NNS.show();
@@ -552,8 +572,6 @@ int main(int argc, char *argv[]) {
 	
 
 
-	NodePath blank_plane = window->load_model(framework.get_models(),mydir+"Assets/plane.egg");
-	blank_plane.set_transparency(TransparencyAttrib::M_alpha, 1);
 	PT(Texture) blankTex=TexturePool::load_texture(mydir+"Assets/blank_slot2.png");
 	
 	
