@@ -55,7 +55,7 @@ void Enemy::tick(int m) {
 	}*/
 	
 	model.set_hpr((atan2(player.model.get_y()-model.get_y(),player.model.get_x()-model.get_x())*180.0/3.14159265358979323846)+90,model.get_hpr().get_y(),model.get_hpr().get_z());		
-	bas_mov(3);
+	bas_mov(0.25);
 	if (running){
 		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="idle"){// || lastframe==anim_collection.get_frame()){	
 			anim_collection.loop("walk",true);

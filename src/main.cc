@@ -920,7 +920,7 @@ int main(int argc, char *argv[]) {
 				}
 				else{
 					ND.back().model.set_hpr(ranD,90,0);
-					ND.back().model.set_x(ND.back().model.get_x()+1.0);
+					ND.back().model.set_z(ND.back().model.get_z()+0.25);
 				}
 				
 				player.death(itms,&entityModels);
