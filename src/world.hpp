@@ -15,7 +15,6 @@ public:
 	World();
 	float preTime;
 	float dt;
-	
 	int tickCount;
 	
 	void init		();
@@ -23,18 +22,18 @@ public:
 	void tick		();
 	void draw		();
 	void get_keys	(MouseWatcher* mw, map <std::string, pair<ButtonHandle, bool> >&keybinds);
-	void look		(WindowFramework *win);
+	void look		(WindowFramework *win, float mouseSens);
 	void move 		(map <std::string, pair<ButtonHandle, bool> > &keybinds);
 	void apply_grav	();
 	
 	Sounds gameSounds;
 	
-	//bool is_running() {return menuStatus;}
 	void menu();
 	void menuOption();
-	//bool pause_menu;
-	//bool option_menu;
+	void menuStart();
 	int menuStatus;
+	enum ms  {ms_game, ms_pause, ms_option, ms_start, ms_optionfromstart};
+
 //	static AsyncTask::DoneStatus	addToTime		(GenericAsyncTask* task, void* data);
 //	static AsyncTask::DoneStatus	CamLookTask		(GenericAsyncTask* task, void* data);
 //	static AsyncTask::DoneStatus	SpinCameraTask	(GenericAsyncTask* task, void* data);

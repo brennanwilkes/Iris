@@ -68,7 +68,24 @@ void Item::action1(){
 	cout<<"error, action for item not handled"<<endl;
 }
 
-void Item::init(){GameObject::init();}
+void Item::init(){
+	
+	GameObject::init();
+	
+	
+	PT(CollisionNode) c_Node;
+	//For collisions
+	c_Node = new CollisionNode("Coll_Sphere");
+	c_Node -> add_solid(new CollisionSphere(0, 0, 0, 2.0));
+	c_Node -> set_from_collide_mask(BitMask32::all_off());
+	c_Node -> set_into_collide_mask(BitMask32::all_off());
+	sphereModel = model.attach_new_node(c_Node);
+	sphereModel.set_color(255,0,0,1.0);
+	coll_push -> add_collider(sphereModel, model);
+	GameObject::ptrav.add_collider(sphereModel, coll_push);
+	
+	
+	}
 	
 void Item::tick(){
 	
@@ -78,36 +95,36 @@ void Item::tick(){
 		gravFrame=0;
 		GameObject::tick(1,0);
 	}
-	cout<<model<<" "<<coll_grav->get_airborne_height()<<endl;
+	//cout<<model<<" "<<coll_grav->get_airborne_height()<<endl;
 	if (getxV()!=0){
-		if(coll_grav->get_airborne_height()<2.0){
-			if (getxV()<=2 && getxV()>=-2){
-				setVel(0.0,getyV(),getzV());
+		//if(coll_grav->is_on_ground()){
+		if (getxV()<=1.2 && getxV()>=-1.2){
+			setVel(0.0,getyV(),getzV());
+		}
+		else{
+			if (getxV()>0){
+				setVel(pow(getxV(),0.5),getyV(),getzV());
 			}
 			else{
-				if (getxV()>0){
-					setVel(pow(getxV(),0.5),getyV(),getzV());
-				}
-				else{
-					setVel(-1*pow(-1*getxV(),0.5),getyV(),getzV());
-				}
+				setVel(-1*pow(-1*getxV(),0.5),getyV(),getzV());
 			}
 		}
+		//}
 	}
 	if (getyV()!=0){
-		if(coll_grav->get_airborne_height()<2.0){
-			if (getyV()<=2 && getyV()>=-2){
-				setVel(getxV(),0.0,getzV());
+		//if(coll_grav->is_on_ground()){
+		if (getyV()<=1.2 && getyV()>=-1.2){
+			setVel(getxV(),0.0,getzV());
+		}
+		else{
+			if (getyV()>0){
+				setVel(getxV(),pow(getyV(),0.5),getzV());
 			}
 			else{
-				if (getyV()>0){
-					setVel(getxV(),pow(getyV(),0.5),getzV());
-				}
-				else{
-					setVel(getxV(),-1*pow(-1*getyV(),0.5),getzV());
-				}
+				setVel(getxV(),-1*pow(-1*getyV(),0.5),getzV());
 			}
 		}
+		//}
 	}
 	
 	

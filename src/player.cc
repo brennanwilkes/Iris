@@ -1,6 +1,8 @@
 #include "global.hpp"
 #include "player.hpp"
 #include "gameObject.hpp"
+#include <animControlCollection.h>
+#include <auto_bind.h>
 
 Player::Player() : GameObject() {}
 
@@ -9,11 +11,12 @@ void Player::tick() {
 		GameObject::tick(1,1); 
 	}
 	
+	totaltickcount++;
 	
 	
 	if (tint>0){
 		model.clear_color_scale();
-		model.set_color_scale(1.0,1-tint,1-tint,1.0);		
+		model.set_color_scale(1.0,1-tint,1-tint,1.0);
 		tint-=0.05;
 		//cout<<tint<<endl;
 		if (tint<0){
@@ -23,14 +26,14 @@ void Player::tick() {
 	}
 	
 	if (coll_grav->get_velocity()<-50.0){
-		if(coll_grav->get_airborne_height()<2.0){
+		if(coll_grav->is_on_ground()){
 			health=health+((coll_grav->get_velocity()+50.0)/2.0);
 			
-			cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
-			cout<<model<<" speed "<<coll_grav->get_velocity()<<endl;
-			cout<<model<<" health "<<health<<endl;
+			//cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
+			//cout<<model<<" speed "<<coll_grav->get_velocity()<<endl;
+			//cout<<model<<" health "<<health<<endl;
 			
-			coll_grav->set_velocity(0.0);
+			//coll_grav->set_velocity(0.0);
 		}
 		/*cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
 		cout<<model<<" speed "<<coll_grav->get_impact_velocity()<<endl;
@@ -39,6 +42,36 @@ void Player::tick() {
 	
 	//GameObject::tick(); 
 	ptrav.traverse(window -> get_render());
+	if(totaltickcount%60 == 0){
+		if(gameLevels.size()>(unsigned int)player.lvlid){
+			for (unsigned int i=0;i<gameLevels[player.lvlid]->exits.size();i++){
+				if (player.model.get_x() >= gameLevels[player.lvlid]->exits[i].x1 && player.model.get_x() <= gameLevels[player.lvlid]->exits[i].x2){
+					if (player.model.get_y() >= gameLevels[player.lvlid]->exits[i].y1 && player.model.get_y() <= gameLevels[player.lvlid]->exits[i].y2){
+						if (player.model.get_z() >= gameLevels[player.lvlid]->exits[i].z1 && player.model.get_z() <= gameLevels[player.lvlid]->exits[i].z2){
+							cout<<"Level change!"<<endl;
+							
+							//gameLevels[player.lvlid]->save("Saves/"+player.savefilename+"/"+to_string(player.lvlid)+".isf");
+							
+							player.lvlid = gameLevels[player.lvlid]->exits[i].lvlid;
+							
+							//gameLevels[player.lvlid]->load("Story/"+to_string(player.lvlid)+".isf");
+							
+							
+							
+							break;
+							
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
 }
 
 void Player::init() {
@@ -48,7 +81,20 @@ void Player::init() {
 	
 	GameObject::init();
 	
+	PT(CollisionNode) c_Node;
+	//For collisions
+	c_Node = new CollisionNode("Coll_Sphere");
+	c_Node -> add_solid(new CollisionSphere(0, 0, 0, 2.0));
+	c_Node -> set_from_collide_mask(BitMask32::bit(0));
+	c_Node -> set_into_collide_mask(BitMask32::all_off());
+	sphereModel = model.attach_new_node(c_Node);
+	sphereModel.set_color(255,0,0,1.0);
+	coll_push -> add_collider(sphereModel, model);
+	GameObject::ptrav.add_collider(sphereModel, coll_push);
+	
+	
 	sphereModel.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z()+5);
+	sphereModelTwo.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z());
 	
 }
 
@@ -76,9 +122,13 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	deaths=0;
 	xp=0.0;
 	
+	pullout=-1;
+	
+	totaltickcount=0;
+	
 	model = w -> load_model(pf->get_models(),dir+"Assets/Iris/Iris.egg");
 	model.set_scale(0.5);
-	model.set_pos(0, 0, 10);
+	model.set_pos(0, 0, 2);
 	model.set_hpr(0, 0, 0);
 	model.set_shader_auto();
 	model.reparent_to(*parent);
@@ -119,9 +169,111 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	//arms_shown = false;
 	ak_arms.hide();
 	
+	negev_arms = w -> load_model(pf->get_models(),dir+"Assets/Iris/negev.egg");
+	negev_arms.set_scale(0.5);
+	negev_arms.set_pos(0.2, 0.7, -0.57);
+	negev_arms.set_hpr(0, 0, 0);
+	negev_arms.set_shader_auto();
+	negev_arms.reparent_to(camera);
+	//arms_shown = false;
+	negev_arms.hide();
 	
-	//cout<<dir<<endl;
 	
+	///////////////////////////////////////////////////////////////////////////
+	//PT(AnimControl) animPtr;
+	name_collection.clear_anims();
+	
+	//AnimControlCollection tempCollection;
+	NodePath animNp1 = w->load_model(pistol_arms, dir + "Assets/Iris/FirstPersonViewModel-Fire.egg");
+	auto_bind(pistol_arms.node(), name_collection);
+	PT(AnimControl) animPtr = name_collection.get_anim(0);
+	pistol_collection.store_anim(animPtr, "pistol_shoot");
+	string animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp1.detach_node();
+	pistol_collection.play("pistol_shoot");
+	NodePath animNp2 = w->load_model(pistol_arms, dir + "Assets/Iris/FirstPersonViewModel-pull_out_pistol.egg");
+	auto_bind(pistol_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	pistol_collection.store_anim(animPtr, "pistol_reload");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp2.detach_node();
+	pistol_collection.play("pistol_reload");
+	
+	NodePath animNp3 = w->load_model(bat_arms, dir + "Assets/Iris/fpvBat-atttack.egg");
+	auto_bind(bat_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	bat_collection.store_anim(animPtr, "bat_shoot");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp3.detach_node();
+	bat_collection.play("bat_shoot");
+	NodePath animNp4 = w->load_model(bat_arms, dir + "Assets/Iris/fpvBat-pull_out_bat.egg");
+	auto_bind(bat_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	bat_collection.store_anim(animPtr, "bat_reload");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp4.detach_node();
+	bat_collection.play("bat_reload");
+	
+	NodePath animNp5 = w->load_model(ak_arms, dir + "Assets/Iris/fpvak47-fire.egg");
+	auto_bind(ak_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	ak_collection.store_anim(animPtr, "ak_shoot");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp5.detach_node();
+	ak_collection.play("ak_shoot");
+	NodePath animNp6 = w->load_model(ak_arms, dir + "Assets/Iris/fpvak47-pull_out_gun.egg");
+	auto_bind(ak_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	ak_collection.store_anim(animPtr, "ak_reload");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp6.detach_node();
+	ak_collection.play("ak_reload");
+	
+	NodePath animNp7 = w->load_model(negev_arms, dir + "Assets/Iris/negev-fire.egg");
+	auto_bind(negev_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	negev_collection.store_anim(animPtr, "negev_shoot");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp7.detach_node();
+	negev_collection.play("negev_shoot");
+	NodePath animNp8 = w->load_model(negev_arms, dir + "Assets/Iris/negev-pull_out_gun.egg");
+	auto_bind(negev_arms.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	negev_collection.store_anim(animPtr, "negev_reload");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp8.detach_node();
+	negev_collection.play("negev_reload");
+	
+	NodePath animNp9 = w->load_model(model, dir + "Assets/Iris/Iris-walk.egg");
+	auto_bind(model.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	main_collection.store_anim(animPtr, "walk");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp9.detach_node();
+	main_collection.play("walk");
+	NodePath animNp10 = w->load_model(model, dir + "Assets/Iris/Iris-Idle.egg");
+	auto_bind(model.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	main_collection.store_anim(animPtr, "idle");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp10.detach_node();
+	main_collection.play("idle");
+	
+	w->load_model(empty_arms, dir + "Assets/Iris/EmptyHands-Idle.egg");
+	auto_bind(empty_arms.node(), empty_collection);
+	empty_collection.loop_all(true);//"Armature");
+	
+	////////////////////////////////////////////////////////////////////////////////
 	
 	max_food=100;
 	food=100;
@@ -144,6 +296,9 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	w->get_render().set_fog(hitFog);
 	
 	ground = false;
+	
+	lvlid=0;
+	
 	
 }
 
@@ -179,7 +334,7 @@ void Player::coll_set_up(){
 	
 	
 	
-	c_Node = new CollisionNode("Player_pickup_ray");
+	/*c_Node = new CollisionNode("Player_pickup_ray");
 	c_Node -> add_solid(new CollisionSegment(0, 0, 0, 0, 20, 0));
 	c_Node -> set_from_collide_mask(BitMask32::bit(2));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
@@ -187,7 +342,7 @@ void Player::coll_set_up(){
 
 	//pickupRayModel.show();
 	qtrav_pickup.add_collider(pickupRayModel, qcoll_pickup);
-	
+	*/
 	
 	// Player Shoot ray setup.
 	// BRENNAN when you set up the player constructor, put this in there as well. It should be the same as everything else.
@@ -195,7 +350,7 @@ void Player::coll_set_up(){
 	qcoll_shoot = new CollisionHandlerQueue;
 	c_Node = new CollisionNode("Player_Shoot");
 	c_Node -> add_solid(new CollisionRay(0, 0, 0, 0, 1, 0));
-	c_Node -> set_from_collide_mask(BitMask32::bit(3));
+	c_Node -> set_from_collide_mask(BitMask32::bit(1));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	shootRayModel = camera.attach_new_node(c_Node);
 	shootRayModel.show();
@@ -211,8 +366,9 @@ void Player::coll_set_up(){
 
 
 bool Player::pick_up(PandaNode* itm,vector<Item*> &itms){
+	//cout<<"HARDER DADDY"<<endl;
 	for (unsigned int i = 0; i < itms.size(); i++){
-		if(itm == itms[i] -> sphereModel.node()){
+		if(itm == itms[i] -> sphereModelTwo.node()){
 			int trans=0;
 			if (player.mode){
 				trans=20;
@@ -263,14 +419,15 @@ bool Player::pick_up(PandaNode* itm,vector<Item*> &itms){
 	
 	
 }
-bool Player::drop(int itr,vector<Item*> itms,NodePath* parent){
+bool Player::drop(int itr,vector<Item*> &itms,NodePath* parent){
 	if ((unsigned int)itr >= 0 && (unsigned int)itr < inventory.size()){
 		itms.push_back(inventory[itr]);
 		player.removeItem(itr);
-		cout<<model.get_pos()<<endl;
+		//cout<<model.get_pos()<<endl;
 		itms.back() -> model.reparent_to(*parent);
 		itms.back() -> model.set_pos(model.get_pos().get_x(),model.get_pos().get_y(),model.get_pos().get_z()+5);
 		itms.back() -> model.show();
+		itms.back() -> sphereModelTwo.show();
 		itms.back() -> setVel(0,0,0);
 		return true;
 	}
@@ -309,18 +466,23 @@ void Player::removeItem(int itr){
 
 void Player::play_anim(){
 	if (player.mainHand->id==0){
-		pistol_collection.play("Armature");
+		pistol_collection.play("pistol_shoot");
 	}
 	if (player.mainHand->id==2){
-		bat_collection.play("Armature");
+		bat_collection.play("bat_shoot");
 	}
 	if (player.mainHand->id==10){
-		ak_collection.play("Armature");
+		ak_collection.play("ak_shoot");
+	}
+	if (player.mainHand->id==11 && player.negev_collection.get_frame()>1 ){
+		//cout<<negev_collection.get_anim_name(0)<<endl;
+		//cout<<negev_collection.get_anim_name(1)<<endl;
+		negev_collection.play("negev_shoot");
 	}
 	
 	
 }
-void Player::death(vector<Item*> v,NodePath* parent){
+void Player::death(vector<Item*> &v,NodePath* parent){
 	float r,r2,r3;
 	unsigned int send_nudes=inventory.size();
 	for (unsigned int i=0;i<send_nudes;i++){
@@ -341,6 +503,11 @@ void Player::death(vector<Item*> v,NodePath* parent){
 	player.arms=&player.empty_arms;
 	player.mainHand=NULL;
 	calc_arms();
+	
+	player.model.set_x(gameLevels[player.lvlid]->spawn_x);
+	player.model.set_y(gameLevels[player.lvlid]->spawn_y);
+	player.model.set_z(gameLevels[player.lvlid]->spawn_z);
+	
 }
 void Player::calc_arms(){
 	
@@ -357,6 +524,7 @@ void Player::calc_arms(){
 	bat_arms.hide();
 	empty_arms.hide();
 	ak_arms.hide();
+	negev_arms.hide();
 	if (arms!=NULL){
 		arms->hide();
 	}
@@ -394,6 +562,11 @@ void Player::calc_arms(){
 				if (mainHand->id==10){
 					on=true;
 					arms=&ak_arms;
+
+				}
+				if (mainHand->id==11){
+					on=true;
+					arms=&negev_arms;
 
 				}
 		

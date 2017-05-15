@@ -16,3 +16,8 @@ Player Respawn
 Iris Animations
 Enemy drops?
 Nedgev support
+
+there are pullout ;) animations to add: 
+Pistol: Assets/Iris/FirstPersonViewModel-pull_out_pistol.egg
+AK47: Assets/Iris/fpvak47-pull_out_gun.egg
+Batman (the baseball bat dingus): Assets/Iris/fpvBat-pull_out_bat.egg

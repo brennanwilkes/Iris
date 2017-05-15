@@ -15,10 +15,8 @@
 #include <cstdlib>
 
 World::World(){
-	//game_running = 1;
-	//pause_menu = 0;
-	//option_menu = 0;
-	menuStatus=0;
+	menuStatus = 3;
+	//ms = {ms_game=0, ms_pause=1, ms_option=2, ms_start=3, ms_optionfromstart=4};
 }
 
 void World::init(){
@@ -28,8 +26,6 @@ void World::init(){
 }
 
 void World::tick(){
-
-	
 	player.tick();
 	
 	GameObject::gtrav.traverse(window -> get_render());
@@ -56,20 +52,40 @@ void World::tick(){
 		}
 	}
 	
-
-
 	
+	if (player.pullout!=-1){
+		if (player.pullout==0){
+			player.pistol_collection.play("pistol_reload");
+		}
+		else if(player.pullout==2){
+			player.bat_collection.play("bat_reload");
+		}
+		else if(player.pullout==10){
+			player.ak_collection.play("ak_reload");
+		}
+		else if(player.pullout==11){
+			player.negev_collection.play("negev_reload");
+		}
+		
+		player.pullout=-1;
+	}
+
 	//RECOIL
 	if (player.recoil_frames>0){
 		float ranR=rand()/(float)RAND_MAX;
-		
-		ranR++;
+		ranR*=2;
+		ranR-=1;
 		player.recoil_frames--;
 		
-		ranR-=1.5;
-		ranR*=2;
+		//ranR*=1.4;
 		
-		player.camera.set_p(player.camera,player.recoil_mult*ranR);
+		if(player.mainHand!=NULL){
+			if(player.mainHand->id==11){
+				ranR*=2;
+			}
+		}
+		
+		player.camera.set_p(player.camera,player.recoil_mult*pow(pow(ranR,2),0.5));
 		player.camera.set_h(player.camera,player.recoil_mult*ranR);
 	}
 
@@ -105,12 +121,10 @@ void World::tick(){
 		}*/
 		
 		world.gameSounds.walkSound3->play();
-		
-		
+
 	}
 	
-	
-	
+
 	tickCount++;
 	if (tickCount>120){
 		float ran=rand()/(float)RAND_MAX;
@@ -138,12 +152,9 @@ void World::tick(){
 		if (player.water<1){
 			player.water=1;
 		}
-		
-		
 		tickCount=0;
 	}
 }
-
 
 void World::draw(){
 	float tx(0),ty(0);
@@ -180,26 +191,32 @@ void World::draw(){
 
 	if (player.hitbox){
 		player.sphereModel.show();
+		player.sphereModelTwo.show();
 		player.rayModel.show();
-		for (unsigned int ij=0;ij<itms.size();ij++){
+		for (unsigned ij=0;ij<itms.size();ij++){
 			itms[ij]->sphereModel.show();
+			itms[ij]->sphereModelTwo.show();
 			itms[ij]->rayModel.show();
 		}
-		for (unsigned int ij=0;ij<enems.size();ij++){
+		for (unsigned ij=0;ij<enems.size();ij++){
 			enems[ij]->sphereModel.show();
+			enems[ij]->sphereModelTwo.show();
 			enems[ij]->rayModel.show();
 			
 		}
 	}
 	else{
 		player.sphereModel.hide();
+		player.sphereModelTwo.hide();
 		player.rayModel.hide();
-		for (unsigned int ij=0;ij<itms.size();ij++){
+		for (unsigned ij=0;ij<itms.size();ij++){
 			itms[ij]->sphereModel.hide();
+			itms[ij]->sphereModelTwo.hide();
 			itms[ij]->rayModel.hide();
 		}
-		for (unsigned int ij=0;ij<enems.size();ij++){
+		for (unsigned ij=0;ij<enems.size();ij++){
 			enems[ij]->sphereModel.hide();
+			enems[ij]->sphereModelTwo.hide();
 			enems[ij]->rayModel.hide();
 			
 		}
@@ -226,14 +243,15 @@ void World::get_keys(MouseWatcher* mw, map <std::string, pair<ButtonHandle, bool
 			(k.second).second = false;
 }
 
-void World::look(WindowFramework *win){
+void World::look(WindowFramework *win, float mouseSens){
+
 	GraphicsWindow *gw = win -> get_graphics_window();
 	if (gw)
 	{
 		int dx = (gw -> get_properties().get_x_size() / 2) - gw -> get_pointer(0).get_x();
 		int dy = (gw -> get_properties().get_y_size() / 2) - gw -> get_pointer(0).get_y();
-		
-		player.camera.set_hpr(player.camera.get_hpr().get_x()+ dx * 0.03, player.camera.get_hpr().get_y() + dy * 0.03, 0);
+
+		player.camera.set_hpr(player.camera.get_hpr().get_x()+ dx * 0.03 * (mouseSens+1), player.camera.get_hpr().get_y() + dy * 0.03 * (mouseSens+1), 0);
 		gw -> move_pointer(0, gw -> get_properties().get_x_size() / 2, gw -> get_properties().get_y_size() / 2);
 	}
 }
@@ -275,7 +293,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	}
 	
 	if (keybinds["sprint"].second){
-		walk=5;
+		walk=4;
 		player.speed=12;
 	}
 	
@@ -294,16 +312,35 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	
 	
 	// Move the player
-	player.model.set_fluid_x(player.model.get_x() + dx * dt * 15 * walk);
-	player.model.set_fluid_y(player.model.get_y() + dy * dt * 15 * walk);
+	player.model.set_fluid_x(player.model.get_x() + (dx * dt * 5 * walk));
+	player.model.set_fluid_y(player.model.get_y() + (dy * dt * 5 * walk));
+	
+	/*
+	for (int i=0;i<player.main_collection.get_num_anims();i++){
+		cout<<player.main_collection.get_anim_name(i)<<endl;
+	}
+	*/
+	
 	
 	if (dx != 0  || dy != 0)
 	{
+		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
+		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1 || player.main_collection.which_anim_playing()=="idle"){
+			player.main_collection.play("walk");
+		}
+		//cout<<"walk"<<endl;
 		player.model.set_hpr(player.camera.get_hpr().get_x(), 0, 0);
 	}
+	else{
+		//cout<<"idle"<<endl;
+		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
+		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1 || player.main_collection.which_anim_playing()=="walk"){
+			player.main_collection.play("idle");
+			//cout<<"start idle"<<endl;
+		}
+	}
+	
 }
-
-
 
 void World::apply_grav(){
 	/*if (dt <= 0.1){
@@ -322,18 +359,19 @@ void World::apply_grav(){
 }
 
 void World::menu(){
-	if (menuStatus==0){
-		menuStatus=1;
+	if (menuStatus==ms_game){
+		menuStatus=ms_pause;
 	}
 	else{
-		menuStatus=0;
+		menuStatus=ms_game;
 	}
 	
-	if (menuStatus==0)
+	if (menuStatus==ms_game)
 	{
 		if (player.arms!=NULL){
 			player.arms->show();
 		}
+		startMenuItems.hide();
 		gameModels.show();
 		menuItems.hide();
 		optionMenuItems.hide();
@@ -342,11 +380,13 @@ void World::menu(){
 		props.set_mouse_mode(WindowProperties::M_confined);
 		window -> get_graphics_window() -> request_properties(props);
 	}
-	else if (menuStatus==1)
+	else if (menuStatus==ms_pause)
 	{	
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
+		startMenuItems.hide();
+
 		gameModels.hide();
 		menuItems.show();
 		optionMenuItems.hide();
@@ -359,61 +399,107 @@ void World::menu(){
 		
 	}
 	
+	else if (menuStatus==ms_option)
+	{	
+		
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.hide();
+
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.show();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+		
+		
+		
+	}
 	else
-	{	
-		
-		if (player.arms!=NULL){
-			player.arms->hide();
-		}
-		gameModels.hide();
-		menuItems.hide();
-		optionMenuItems.show();
-		WindowProperties props = window -> get_graphics_window() -> get_properties();
-		props.set_cursor_hidden(false);
-		props.set_mouse_mode(WindowProperties::M_absolute);
-		window -> get_graphics_window() -> request_properties(props);
-		
-		
-		
-	}
-	
-	
-	
-	
-}
-
-void World::menuOption(){
-
-	
-	if (menuStatus==2){
-		menuStatus=1;
-	}
-	else{
-		menuStatus=2;
-	}
-	
-	if (menuStatus==2)
-	{	
-		if (player.arms!=NULL){
-			player.arms->hide();
-		}
-		gameModels.hide();
-		menuItems.hide();
-		optionMenuItems.show();
-		WindowProperties props = window -> get_graphics_window() -> get_properties();
-		props.set_cursor_hidden(false);
-		props.set_mouse_mode(WindowProperties::M_absolute);
-		window -> get_graphics_window() -> request_properties(props);
-		
-		
-		
-	}
-	
-	if (menuStatus==1)
 	{
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
+		startMenuItems.show();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.show();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+
+	
+}
+
+void World::menuOption(){
+	if (menuStatus==ms_option){
+		menuStatus=ms_pause;
+	}
+	else if (menuStatus ==ms_pause){
+		menuStatus=ms_option;
+	}
+	
+	if (menuStatus == ms_start){
+		menuStatus = ms_optionfromstart;
+	}
+	else if (menuStatus == ms_optionfromstart){
+		menuStatus = ms_start;
+	}
+
+	if (menuStatus==ms_optionfromstart)
+	{	
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.hide();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.show();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+	if (menuStatus==ms_start)
+	{	
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.show();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.hide();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+	if (menuStatus==ms_option)
+	{	
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.hide();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.show();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+	
+	if (menuStatus==ms_pause)
+	{
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.hide();
 		gameModels.hide();
 		menuItems.show();
 		optionMenuItems.hide();
@@ -425,3 +511,42 @@ void World::menuOption(){
 	
 }
 
+void World::menuStart(){
+	if (menuStatus==ms_start){
+		menuStatus=ms_game;
+	}
+	else{
+		menuStatus=ms_start;
+	}
+	
+	if (menuStatus==ms_game)
+	{	
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.hide();
+		gameModels.show();
+		menuItems.hide();
+		optionMenuItems.hide();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(true);
+		props.set_mouse_mode(WindowProperties::M_confined);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+	
+	if (menuStatus==ms_start)
+	{
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.show();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.hide();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+	
+}

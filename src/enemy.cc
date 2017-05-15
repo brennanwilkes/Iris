@@ -1,6 +1,7 @@
 #include "global.hpp"
 #include "enemy.hpp"
 #include "gameObject.hpp"
+#include <auto_bind.h>
 
 Enemy::Enemy() : GameObject() {}
 
@@ -56,13 +57,13 @@ void Enemy::tick(int m) {
 	model.set_hpr((atan2(player.model.get_y()-model.get_y(),player.model.get_x()-model.get_x())*180.0/3.14159265358979323846)+90,model.get_hpr().get_y(),model.get_hpr().get_z());		
 	bas_mov(3);
 	if (running){
-		if(anim_collection.get_frame()==anim_collection.get_num_frames()-1){// || lastframe==anim_collection.get_frame()){	
-			anim_collection.loop("Armature.2",true);
+		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1){// || lastframe==anim_collection.get_frame()){	
+			anim_collection.loop("walk",true);
 		}
 	}
 	else{
-		if(anim_collection.get_frame()==anim_collection.get_num_frames()-1){//|| lastframe==anim_collection.get_frame()){	
-			anim_collection.loop("Armature.1",true);
+		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1){//|| lastframe==anim_collection.get_frame()){	
+			anim_collection.loop("idle",true);
 		}
 	}
 	
@@ -84,7 +85,31 @@ void Enemy::tick(int m) {
 	
 }
 
-void Enemy::init() {GameObject::init();}
+void Enemy::init() {
+	GameObject::init();
+	
+	
+	
+	
+	PT(CollisionNode) c_Node;
+	//For collisions
+	c_Node = new CollisionNode("Coll_Sphere");
+	c_Node -> add_solid(new CollisionSphere(0, 0, 0, 2.0));
+	c_Node -> set_from_collide_mask(BitMask32::bit(0));
+	c_Node -> set_into_collide_mask(BitMask32::all_off());
+	sphereModel = model.attach_new_node(c_Node);
+	sphereModel.set_color(255,0,0,1.0);
+	coll_push -> add_collider(sphereModel, model);
+	GameObject::ptrav.add_collider(sphereModel, coll_push);
+	
+	
+	
+	
+	
+	sphereModel.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z()+5);
+	sphereModelTwo.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z());
+	sphereModelTwo.set_scale(1.5);
+}
 
 bool Enemy::check_sight(){
 	
@@ -138,7 +163,7 @@ void Enemy::bas_mov(float dis){
 		
 		//cout<<qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()<<endl;
 		
-		if (qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()!="Coll_Sphere"){
+		if (qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()!="Interaction_Sphere"){
 			return;
 		}
 
@@ -258,36 +283,60 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 	
 	setVel(0,0,0);
 	
+	
+	
+	AnimControlCollection name_collection;
+	
+	
+	NodePath animNp1 = w->load_model(model, mydir + "Assets/INSECT/insect-Idle.egg");
+	auto_bind(model.node(), name_collection);
+	PT(AnimControl) animPtr = name_collection.get_anim(0);
+	anim_collection.store_anim(animPtr, "idle");
+	string animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp1.detach_node();
+	anim_collection.play("idle");
+	NodePath animNp2 = w->load_model(model, mydir + "Assets/INSECT/insect-Move.egg");
+	auto_bind(model.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	anim_collection.store_anim(animPtr, "walk");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp2.detach_node();
+	anim_collection.play("walk");
+	
 }
 
 void Enemy::coll_set_up(int dist){
 	//qcoll_pickup = new CollisionHandlerQueue;
-
+	
 	PT(CollisionNode) c_Node;
-	c_Node = new CollisionNode("Enemy_sphere");
+	
+	
+	//c_Node = new CollisionNode("Enemy_sphere");
 	//c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
 	
 	//c_Node = model.find("**/courseGeometry");
 	//courseGeometry.setCollideMask(BitMask32.bit(0))
 	
-	c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
-	c_Node -> set_from_collide_mask(BitMask32::bit(0));
-	c_Node -> set_into_collide_mask(BitMask32::bit(3));
-	sphereModel = model.attach_new_node(c_Node);
+	//c_Node -> add_solid(new CollisionSphere(0, 0, 4, 2.0));
+	//c_Node -> set_from_collide_mask(BitMask32::bit(0));
+	//c_Node -> set_into_collide_mask(BitMask32::bit(0));
+	//sphereModel = model.attach_new_node(c_Node);
 
 	//sphereModel.show();
-	coll_push -> add_collider(sphereModel, model);
-	ptrav.add_collider(sphereModel, coll_push);
-
+	//coll_push -> add_collider(sphereModel, model);
+	//ptrav.add_collider(sphereModel, coll_push);
+	
 
 	qcoll_shoot = new CollisionHandlerQueue;
 	c_Node = new CollisionNode("AI_Shoot");
 	c_Node -> add_solid(new CollisionRay(0, 0, 2, 0, dist, 0));
-	c_Node -> set_from_collide_mask(BitMask32::bit(0));
+	c_Node -> set_from_collide_mask(BitMask32::bit(1));
 	c_Node -> set_into_collide_mask(BitMask32::all_off());
 	shootRayModel = model.attach_new_node(c_Node);
 	shootRayModel.set_pos(0,0,0);
-	shootRayModel.show();
+	shootRayModel.hide();
 	qtrav_shoot.add_collider(shootRayModel, qcoll_shoot);
 
 	

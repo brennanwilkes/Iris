@@ -89,32 +89,47 @@ public:
 	
 	NodePath sphereModelTracker;
 	
+	AnimControlCollection name_collection;
+	
+	AnimControlCollection main_collection;
 	AnimControlCollection pistol_collection;
 	AnimControlCollection bat_collection;
 	AnimControlCollection empty_collection;
 	AnimControlCollection ak_collection;
+	AnimControlCollection negev_collection;
 	
 	NodePath pistol_arms;
 	NodePath bat_arms;
 	NodePath empty_arms;
 	NodePath ak_arms;
+	NodePath negev_arms;
 	
 	float xp;
 	int deaths;
 	int kills;
 	
-	void death(vector<Item*> v,NodePath* parent);
+	void death(vector<Item*> &v,NodePath* parent);
 	
 	
 	void set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string dir);
 	void coll_set_up();
 	bool pick_up(PandaNode* itm,vector<Item*> &itms);
-	bool drop(int itr,vector<Item*> itms,NodePath* parent);
+	bool drop(int itr,vector<Item*> &itms,NodePath* parent);
 	//void recoil(int fc, float mult);
 	
 	
 	void calc_arms();
 	void play_anim();
+	
+	
+	int lvlid;
+	string savefilename;
+	
+	
+	int totaltickcount;
+	
+	int pullout;
+	
 	
 private:
 	//vector<Item> inventory;

@@ -15,6 +15,24 @@ void WeaponObject::weapon_init(int max,float f,float a,int bt,int mc,int c){
 	//DO random colours like this
 	//model.set_color_scale(222/255.0,184/225.0,135/225.0,1.0);
 	
+	
+	
+	if(id==10){	//ak
+		
+	}
+	else if(id==0){	//pistol
+		
+	}
+	else if(id==2){	//bat
+		
+	}
+	if(id==11){	//nedgev
+		
+	}
+	
+	
+	
+	
 	firerate=f;
 	accuracy=a;
 	bullet_type=bt;

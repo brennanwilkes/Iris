@@ -6,6 +6,8 @@ Keys::Keys(){
 	{"menu", {key, false}}
 	} */
 	//https://www.panda3d.org/manual/index.php/Keyboard_Support
+	mouseSens = 0.0;
+
 	keybinds["menu"] = std::make_pair(KeyboardButton::escape(), false);
 	keybinds["jump"] = std::make_pair(KeyboardButton::space(), false);
 	keybinds["cameraToggle" ] = std::make_pair(KeyboardButton::ascii_key('f'), false);
@@ -22,6 +24,11 @@ Keys::Keys(){
 	keybinds["zoomOut"] = std::make_pair(KeyboardButton::ascii_key('-'), false);
 	keybinds["zoomIn"] = std::make_pair(KeyboardButton::ascii_key('='), false);
 
+	string nums = "123456789";
+	for (auto i: nums){
+		keybinds["inv"+to_string(i-48)] = std::make_pair(KeyboardButton::ascii_key(i), false);
+	}
+	
 	for (auto k: keybinds){
 		keybindItems.push_back(k.first);
 	}
@@ -67,8 +74,16 @@ Keys::Keys(){
 		KeyboardButton::scroll_lock(),
 		KeyboardButton::print_screen(),
 	};
-	string alphabet = "qwertyuiop[]asdfghjkl;'zxcvbnm,./1234567890-=`\\";
+	string alphabet = "0qwertyuiop[]asdfghjkl;'zxcvbnm,./-=`\\";
 	for (auto i: alphabet){
 		allKeys.push_back(KeyboardButton::ascii_key(i));
 	}
 }
+/*
+Keys::~Keys(){
+	for (unsigned i=0; i<keybindMenu.size(); i++){
+		delete keybindMenu.at(i);
+	}
+}
+*/
+
