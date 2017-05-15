@@ -156,14 +156,18 @@ void Enemy::bas_mov(float dis){
 	*/
 	running=false;
 	
-	if (qcoll_shoot -> get_num_entries() > 0)
+	if (qcoll_shoot -> get_num_entries() > 1)
 	{
 		
 		qcoll_shoot -> sort_entries();
+		/*cout<<endl;
+		for (int i=0;i<qcoll_shoot -> get_num_entries();i++){
+			cout<<qcoll_shoot -> get_entry(i) -> get_into_node()->get_name()<<endl;
+		}
+		cout<<endl;
+		*/
 		
-		//cout<<qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()<<endl;
-		
-		if (qcoll_shoot -> get_entry(0) -> get_into_node()->get_name()!="Interaction_Sphere"){
+		if (qcoll_shoot -> get_entry(1) -> get_into_node()->get_name()!="Interaction_Sphere"){
 			return;
 		}
 
