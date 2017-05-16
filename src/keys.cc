@@ -15,6 +15,8 @@ Keys::Keys(){
 	keybinds[ "pickup"] = std::make_pair(KeyboardButton::ascii_key('e'), false);
 	keybinds["reload"] = std::make_pair(KeyboardButton::ascii_key('r'), false);
 	keybinds["drop"] = std::make_pair(KeyboardButton::ascii_key('q'), false);
+	keybinds["spider"] =  std::make_pair(KeyboardButton::ascii_key('i'), false);
+
 	keybinds["forward"] = std::make_pair(KeyboardButton::ascii_key('w'),false);
 	keybinds["backward"] = std::make_pair(KeyboardButton::ascii_key('s'), false);
 	keybinds["left"] = std::make_pair(KeyboardButton::ascii_key('a'), false);
@@ -23,6 +25,7 @@ Keys::Keys(){
 	keybinds["sprint"] = std::make_pair( KeyboardButton::shift(), false);
 	keybinds["zoomOut"] = std::make_pair(KeyboardButton::ascii_key('-'), false);
 	keybinds["zoomIn"] = std::make_pair(KeyboardButton::ascii_key('='), false);
+	;
 
 	string nums = "123456789";
 	for (auto i: nums){

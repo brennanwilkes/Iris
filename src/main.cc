@@ -118,6 +118,7 @@ void invHotkey(const Event* eventPtr, void* dataPtr);
 void invPress(const Event* eventPtr, void* dataPtr);
 void jump(const Event* eventPtr, void* dataPtr);
 void menu(const Event* eventPtr, void* dataPtr);
+void makeSpider(const Event* eventPtr, void* dataPtr);
 void hide_arms(const Event* eventPtr, void* dataPtr);
 void onMouse1(const Event* eventPtr, void* dataPtr);
 void onE(const Event* eventPtr, void* dataPtr);
@@ -675,11 +676,7 @@ int main(int argc, char *argv[]) {
 	//itms.push_back(&dora);
 	
 
-	Enemy romar;
-	romar.set_up(&shootableModels,window,&framework,mydir+"Assets/INSECT/insect.egg",50.0,-10,-10,0,15.0,40,24,0,10.0);
-	romar.init();
-	romar.coll_set_up(1000);
-	enems.push_back(&romar);
+
 
 	
 	
@@ -778,6 +775,7 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "pickup", &onE, NULL);
 	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "reload", &onR, NULL);
 	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
+	window -> get_panda_framework() -> define_key(keys.keybinds["spider"].first.get_name(), "spider", &makeSpider, &shootableModels);
 
 	keys.wildKeys["menu"] = &menu;
 	keys.dataPtrs["menu"] = window;
@@ -800,6 +798,8 @@ int main(int argc, char *argv[]) {
 	keys.wildKeys["drop"] = &drop;
 	keys.dataPtrs["drop"] = &blankTex;
 
+	keys.wildKeys["spider"] = &makeSpider;
+	keys.dataPtrs["spider"] = &shootableModels;
 
 	for (int i=1; i<10; i++){
 		window -> get_panda_framework() -> define_key(keys.keybinds["inv"+to_string(i)].first.get_name(), "inv"+to_string(i), &invHotkey, &blankTex);
@@ -1096,9 +1096,17 @@ void rebindMouseSens(const Event* eventPtr, void* dataPtr){
 	keys.mouseSens = mouseSlider->get_value()*2.0;
 }
 
-
 void menu(const Event* eventPtr, void* dataPtr){
 	world.menu();
+}
+
+void makeSpider(const Event* eventPtr, void* dataPtr){
+	NodePath* shootableModels = static_cast<NodePath*>(dataPtr);
+	Enemy* romar = new Enemy;
+	romar->set_up(shootableModels, window, window->get_panda_framework(), mydir+"Assets/INSECT/insect.egg",50.0,-10,-10,0,15.0,40,24,0,10.0);
+	romar->init();
+	romar->coll_set_up(1000);
+	enems.push_back(romar);
 }
 
 void drop(const Event* eventPtr, void* dataPtr){
