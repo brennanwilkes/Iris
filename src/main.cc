@@ -1030,7 +1030,7 @@ void invPress(const Event* eventPtr, void* dataPtr){
 void invHotkey(const Event* eventPtr, void* dataPtr){
 	int t=0;
 	for (int i=1; i<10; i++){
-		cout << "i" << i << " - inv" + to_string(i) << " - " <<keys.keybinds["inv" + to_string(i)].first.get_name() << " evnt " <<eventPtr->get_name()<< endl;
+		//cout << "i" << i << " - inv" + to_string(i) << " - " <<keys.keybinds["inv" + to_string(i)].first.get_name() << " evnt " <<eventPtr->get_name()<< endl;
 		if (keys.keybinds["inv" + to_string(i)].first.get_name() == eventPtr->get_name()){
 			t = i;
 			break;
