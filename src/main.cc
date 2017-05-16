@@ -118,6 +118,10 @@ void invHotkey(const Event* eventPtr, void* dataPtr);
 void invPress(const Event* eventPtr, void* dataPtr);
 void jump(const Event* eventPtr, void* dataPtr);
 void menu(const Event* eventPtr, void* dataPtr);
+void makeBat(int x, int y, int z,NodePath* parentNode);
+void makePistol(int x, int y, int z,NodePath* parentNode);
+void makeKalashnikov(int x, int y, int z,NodePath* parentNode);
+void makeNegev(int x, int y, int z,NodePath* parentNode);
 void makeSpider(const Event* eventPtr, void* dataPtr);
 void hide_arms(const Event* eventPtr, void* dataPtr);
 void onMouse1(const Event* eventPtr, void* dataPtr);
@@ -343,7 +347,6 @@ int main(int argc, char *argv[]) {
 
 
 	// Start Menu items
-	//float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
 	PGButton* StartGameButton;
 	PGButton* loadGameButton;
 	PGButton* realQuitButton;
@@ -450,19 +453,17 @@ int main(int argc, char *argv[]) {
 		butt -> setup(keys.keybindItems.at(i)+":"+ keys.keybinds[keys.keybindItems.at(i)].first.get_name());
 		NodePath BindNode1 = window -> get_pixel_2d().attach_new_node(butt);
 		BindNode1.set_scale(0.1);
-		BindNode1.set_pos(xs+0.1*(i/8*8+1),0,0.85-(.2*(i%8+1)));
+		BindNode1.set_pos(xs+0.1*(i/11*8+1),0,0.85-(.15*(i%11+1)));
 		BindNode1.reparent_to(optionMenuItems);
 		window -> get_panda_framework() -> define_key(butt->get_click_event(keys.keybinds["use"].first ), "Bind "+keys.keybindItems.at(i)+"Press",&rebindButton, butt);
 		keys.keybindMenu.push_back(butt);
 		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
 	}
 
-	// Setup, feeding the constructor with (bool vertical,float lenght,float width,float bevel)
 	mouseSlider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
 	mouseSlider->set_range(0,1);
 	mouseSlider->set_value(0);
 	 
-	// Setup scroll bar (the 'moving thumb button' including left and right button)
 	mouseSlider->setup_slider(true,1,0.05,false);
 	NodePath mouseSliderNP = window->get_aspect_2d().attach_new_node(mouseSlider);
 	mouseSliderNP.set_pos(xs+2.5,0,.25);
@@ -570,6 +571,7 @@ int main(int argc, char *argv[]) {
 	defbutNPa.reparent_to(menuItems);
 	*/
 	
+	//Inventory buttons
 
 	// Setup, feeding the constructor with (bool vertical,float lenght,float width,float bevel)
 	Slider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
@@ -585,8 +587,6 @@ int main(int argc, char *argv[]) {
 
 
 	PT(Texture) blankTex=TexturePool::load_texture(mydir+"Assets/blank_slot2.png");
-	
-	
 
 	//////////////////////////////////////////////
 
@@ -641,7 +641,6 @@ int main(int argc, char *argv[]) {
 	
 	
 	///////////////////////////////////////////////////////////////////////////////////
-	///Pill bottle
 	
 	//Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,int zzz,int xxx,int yyy,float rad,int zzzz)
 	
@@ -655,38 +654,11 @@ int main(int argc, char *argv[]) {
 	
 	
 	
-	WeaponObject ak47('g',35,0,20,8.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
-	ak47.weapon_init(24,25.0,1.0,0,64,1);
-	itms.push_back(&ak47);
-	
-	/*
-	WeaponObject ak48('g',37,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
-	ak48.weapon_init(24,25.0,1.0,0,64,1);
-	itms.push_back(&ak48);
-	
-	WeaponObject ak49('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
-	ak49.weapon_init(24,25.0,1.0,0,64,1);
-	itms.push_back(&ak49);
-	*/
-	
-	
-	WeaponObject nedgev('g',39,0,20,17.0f,2.0f, mydir+"blenderFiles/negevitem.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/negevicon.png",140.0,11);
-	nedgev.weapon_init(140,27.0,1.0,0,560,1);
-	itms.push_back(&nedgev);
-	
-	
-	
-	WeaponObject Bat('g',15,0,20,1.0f,1.0f, mydir+"Model/Baseballbat.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/baticon.png",15.0,2);
-	Bat.weapon_init(15,1.0,1.0,0,0,1);
-	itms.push_back(&Bat);
-	
-	WeaponObject Pis('g',25,0,20,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
-	Pis.weapon_init(8,1.0,1.0,0,64,1);	
-	itms.push_back(&Pis);
-	
-	WeaponObject Pis2('g',22,3,20,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
-	Pis2.weapon_init(8,1.0,1.0,0,64,1);	
-	itms.push_back(&Pis2);
+	makeKalashnikov(35, 0, 20,&gameModels);
+	makeNegev(30,0,20, &gameModels);
+	makeBat(15,0,20, &gameModels);
+	makePistol(25,0,20, &gameModels);
+	makePistol(22,3,20, &gameModels);
 	
 	
 	HealthItem Pill('c',10,0,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",100.0,1);
@@ -705,24 +677,7 @@ int main(int argc, char *argv[]) {
 	//itms.push_back(&dora);
 	
 
-
-
-	
-	
-	
-	
 	player.model.set_pos(player.model.get_x(),player.model.get_y(),player.model.get_z()+25);
-	
-
-	/*
-	Enemy sebastian;
-	sebastian.set_up(&shootableModels,window,&framework,mydir+"Assets/INSECT/insect.egg",500.0,10,10,10,15.0);
-	sebastian.init();
-	sebastian.coll_set_up(10);
-	enems.push_back(&sebastian);
-	*/
-	
-	
 	
 	
 	//Deprecated but useful notes so dont delete
@@ -784,7 +739,6 @@ int main(int argc, char *argv[]) {
 	nd_crosshair.set_transparency(TransparencyAttrib::M_alpha, 1);
 	nd_crosshair.set_scale(0.5);
 	nd_crosshair.set_pos(-0.25, 0 ,-0.25);
-	//nd_crosshair.reparent_to(gameModels);
 	tex_crosshair=TexturePool::load_texture(mydir+"Assets/CrossHair.png");
 	nd_crosshair.set_texture(tex_crosshair);
 	
@@ -797,36 +751,29 @@ int main(int argc, char *argv[]) {
 	// define_key("event_name", "description", function, data);
 	// data is a void pointer, so it can take anything.
 
-	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
-	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", &jump, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "cameraToggle", &toggle, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "pickup", &onE, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "reload", &onR, NULL);
-	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["spider"].first.get_name(), "spider", &makeSpider, &shootableModels);
 
+	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
 	keys.wildKeys["menu"] = &menu;
 	keys.dataPtrs["menu"] = window;
-	
+	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", &jump, NULL);
 	keys.wildKeys["jump"] = &jump;
 	keys.dataPtrs["jump"] = NULL;
-
+	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "cameraToggle", &toggle, NULL);
 	keys.wildKeys["cameraToggle"] = &toggle;
 	keys.dataPtrs["cameraToggle"] = NULL;
-
+	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, &blankTex);
 	keys.wildKeys["use"] = &onMouse1;
 	keys.dataPtrs["use"] = &blankTex;
-
+	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "pickup", &onE, NULL);
 	keys.wildKeys["pickup"] = &onE;
 	keys.dataPtrs["pickup"] = NULL;
-
+	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "reload", &onR, NULL);
 	keys.wildKeys["reload"] = &onR;
 	keys.dataPtrs["reload"] = NULL;
-
+	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
 	keys.wildKeys["drop"] = &drop;
 	keys.dataPtrs["drop"] = &blankTex;
-
+	window -> get_panda_framework() -> define_key(keys.keybinds["spider"].first.get_name(), "spider", &makeSpider, &shootableModels);
 	keys.wildKeys["spider"] = &makeSpider;
 	keys.dataPtrs["spider"] = &shootableModels;
 
@@ -1144,10 +1091,38 @@ void menu(const Event* eventPtr, void* dataPtr){
 	world.menu();
 }
 
+void makeBat(int x, int y, int z,NodePath* parentNode){
+	WeaponObject* Bat = new WeaponObject('g',15,0,20,1.0f,1.0f, mydir+"Model/Baseballbat.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/baticon.png",15.0,2);
+	Bat->weapon_init(15,1.0,1.0,0,0,1);
+	itms.push_back(Bat);
+}
+
+void makePistol(int x, int y, int z,NodePath* parentNode){
+	WeaponObject* Pis = new WeaponObject('g',x,y,z,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
+	Pis->weapon_init(8,1.0,1.0,0,64,1);
+	itms.push_back(Pis);
+}
+
+void makeKalashnikov(int x, int y, int z,NodePath* parentNode){
+	WeaponObject* ak47 = new WeaponObject('g',x,y,z,8.0f,1.0f, mydir+"blenderFiles/AK47.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
+	ak47->weapon_init(24,25.0,1.0,0,64,1);
+	itms.push_back(ak47);
+}
+
+void makeNegev(int x, int y, int z,NodePath* parentNode){
+	WeaponObject* nedgev = new WeaponObject('g',x,y,z,17.0f,2.0f, mydir+"blenderFiles/negevitem.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/negevicon.png",140.0,11);
+	nedgev->weapon_init(140,27.0,1.0,0,560,1);
+	itms.push_back(nedgev);
+}
+
 void makeSpider(const Event* eventPtr, void* dataPtr){
 	NodePath* shootableModels = static_cast<NodePath*>(dataPtr);
 	Enemy* romar = new Enemy;
-	romar->set_up(shootableModels, window, window->get_panda_framework(), mydir+"Assets/INSECT/insect.egg",50.0,-10,-10,0,15.0,40,24,0,10.0);
+	int x = player.model.get_x()+50;//-10
+	int y = player.model.get_y();//-10
+	int z = player.model.get_z()+6;//0
+
+	romar->set_up(shootableModels, window, window->get_panda_framework(), mydir+"Assets/INSECT/insect.egg",50.0,x,y,z,15.0,40,24,0,10.0);
 	romar->init();
 	romar->coll_set_up(1000);
 	enems.push_back(romar);
