@@ -18,6 +18,11 @@
 
 class Player : public GameObject{
 public:
+	
+	static CollisionTraverser gtrav;
+	static CollisionTraverser ptrav;
+	
+	
 	Player();
 	NodePath look();
 	

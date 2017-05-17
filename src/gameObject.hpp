@@ -13,8 +13,8 @@ class GameObject{
 public:
 	GameObject();
 	
-	static CollisionTraverser gtrav;
-	static CollisionTraverser ptrav;
+	//static CollisionTraverser gtrav;
+	//static CollisionTraverser ptrav;
 	
 	virtual void init();
 	

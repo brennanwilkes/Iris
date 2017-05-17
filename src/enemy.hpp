@@ -16,6 +16,12 @@
 
 class Enemy : public GameObject{
 public:
+	
+	static CollisionTraverser gtrav;
+	static CollisionTraverser ptrav;
+	
+	
+	
 	Enemy();
 	void init();
 	void tick(int m);
@@ -42,9 +48,6 @@ public:
 	NodePath shootRayModel;
 
 	PT(CollisionHandlerQueue) qcoll_shoot;
-
-	CollisionTraverser ptrav;
-	CollisionTraverser qtrav;
 	CollisionTraverser qtrav_shoot;
 	
 	AnimControlCollection name_collection;

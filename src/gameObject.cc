@@ -8,8 +8,7 @@ GameObject::GameObject(){
 	lastz=0.0;
 }
 
-CollisionTraverser GameObject::gtrav;
-CollisionTraverser GameObject::ptrav;
+
 
 void GameObject::init(){
 	PT(CollisionNode) c_Node;
@@ -21,8 +20,8 @@ void GameObject::init(){
 	rayModel = model.attach_new_node(c_Node);
 	//rayModel.set_pos(0,0,0);
 	coll_grav -> add_collider(rayModel, model);
-	coll_grav->set_gravity(50.0);
-	GameObject::gtrav.add_collider(rayModel, coll_grav);
+	coll_grav->set_gravity(70.0);
+	
 	
 	/*
 	//For collisions

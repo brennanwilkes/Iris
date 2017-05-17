@@ -6,6 +6,11 @@
 
 Player::Player() : GameObject() {}
 
+
+CollisionTraverser Player::gtrav;
+CollisionTraverser Player::ptrav;
+
+
 void Player::tick() {
 	if (speed>1 || !ground){
 		GameObject::tick(1,1); 
@@ -90,8 +95,11 @@ void Player::init() {
 	sphereModel = model.attach_new_node(c_Node);
 	sphereModel.set_color(255,0,0,1.0);
 	coll_push -> add_collider(sphereModel, model);
-	GameObject::ptrav.add_collider(sphereModel, coll_push);
 	
+	ptrav.add_collider(sphereModel, coll_push);
+	gtrav.add_collider(rayModel, coll_grav);
+	
+	coll_grav->set_gravity(70.0*2);
 	
 	sphereModel.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z()+5);
 	sphereModelTwo.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z());

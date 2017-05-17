@@ -5,6 +5,9 @@
 
 Enemy::Enemy() : GameObject() {}
 
+CollisionTraverser Enemy::gtrav;
+CollisionTraverser Enemy::ptrav;
+
 void Enemy::tick(int m) {
 	
 	tickFrame++;
@@ -15,13 +18,9 @@ void Enemy::tick(int m) {
 		
 		float xd,yd,zd,td;//,x2,y2,z2;
 	
-		xd=model.get_x();
-		yd=model.get_y();
-		zd=model.get_z();
-	
-		xd=xd-player.model.get_x();
-		yd=yd-player.model.get_y();
-		zd=zd-player.model.get_z();
+		xd=model.get_x()-player.model.get_x();
+		yd=model.get_y()-player.model.get_y();
+		zd=model.get_z()-player.model.get_z();
 	
 		xd= pow(xd*xd,0.5);
 		yd= pow(yd*yd,0.5);
@@ -33,42 +32,23 @@ void Enemy::tick(int m) {
 			attack();
 		}
 	}
-	if (tickFrame>10){
+	if (tickFrame>60 || (running&&tickFrame>6)){
 		tickFrame=0;
 		check_sight();
 	}
-	/*if(rot!=0){
-		model.set_hpr((int)(model.get_hpr().get_x()+rot)%360,model.get_hpr().get_y(),model.get_hpr().get_z());
-		
-		running=true;
-	}
-	else{
-		//model.look_at(player.model);
-		//model.set_hpr(model.get_hpr().get_x()+180,model.get_hpr().get_y(),model.get_hpr().get_z());
-		
-		//Trig would probally be faster so maybe figure it out eventually
-		
-		model.set_hpr((atan2(player.model.get_y()-model.get_y(),player.model.get_x()-model.get_x())*180.0/3.14159265358979323846)+90,model.get_hpr().get_y(),model.get_hpr().get_z());
-		
-		
-		bas_mov(3);
-	}*/
 	
-	model.set_hpr((atan2(player.model.get_y()-model.get_y(),player.model.get_x()-model.get_x())*180.0/3.14159265358979323846)+90,model.get_hpr().get_y(),model.get_hpr().get_z());		
-	bas_mov(0.25);
+	
 	if (running){
-		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="idle"){// || lastframe==anim_collection.get_frame()){	
+		bas_mov(0.25);
+		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="idle"){
 			anim_collection.loop("walk",true);
 		}
 	}
 	else{
-		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="walk"){//|| lastframe==anim_collection.get_frame()){	
+		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="walk"){	
 			anim_collection.loop("idle",true);
 		}
 	}
-	
-	
-	
 	
 	if (tint>0){
 		model.clear_color_scale();
@@ -76,8 +56,7 @@ void Enemy::tick(int m) {
 		tint-=0.05;
 	}
 	
-	GameObject::tick(1,0);
-	
+	//GameObject::tick(1,0);
 	
 	if (health<=0){
 		death();
@@ -89,8 +68,6 @@ void Enemy::init() {
 	GameObject::init();
 	
 	
-	
-	
 	PT(CollisionNode) c_Node;
 	//For collisions
 	c_Node = new CollisionNode("Coll_Sphere");
@@ -100,11 +77,10 @@ void Enemy::init() {
 	sphereModel = model.attach_new_node(c_Node);
 	sphereModel.set_color(255,0,0,1.0);
 	coll_push -> add_collider(sphereModel, model);
-	GameObject::ptrav.add_collider(sphereModel, coll_push);
+	ptrav.add_collider(sphereModel, coll_push);
+	gtrav.add_collider(rayModel, coll_grav);
 	
-	
-	
-	
+	coll_grav->set_gravity(70.0*12);
 	
 	sphereModel.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z()+5);
 	sphereModelTwo.set_pos(sphereModel.get_x(),sphereModel.get_y(),sphereModel.get_z());
@@ -113,93 +89,36 @@ void Enemy::init() {
 
 bool Enemy::check_sight(){
 	
-	xdis=model.get_x()-player.model.get_x();
-	ydis=model.get_y()-player.model.get_y();
-	
-	float trot=atan2(ydis,xdis)/3.14159265358979323846*180.0;
-	trot=(int)trot%360;
-	
-	
-	trot=trot-((int)model.get_hpr().get_x()%360)-90;
-	
-	rot=0;
-	if ((10>trot && trot > 0)||(370>trot && trot>360)){
-		rot=1;
-	}
-	if ((-10<trot && trot < 0)||(350<trot && trot<360)){
-		rot=-1;
-	}
-	
-	
-	
-	
-	
-	
-	return false;
-}
-
-void Enemy::bas_mov(float dis){
-	
-	
 	float dis2=sqrt(pow(player.model.get_y()-model.get_y(),2)+pow(player.model.get_x()-model.get_x(),2));
-	//shootRayModel.set_pos(0,0,0);
 	shootRayModel.look_at(player.sphereModel);
 	//cout<<shootRayModel.get_hpr()<<endl;
 	shootRayModel.set_hpr(shootRayModel.get_hpr().get_x(),shootRayModel.get_hpr().get_y()-atan2(2.0,dis2),shootRayModel.get_hpr().get_z());
 	qtrav_shoot.traverse(window -> get_render());
 	
-	/*
-	for (int i=0;i<qcoll_shoot->get_num_entries();i++){
-		cout<<qcoll_shoot -> get_entry(i) -> get_into_node()->get_name()<<" ";
-	}
-	cout<<endl;
-	*/
+	
 	running=false;
 	
 	if (qcoll_shoot -> get_num_entries() > 1)
 	{
-		
 		qcoll_shoot -> sort_entries();
-		/*cout<<endl;
-		for (int i=0;i<qcoll_shoot -> get_num_entries();i++){
-			cout<<qcoll_shoot -> get_entry(i) -> get_into_node()->get_name()<<endl;
-		}
-		cout<<endl;
-		*/
-		
 		if (qcoll_shoot -> get_entry(1) -> get_into_node()->get_name()!="Interaction_Sphere"){
-			return;
+			return false;
 		}
-
 	}
 	else{
-		//cout<<"naw! "<<qcoll_shoot->get_num_entries()<<endl;
-		//running=false;
-		return;
+		return false;
 	}
 	running=true;
-	//cout<<"ya"<<endl;
-	/*
-	float xd,yd,zd,td;//,x2,y2,z2;
+	return true;
+}
+
+void Enemy::bas_mov(float dis){
 	
-	xd=model.get_x();
-	yd=model.get_y();
-	zd=model.get_z();
+	model.set_hpr((atan2(player.model.get_y()-model.get_y(),player.model.get_x()-model.get_x())*180.0/3.14159265358979323846)+90,model.get_hpr().get_y(),model.get_hpr().get_z());
 	
-	xd=xd-player.model.get_x();
-	yd=yd-player.model.get_y();
-	zd=zd-player.model.get_z();
 	
-	xd= pow(xd*xd,0.5);
-	yd= pow(yd*yd,0.5);
-	zd= pow(zd*zd,0.5);
+	float dis2=sqrt(pow(player.model.get_y()-model.get_y(),2)+pow(player.model.get_x()-model.get_x(),2));
 	
-	td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
-	
-	if (td>50){
-		return;
-	}
-	*/
 	
 	float xtran=0;
 	float ytran=0;
@@ -237,12 +156,7 @@ void Enemy::bas_mov(float dis){
 	if (ytran!=0){
 		model.set_fluid_y(model.get_y() + ytran*tmpy*world.dt*15 );
 	}
-	/*if (xtran==0 && ytran==0){
-		running=false;
-	}
-	else{
-		running=true;
-	}*/
+	
 	
 }
 

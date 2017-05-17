@@ -918,7 +918,7 @@ void sys_exit(const Event* eventPtr, void* dataPtr){
 
 void jump(const Event* eventPtr, void* dataPtr){
 	if (world.menuStatus==world.ms_game){
-		cout<<player.coll_grav->get_airborne_height()<<" "<<player.coll_grav->is_on_ground()<<" "<<player.coll_grav->get_velocity()<<endl;
+		//cout<<player.coll_grav->get_airborne_height()<<" "<<player.coll_grav->is_on_ground()<<" "<<player.coll_grav->get_velocity()<<endl;
 		if(player.doublejump || player.coll_grav->is_on_ground())
 		{
 			world.gameSounds.femaleGrunt7->play();
@@ -1505,6 +1505,7 @@ void makeSpider(int x, int y, int z, NodePath* parentNode){
 	romar->init();
 	romar->coll_set_up(1000);
 	enems.push_back(romar);
+	cout<<"Spider!"<<endl;
 }
 
 void makeWaterbottle(int x, int y, int z,NodePath* parentNode){

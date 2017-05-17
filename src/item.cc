@@ -2,6 +2,13 @@
 #include "gameObject.hpp"
 #include <cmath>
 
+
+
+CollisionTraverser Item::gtrav;
+CollisionTraverser Item::ptrav;
+
+
+
 Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,int zzz,int xxx,int yyy,float rad,int zzzz,std::string fn2,float am,int idd){
 	type=t;
 	amount=am;
@@ -82,10 +89,12 @@ void Item::init(){
 	sphereModel = model.attach_new_node(c_Node);
 	sphereModel.set_color(255,0,0,1.0);
 	coll_push -> add_collider(sphereModel, model);
-	GameObject::ptrav.add_collider(sphereModel, coll_push);
+	ptrav.add_collider(sphereModel, coll_push);
+	gtrav.add_collider(rayModel, coll_grav);
 	
-	
-	}
+	coll_grav->set_gravity(70.0*12);
+
+}
 	
 void Item::tick(){
 	
