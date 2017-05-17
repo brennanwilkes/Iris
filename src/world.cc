@@ -28,15 +28,33 @@ void World::init(){
 void World::tick(){
 	player.tick();
 	
-	GameObject::gtrav.traverse(window -> get_render());
-	GameObject::ptrav.traverse(window -> get_render());
+	//GameObject::gtrav.traverse(window -> get_render());
+	//GameObject::ptrav.traverse(window -> get_render());
 	
+	
+	Player::ptrav.traverse(window -> get_render());
+	if(tickCount%2==0){
+		Player::gtrav.traverse(window -> get_render());
+	}
+	if(tickCount%6==0){
+		Enemy::ptrav.traverse(window -> get_render());
+		Item::ptrav.traverse(window -> get_render());
+		
+		
+		
+	}
+	if(tickCount%12==0){
+		Item::gtrav.traverse(window -> get_render());
+		Enemy::gtrav.traverse(window -> get_render());	
+	}
 	for (unsigned int i=0;i<itms.size();i++){
 		itms[i]->tick();
 	}
 	for (unsigned int i=0;i<enems.size();i++){
 		enems[i]->tick(1);
 	}
+	
+	
 	
 	player.calc_arms();
 	if (player.mode==0){
@@ -126,7 +144,7 @@ void World::tick(){
 	
 
 	tickCount++;
-	if (tickCount>120){
+	if (tickCount%120==0){
 		float ran=rand()/(float)RAND_MAX;
 		if (player.food<25 || player.water<35){
 			if(ran<((100-pow(0.5,player.food))/1000.0)){
@@ -152,7 +170,9 @@ void World::tick(){
 		if (player.water<1){
 			player.water=1;
 		}
-		tickCount=0;
+		if (tickCount>=120000){
+			tickCount=0;
+		}
 	}
 }
 

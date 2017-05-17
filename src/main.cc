@@ -109,6 +109,7 @@ int scene;
 WindowFramework* window;
 
 // Forward declared functions
+void startGame(const Event* eventPtr, void* dataPtr);
 void sys_exit(const Event* eventPtr, void* dataPtr);
 void toggle(const Event* eventPtr, void* dataPtr);
 void toggleHitBox(const Event* eventPtr, void* dataPtr);
@@ -117,7 +118,10 @@ void toggleOptionMenu(const Event* eventPtr, void* dataPtr);
 void invHotkey(const Event* eventPtr, void* dataPtr);
 void invPress(const Event* eventPtr, void* dataPtr);
 void jump(const Event* eventPtr, void* dataPtr);
+void rebindButton(const Event* eventPtr, void* dataPtr);
+void rebindMouseSens(const Event* eventPtr, void* dataPtr);
 void menu(const Event* eventPtr, void* dataPtr);
+void spiderClick(const Event* eventPtr, void* dataPtr);
 void hide_arms(const Event* eventPtr, void* dataPtr);
 void onMouse1(const Event* eventPtr, void* dataPtr);
 void onE(const Event* eventPtr, void* dataPtr);
@@ -126,10 +130,18 @@ void drop(const Event* eventPtr, void* dataPtr);
 int getMenuSliderInd();
 void calc_inv(PGButton* fs,PGButton* ss,PGButton* ts,PT(Texture)* bt);
 
-void rebindButton(const Event* eventPtr, void* dataPtr);
-void rebindMouseSens(const Event* eventPtr, void* dataPtr);
+void makeAmmobox(int x, int y, int z,NodePath* parentNode);
+void makeBat(int x, int y, int z,NodePath* parentNode);
+void makeCheese(int x, int y, int z,NodePath* parentNode);
+void makePill(int x, int y, int z,NodePath* parentNode);
+void makePistol(int x, int y, int z,NodePath* parentNode);
+void makeKalashnikov(int x, int y, int z,NodePath* parentNode);
+void makeNegev(int x, int y, int z,NodePath* parentNode);
+void makeSpider(int x, int y, int z,NodePath* parentNode);
+void makeWaterbottle(int x, int y, int z,NodePath* parentNode);
 
-void startGame(const Event* eventPtr, void* dataPtr);
+
+
 
 int main(int argc, char *argv[]) {
 	// Panda Objects
@@ -188,35 +200,9 @@ int main(int argc, char *argv[]) {
 	
 
 	//////////////////////////////////////////////
+	
+	//Loading screen
 
-	/*PGButton* InvButton1;
-	InvButton1 = new PGButton("InvButton1");
-	InvButton1 -> setup(blank_plane);
-	*/
-	
-	/*
-	PT(Texture) wts;
-	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
-	CardMaker cms("cardMaker");
-	
-	
-	PT(PandaNode) readycards = cms.generate();
-	
-	//
-	
-	NodePath NNS(readycards);
-	
-	NNS.setup(blank_plane);
-	
-	NNS = window -> get_aspect_2d().attach_new_node(readycards);
-	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
-	NNS.set_pos(xs,0,0);
-	NNS.set_scale(window->get_render(),1);
-	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
-	NNS.set_texture(wts);
-	
-	NNS.show();
-	*/
 	PT(Texture) wts;
 	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
 	
@@ -228,12 +214,23 @@ int main(int argc, char *argv[]) {
 	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
 	NNS.set_scale(2.0);
 	NNS.set_pos(xs,0,-1);
-	NNS.show();
+	//NNS.show();
 	NNS.set_texture(wts);
+	NNS.hide();
+	
+	NodePath loadanim=window->load_model(framework.get_models(),mydir+"Assets/INSECT/insect.egg");
+	loadanim.reparent_to(window->get_render());
+	loadanim.set_pos(0,30,-3.5);
+	loadanim.show();
 	
 	
-	
-	
+	AnimControlCollection load_anim_collection;
+	NodePath loadnode = window->load_model(loadanim, mydir + "Assets/INSECT/insect-Move.egg");
+	auto_bind(loadanim.node(), load_anim_collection);
+	PT(AnimControl) animPtrLoad = load_anim_collection.get_anim(0);
+	load_anim_collection.store_anim(animPtrLoad, "load");
+	loadnode.detach_node();
+	load_anim_collection.loop("load",1);
 	
 	
 	
@@ -355,10 +352,11 @@ int main(int argc, char *argv[]) {
 
 	
 	player.coll_set_up();
+	player.model.set_pos(player.model.get_x(),player.model.get_y(),player.model.get_z()+25);
+
 
 
 	// Start Menu items
-	//float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
 	PGButton* StartGameButton;
 	PGButton* loadGameButton;
 	PGButton* realQuitButton;
@@ -465,19 +463,17 @@ int main(int argc, char *argv[]) {
 		butt -> setup(keys.keybindItems.at(i)+":"+ keys.keybinds[keys.keybindItems.at(i)].first.get_name());
 		NodePath BindNode1 = window -> get_pixel_2d().attach_new_node(butt);
 		BindNode1.set_scale(0.1);
-		BindNode1.set_pos(xs+0.1*(i/8*8+1),0,0.85-(.2*(i%8+1)));
+		BindNode1.set_pos(xs+0.1*(i/11*8+1),0,0.85-(.15*(i%11+1)));
 		BindNode1.reparent_to(optionMenuItems);
 		window -> get_panda_framework() -> define_key(butt->get_click_event(keys.keybinds["use"].first ), "Bind "+keys.keybindItems.at(i)+"Press",&rebindButton, butt);
 		keys.keybindMenu.push_back(butt);
 		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
 	}
 
-	// Setup, feeding the constructor with (bool vertical,float lenght,float width,float bevel)
 	mouseSlider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
 	mouseSlider->set_range(0,1);
 	mouseSlider->set_value(0);
 	 
-	// Setup scroll bar (the 'moving thumb button' including left and right button)
 	mouseSlider->setup_slider(true,1,0.05,false);
 	NodePath mouseSliderNP = window->get_aspect_2d().attach_new_node(mouseSlider);
 	mouseSliderNP.set_pos(xs+2.5,0,.25);
@@ -585,6 +581,7 @@ int main(int argc, char *argv[]) {
 	defbutNPa.reparent_to(menuItems);
 	*/
 	
+	//Inventory buttons
 
 	// Setup, feeding the constructor with (bool vertical,float lenght,float width,float bevel)
 	Slider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
@@ -600,8 +597,6 @@ int main(int argc, char *argv[]) {
 
 
 	PT(Texture) blankTex=TexturePool::load_texture(mydir+"Assets/blank_slot2.png");
-	
-	
 
 	//////////////////////////////////////////////
 
@@ -649,16 +644,7 @@ int main(int argc, char *argv[]) {
 	keys.buttonIndex["click-mouse1-"+InvButton3->get_id()] = InvButton3;
 
 	//////////////////////////////////////////////
-	
-	
-	
-	
-	
-	
-	///////////////////////////////////////////////////////////////////////////////////
-	///Pill bottle
-	
-	//Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,int zzz,int xxx,int yyy,float rad,int zzzz)
+		
 	
 	Level testlevel(0,0,0,5);
 	
@@ -667,81 +653,6 @@ int main(int argc, char *argv[]) {
 	testlevel.exits.push_back(testregion);
 	
 	gameLevels.push_back(&testlevel);
-	
-	
-	
-	WeaponObject ak47('g',35,0,20,8.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
-	ak47.weapon_init(24,25.0,1.0,0,64,1);
-	itms.push_back(&ak47);
-	
-	/*
-	WeaponObject ak48('g',37,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
-	ak48.weapon_init(24,25.0,1.0,0,64,1);
-	itms.push_back(&ak48);
-	
-	WeaponObject ak49('g',39,0,20,1.0f,1.0f, mydir+"blenderFiles/AK47.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
-	ak49.weapon_init(24,25.0,1.0,0,64,1);
-	itms.push_back(&ak49);
-	*/
-	
-	
-	WeaponObject nedgev('g',39,0,20,17.0f,2.0f, mydir+"blenderFiles/negevitem.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/negevicon.png",140.0,11);
-	nedgev.weapon_init(140,27.0,1.0,0,560,1);
-	itms.push_back(&nedgev);
-	
-	
-	
-	WeaponObject Bat('g',15,0,20,1.0f,1.0f, mydir+"Model/Baseballbat.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/baticon.png",15.0,2);
-	Bat.weapon_init(15,1.0,1.0,0,0,1);
-	itms.push_back(&Bat);
-	
-	WeaponObject Pis('g',25,0,20,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
-	Pis.weapon_init(8,1.0,1.0,0,64,1);	
-	itms.push_back(&Pis);
-	
-	WeaponObject Pis2('g',22,3,20,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",&gameModels,window,&framework,1.0f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
-	Pis2.weapon_init(8,1.0,1.0,0,64,1);	
-	itms.push_back(&Pis2);
-	
-	
-	HealthItem Pill('c',10,0,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",100.0,1);
-	itms.push_back(&Pill);
-	
-	Item Ammo('a',0,5,20,1.0f,1.0f, mydir+"Assets/pillBottle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",35.0,10);
-	itms.push_back(&Ammo);
-	
-	FoodItem cheese('c',55,0,20,1.0f,1.0f, mydir+"blenderFiles/cheese.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/cheeseicon.png",25.0,5);
-	itms.push_back(&cheese);
-	
-	WaterItem booootle('c',45,5,20,1.0f,1.0f, mydir+"blenderFiles/Bootle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/BottleIcon.png",80.0,6);
-	itms.push_back(&booootle);
-	
-	//healthItem dora('c',25,15,500,1.0f,1.0f, mydir+"blenderFiles/Bootle.egg",&gameModels,window,&framework,0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/BottleIcon.png",80.0,4);
-	//itms.push_back(&dora);
-	
-
-	Enemy romar;
-	romar.set_up(&shootableModels,window,&framework,mydir+"Assets/INSECT/insect.egg",50.0,-10,-10,0,15.0,40,24,0,10.0);
-	romar.init();
-	romar.coll_set_up(1000);
-	enems.push_back(&romar);
-
-	
-	
-	
-	
-	player.model.set_pos(player.model.get_x(),player.model.get_y(),player.model.get_z()+25);
-	
-
-	/*
-	Enemy sebastian;
-	sebastian.set_up(&shootableModels,window,&framework,mydir+"Assets/INSECT/insect.egg",500.0,10,10,10,15.0);
-	sebastian.init();
-	sebastian.coll_set_up(10);
-	enems.push_back(&sebastian);
-	*/
-	
-	
 	
 	
 	//Deprecated but useful notes so dont delete
@@ -779,22 +690,21 @@ int main(int argc, char *argv[]) {
 		player.weapons.back().Node.hide();
 	}
 	*/
-	
+
+	//Hand display
 	CardMaker cm("cardMaker");
 	PT(PandaNode) readyCard = cm.generate();
 	NodePath NN(readyCard);
 	player.handDisplay=NN;
-	
 	player.handDisplay = window -> get_aspect_2d().attach_new_node(readyCard);
 	player.handDisplay.set_transparency(TransparencyAttrib::M_alpha, 1);
 	player.handDisplay.set_scale(0.4);
 	player.handDisplay.set_pos(xs+0.1,0, -0.9);
 	player.handDisplay.show();
 	player.handDisplay.set_texture(blankTex);
-	
-	
-	
-	
+
+
+	//Crosshair
 	PT(Texture) tex_crosshair;
 	CardMaker cm_crosshair("cardMaker");
 	PT(PandaNode) rc_crosshair = cm_crosshair.generate();
@@ -803,7 +713,6 @@ int main(int argc, char *argv[]) {
 	nd_crosshair.set_transparency(TransparencyAttrib::M_alpha, 1);
 	nd_crosshair.set_scale(0.5);
 	nd_crosshair.set_pos(-0.25, 0 ,-0.25);
-	//nd_crosshair.reparent_to(gameModels);
 	tex_crosshair=TexturePool::load_texture(mydir+"Assets/CrossHair.png");
 	nd_crosshair.set_texture(tex_crosshair);
 	
@@ -816,38 +725,45 @@ int main(int argc, char *argv[]) {
 	// define_key("event_name", "description", function, data);
 	// data is a void pointer, so it can take anything.
 
+	if ("hide this"){
 	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
+	keys.wildKeys["menu"] = &menu;
+	keys.dataPtrs["menu"] = window;
 	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", &jump, NULL);
+	keys.wildKeys["jump"] = &jump;
+	keys.dataPtrs["jump"] = NULL;
 	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "cameraToggle", &toggle, NULL);
+	keys.wildKeys["cameraToggle"] = &toggle;
+	keys.dataPtrs["cameraToggle"] = NULL;
 	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, &blankTex);
+	keys.wildKeys["use"] = &onMouse1;
+	keys.dataPtrs["use"] = &blankTex;
 	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "pickup", &onE, NULL);
+	keys.wildKeys["pickup"] = &onE;
+	keys.dataPtrs["pickup"] = NULL;
 	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "reload", &onR, NULL);
+	keys.wildKeys["reload"] = &onR;
+	keys.dataPtrs["reload"] = NULL;
 	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
+	keys.wildKeys["drop"] = &drop;
+	keys.dataPtrs["drop"] = &blankTex;
+	window -> get_panda_framework() -> define_key(keys.keybinds["spider"].first.get_name(), "spider", &spiderClick, &shootableModels);
+	keys.wildKeys["spider"] = &spiderClick;
+	keys.dataPtrs["spider"] = &shootableModels;
 
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv1"].first.get_name(), "inv1", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv2"].first.get_name(), "inv2", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv3"].first.get_name(), "inv3", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv4"].first.get_name(), "inv4", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv5"].first.get_name(), "inv5", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv6"].first.get_name(), "inv6", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv7"].first.get_name(), "inv7", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv8"].first.get_name(), "inv8", &invHotkey, &blankTex);
-	window -> get_panda_framework() -> define_key(keys.keybinds["inv9"].first.get_name(), "inv9", &invHotkey, &blankTex);
+	for (int i=1; i<10; i++){
+		window -> get_panda_framework() -> define_key(keys.keybinds["inv"+to_string(i)].first.get_name(), "inv"+to_string(i), &invHotkey, &blankTex);
+		keys.wildKeys["inv"+to_string(i)] = &invHotkey;
+		keys.dataPtrs["inv"+to_string(i)] = &blankTex;
+	}
 
 	window -> get_panda_framework() -> define_key("h", "hide_arms", hide_arms, NULL);
 
-	keys.wildKeys["menu"] = &menu;
-	keys.wildKeys["jump"] = &jump;
-	keys.wildKeys["cameraToggle"] = &toggle;
-	keys.wildKeys["use"] = &onMouse1;
-	keys.wildKeys["pickup"] = &onE;
-	keys.wildKeys["reload"] = &onR;
-	keys.wildKeys["drop"] = &drop;
-
 	window -> get_panda_framework() -> define_key(StartGameButton->get_click_event(keys.keybinds["use"].first ), "Start game button press", &startGame, NULL);
 	window -> get_panda_framework() -> define_key(realQuitButton->get_click_event(keys.keybinds["use"].first ), "Quit button press", &sys_exit, realQuitButton);
+	
 	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(keys.keybinds["use"].first ), "Menu button press", &startGame, QuitButton);
-	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hit button press", &toggleHitBox, HitTogButton);
+	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hitbox button press", &toggleHitBox, HitTogButton);
 	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(keys.keybinds["use"].first ), "Double jump button press", &toggleDoubleJump, DoubleTogButton);
 
 	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton);
@@ -859,10 +775,22 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory 1 slot press", &invPress, &blankTex);
 	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(keys.keybinds["use"].first ), "Inventory 2 slot press", &invPress, &blankTex);
 	window -> get_panda_framework() -> define_key(InvButton3->get_click_event(keys.keybinds["use"].first ), "Inventory 3 slot press", &invPress, &blankTex);
-	
+	}
 	
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-	NNS.hide();
+
+	//Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,int zzz,int xxx,int yyy,float rad,int zzzz)
+	makeKalashnikov(35, 0, 20,&gameModels);
+	makeNegev(30,0,20, &gameModels);
+	makeBat(15,0,20, &gameModels);
+	makePistol(25,0,20, &gameModels);
+	makePistol(22,3,20, &gameModels);
+
+	makePill(10,0,20, &gameModels);
+	makeWaterbottle(45,5,20, &gameModels);
+	makeCheese(55,0,20, &gameModels);
+	makeAmmobox(0,5,20, &gameModels);
+	
 	// Start the loop / gameoptionMe
 	//Thread *current_thread = Thread::get_current_thread();
 	world.init();
@@ -872,13 +800,14 @@ int main(int argc, char *argv[]) {
 	int temptickcount=0;
 	int frameDelay=0;
 
-	
-	//float shift;
 	gameModels.hide();
+	loadanim.hide();
+	NNS.hide();
+
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
-	while(framework.do_frame(current_thread))
-	{
+	while(framework.do_frame(current_thread)){
+
 		if (frameDelay>30){
 			fpsNode->set_text(to_string((int)(1/world.dt))+" fps");
 			fpsNodePath.show();
@@ -989,7 +918,7 @@ void sys_exit(const Event* eventPtr, void* dataPtr){
 
 void jump(const Event* eventPtr, void* dataPtr){
 	if (world.menuStatus==world.ms_game){
-		cout<<player.coll_grav->get_airborne_height()<<" "<<player.coll_grav->is_on_ground()<<" "<<player.coll_grav->get_velocity()<<endl;
+		//cout<<player.coll_grav->get_airborne_height()<<" "<<player.coll_grav->is_on_ground()<<" "<<player.coll_grav->get_velocity()<<endl;
 		if(player.doublejump || player.coll_grav->is_on_ground())
 		{
 			world.gameSounds.femaleGrunt7->play();
@@ -1075,9 +1004,20 @@ void invPress(const Event* eventPtr, void* dataPtr){
 }
 
 void invHotkey(const Event* eventPtr, void* dataPtr){
-	int t = stoi(eventPtr->get_name());
+	int t=0;
+	for (int i=1; i<10; i++){
+		//cout << "i" << i << " - inv" + to_string(i) << " - " <<keys.keybinds["inv" + to_string(i)].first.get_name() << " evnt " <<eventPtr->get_name()<< endl;
+		if (keys.keybinds["inv" + to_string(i)].first.get_name() == eventPtr->get_name()){
+			t = i;
+			break;
+		}
+	}
+	if (!t){
+		return;
+	}
+	//int t = stoi(eventPtr->get_name()); //int key
 	//fix this bit to use indices
-	player.handInd=t-1;//(atoi(tag));
+	player.handInd=t-1;
 	if ((int)player.inventory.size()>=t){
 		player.mainHand=player.inventory[t-1];
 		player.handDisplay.set_texture(player.inventory[t-1]->imgTex);
@@ -1116,8 +1056,8 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 					keys.buttonIndex[eventPtr->get_name()] -> setup(i+":"+ k.get_name());
 					for (auto j: keys.wildKeys){
 						if (i==(j.first)){
-							window -> get_panda_framework() -> define_key(k.get_name(), i, keys.wildKeys[i], NULL);
-							window -> get_panda_framework() -> get_event_handler().remove_hook(oldKey, keys.wildKeys[i], NULL);
+							window -> get_panda_framework() -> define_key(k.get_name(), i, keys.wildKeys[i], keys.dataPtrs[i]);
+							window -> get_panda_framework() -> get_event_handler().remove_hook(oldKey, keys.wildKeys[i], keys.dataPtrs[i]);
 							return;
 						}
 					}
@@ -1132,9 +1072,13 @@ void rebindMouseSens(const Event* eventPtr, void* dataPtr){
 	keys.mouseSens = mouseSlider->get_value()*2.0;
 }
 
-
 void menu(const Event* eventPtr, void* dataPtr){
 	world.menu();
+}
+
+void spiderClick(const Event* eventPtr, void* dataPtr){
+	NodePath* shootableModels = static_cast<NodePath*>(dataPtr);
+	makeSpider(player.model.get_x()+50, player.model.get_y(), player.model.get_z()+6, shootableModels);
 }
 
 void drop(const Event* eventPtr, void* dataPtr){
@@ -1513,4 +1457,58 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 			}
 		}
 	}
+}
+
+
+void makeAmmobox(int x, int y, int z,NodePath* parentNode){
+	Item* Ammo= new Item('a',x,y,z,1.0f,1.0f, mydir+"Assets/pillBottle.egg",parentNode,window,window->get_panda_framework(),0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",35.0,10);
+	itms.push_back(Ammo);
+}
+
+void makeBat(int x, int y, int z,NodePath* parentNode){
+	WeaponObject* Bat = new WeaponObject('g',15,0,20,1.0f,1.0f, mydir+"Model/Baseballbat.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/baticon.png",15.0,2);
+	Bat->weapon_init(15,1.0,1.0,0,0,1);
+	itms.push_back(Bat);
+}
+
+void makeCheese(int x, int y, int z,NodePath* parentNode){
+	FoodItem* cheese = new FoodItem('c',x,y,z,1.0f,1.0f, mydir+"blenderFiles/cheese.egg",parentNode,window,window->get_panda_framework(),0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/cheeseicon.png",25.0,5);
+	itms.push_back(cheese);
+}
+
+void makePill(int x, int y, int z,NodePath* parentNode){
+	HealthItem* Pill = new HealthItem('c',x,y,z,1.0f,1.0f, mydir+"Assets/pillBottle.egg",parentNode,window,window->get_panda_framework(),0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/pbottleicon.png",100.0,1);
+	itms.push_back(Pill);
+}
+
+void makePistol(int x, int y, int z,NodePath* parentNode){
+	WeaponObject* Pis = new WeaponObject('g',x,y,z,1.0f,1.0f, mydir+"Model/PIstol/Pistol.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"Model/PIstol/ITSAGUN.png",8.0,0);
+	Pis->weapon_init(8,1.0,1.0,0,64,1);
+	itms.push_back(Pis);
+}
+
+void makeKalashnikov(int x, int y, int z,NodePath* parentNode){
+	WeaponObject* ak47 = new WeaponObject('g',x,y,z,8.0f,1.0f, mydir+"blenderFiles/AK47.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
+	ak47->weapon_init(24,25.0,1.0,0,64,1);
+	itms.push_back(ak47);
+}
+
+void makeNegev(int x, int y, int z,NodePath* parentNode){
+	WeaponObject* nedgev = new WeaponObject('g',x,y,z,17.0f,2.0f, mydir+"blenderFiles/negevitem.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/negevicon.png",140.0,11);
+	nedgev->weapon_init(140,27.0,1.0,0,560,1);
+	itms.push_back(nedgev);
+}
+
+void makeSpider(int x, int y, int z, NodePath* parentNode){
+	Enemy* romar = new Enemy;
+	romar->set_up(parentNode, window, window->get_panda_framework(), mydir+"Assets/INSECT/insect.egg",50.0,x,y,z,15.0,40,24,0,10.0);
+	romar->init();
+	romar->coll_set_up(1000);
+	enems.push_back(romar);
+	cout<<"Spider!"<<endl;
+}
+
+void makeWaterbottle(int x, int y, int z,NodePath* parentNode){
+	WaterItem* booootle = new WaterItem('c',x,y,z,1.0f,1.0f, mydir+"blenderFiles/Bootle.egg",parentNode,window,window->get_panda_framework(),0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/BottleIcon.png",80.0,6);
+	itms.push_back(booootle);
 }
