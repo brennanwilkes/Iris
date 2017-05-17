@@ -222,7 +222,14 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 	name_collection.unbind_anim(animName);
 	animNp2.detach_node();
 	anim_collection.play("walk");
-	
+	NodePath animNp3 = w->load_model(model, mydir + "Assets/INSECT/insect-Attack.egg");
+	auto_bind(model.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	anim_collection.store_anim(animPtr, "attack");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp3.detach_node();
+	anim_collection.play("attack");
 }
 
 void Enemy::coll_set_up(int dist){
@@ -296,6 +303,7 @@ void Enemy::attack() {
 	td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
 	
 	player.health-=damage/td;
+	anim_collection.play("attack");
 	
 	player.tint=1;
 	float ran=rand()/(float)RAND_MAX;
