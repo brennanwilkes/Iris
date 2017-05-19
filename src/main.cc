@@ -799,7 +799,8 @@ int main(int argc, char *argv[]) {
 	player.health=50;
 	int temptickcount=0;
 	int frameDelay=0;
-
+	int savedt=0;
+	int frameDelayCount=0;
 	gameModels.hide();
 	loadanim.hide();
 	NNS.hide();
@@ -809,10 +810,19 @@ int main(int argc, char *argv[]) {
 	while(framework.do_frame(current_thread)){
 
 		if (frameDelay>30){
-			fpsNode->set_text(to_string((int)(1/world.dt))+" fps");
-			fpsNodePath.show();
+			//cout<<world.dt<<" "<<1/world.dt<<endl;
+			savedt+=(int)(1/world.dt);
 			frameDelay =0;
+			frameDelayCount++;
 		}
+		if(frameDelayCount==4){
+			fpsNode->set_text(to_string(savedt/4)+" fps");
+			fpsNodePath.show();
+			frameDelayCount=0;
+			savedt=0.0;
+		}
+		
+		
 		frameDelay++;
 
 		// Things to do every frame
