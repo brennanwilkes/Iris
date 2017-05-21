@@ -30,6 +30,8 @@ public:
 	vector<StaticObject> statics;
 	vector<Item> items;
 	
+	map<string,NodePath> models;
+	
 	void save(std::string file); // Saves this instance of Level to a file
 	void load(std::string file); // Loads the save file into this instance of Level
 	bool file_exists(std::string file); // Checks if a file exists
