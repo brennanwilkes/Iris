@@ -80,6 +80,7 @@ https://www.panda3d.org/manual/index.php/Common_State_Changes
 #include "keys.hpp"
 #include "level.hpp"
 #include "global.hpp"
+#include "ourloader.hpp"
 
 #include "load_prc_file.h"
 #include "configVariableFilename.h"
