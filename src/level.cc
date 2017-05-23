@@ -22,6 +22,10 @@ map< const string, vector<string> > Level::gen_used_dat(){
 	return m;
 }
 
+Level::Level(){
+	
+}
+
 Level::Level(int idd,float sx,float sy,float sz){
     id=idd;
     spawn_x=sx;

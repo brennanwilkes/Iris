@@ -7,3 +7,5 @@ main
 localdir.cpp
 Eigen
 obj/*
+*.o
+levelCreator/levelCreator
