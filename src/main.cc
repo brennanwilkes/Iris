@@ -105,6 +105,8 @@ PT(PGSliderBar) mouseSlider=new PGSliderBar("mouseSliderBar");;
 
 vector<Level*> gameLevels;
 
+OurLoader ourloader;
+
 int scene;
 
 WindowFramework* window;

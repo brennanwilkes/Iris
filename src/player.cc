@@ -62,7 +62,8 @@ void Player::tick() {
 							//gameLevels[player.lvlid]->load("Story/"+to_string(player.lvlid)+".isf");
 							
 							
-							
+							//kaboom(gameModels);
+							cout<<"wut"<<endl;
 							break;
 							
 						}
@@ -617,5 +618,14 @@ void Player::calc_arms(){
 //}
 
 
-
+void Player::kaboom(NodePath root){
+	cout<<root.get_num_nodes()<<endl;
+	cout<<root.get_name()<<endl;
+	for(int i=0;i<root.get_num_nodes();i++){
+		Player::kaboom(root.get_child(0));
+	}
+	if(root!=gameModels){
+		root.remove_node();
+	}
+}
 
