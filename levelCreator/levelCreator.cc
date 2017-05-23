@@ -28,6 +28,7 @@ void load_new_model(const Event* eventPtr, void* dataPtr);
 void unload_model(const Event* eventPtr, void* dataPtr);
 void move_model(const Event* eventPtr, void* dataPtr);
 void rot_model(const Event* eventPtr, void* dataPtr);
+void edit_model(const Event* eventPtr, void* dataPtr);
 void mwheel_up(const Event* eventPtr, void* dataPtr);
 void mwheel_down(const Event* eventPtr, void* dataPtr);
 void save_level(const Event* eventPtr, void* dataPtr);
@@ -77,7 +78,6 @@ PT(MouseWatcher) mW;
 // Timers
 float preTime(0);
 float dt(0);
-float click_time(0);
 
 // Mouse mode: 0 - Unlocked, 1 - Locked
 bool mouse_mode(0);
@@ -134,6 +134,7 @@ int main(int argc, char* argv[])
 	window -> get_panda_framework() -> define_key("control-s", "Save Level to file", save_level, NULL);
 	window -> get_panda_framework() -> define_key("control-l", "Load Level from file", load_level, NULL);
 	window -> get_panda_framework() -> define_key("control-a", "Append Level from file", append_level, NULL);
+	window -> get_panda_framework() -> define_key("e", "Edit model attributes", edit_model, NULL);
 	window -> get_panda_framework() -> define_key("t", "Test Function", test_func, NULL);
 	
 	while (fw.do_frame(c_thr))
@@ -175,16 +176,9 @@ void select_model(const Event* eventPtr, void* dataPtr){
 		{
 			if (cur_state != mov_sel)
 			{
-				click_time = globalClock -> get_real_time();
 				cur_state = mov_sel;
 				selected.set_collide_mask(BitMask32::all_off());
 				cout << "Now moving selected object, " << selected.get_name() << endl;
-			}
-			else if (globalClock -> get_real_time() - click_time < 0.25)
-			{
-				cur_state = edit_sel;
-				selected.set_collide_mask(BitMask32::all_on());
-				cout << "Now editing selected object, " << selected.get_name() << endl;
 			}
 		}
 		else
@@ -265,8 +259,14 @@ void unload_model(const Event* eventPtr, void* dataPtr){
 	}
 }
 
-void move_model(const Event* eventPtr, void* dataPtr){ if (selected) {
+void move_model(const Event* eventPtr, void* dataPtr){
 	// Prompts user for new positional values for selected object
+	if (selected.is_empty())
+	{
+		cout << "Nothing selected!" << endl;
+		return;
+	}
+	
 	float x(0), y(0), z(0);
 	cout << "Moving selected object: " << selected.get_name() << " to: " << endl;
 	cout << "New x: " << endl;
@@ -281,10 +281,16 @@ void move_model(const Event* eventPtr, void* dataPtr){ if (selected) {
 	selected.set_z(z);
 	
 	cout << "Moved " << selected.get_name() << " to " << x << ", " << y << ", " << z << endl;
-} else {cout << "Nothing selected!" << endl;}}
+}
 
-void rot_model(const Event* eventPtr, void* dataPtr){ if (selected) {
+void rot_model(const Event* eventPtr, void* dataPtr){
 	// Prompts user for new rotational values for selected object
+	if (selected.is_empty())
+	{
+		cout << "Nothing selected!" << endl;
+		return;
+	}
+	
 	float h(0), p(0), r(0);
 	cout << "New h: " << endl;
 	cin >> h;
@@ -294,8 +300,45 @@ void rot_model(const Event* eventPtr, void* dataPtr){ if (selected) {
 	cin >> r;
 	
 	cout << "Rotated Object!" << endl;
+}
+
+void edit_model(const Event* eventPtr, void* dataPtr){
+	if (selected.is_empty()) 
+	{
+		cout << "Nothing selected!" << endl;
+		return;
+	}
 	
-} else {cout << "Nothing selected!" << endl;}}
+	cur_state = edit_sel;
+	
+	string datum;
+	
+	while (true)
+	{
+		cout << "Class type: ";
+		cin >> datum;
+		if (Level::used_dat.find(datum) != Level::used_dat.end())
+		{
+			break;
+		}
+		cout << "Invalid class type. Valid class types are: ";
+		for (auto &x:Level::used_dat)
+		{
+			cout << x.first << ", ";
+		}
+		cout << endl;
+	}
+	
+	vector<string> data = Level::used_dat[datum];
+	for (const auto &dat:data)
+	{
+		cout << dat << ": ";
+		cin >> datum;
+		selected.set_tag(dat, datum);
+	}
+	cout << "Done editing!" << endl;
+	cur_state = sel;
+}
 
 void setup(WindowFramework* win){
 	// Creates the scene graph root nodes.
@@ -397,5 +440,9 @@ void load_level(const Event* eventPtr, void* dataPtr){
 }
 
 void append_level(const Event* eventPtr, void* dataPtr){
-	
+	string filename;
+	cout << "Append level from file: ";
+	cin >> filename;
+	level.load(filename);
+	cout << "Appended level from " << filename << endl;
 }

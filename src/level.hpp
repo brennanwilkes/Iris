@@ -27,8 +27,10 @@ class Level{
 public:
 	static map< const string, vector<string> > used_dat;
 	static map< const string, vector<string> > gen_used_dat();
-
-	void save(std::string file, bool ov); // Saves this instance of Level to a file
+	
+	Level();
+	
+	void save(std::string file, bool ov = true); // Saves this instance of Level to a file
 	void load(std::string file); // Loads the save file into this instance of Level
 	void clear(); // Empties all loaded models
 	void tagify(); // Empties all loaded models
