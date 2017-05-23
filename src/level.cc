@@ -22,6 +22,13 @@ map< const string, vector<string> > Level::gen_used_dat(){
 	return m;
 }
 
+Level::Level(int idd,float sx,float sy,float sz){
+    id=idd;
+    spawn_x=sx;
+    spawn_y=sy;
+    spawn_z=sz;
+}
+
 void Level::save(string filename, bool ov = true){
 	string overwrite("y");
 	if (ov && file_exists(filename))
@@ -156,11 +163,11 @@ bool Level::file_exists(string filename){
 }
 
 string Level::add_model(NodePath model){
-	string id_s = to_string(id);
+	string id_s = to_string(uuid);
 	models[id_s] = model;
 	models[id_s].set_tag("id", id_s);
 	
-	return to_string(id++);
+	return to_string(uuid++);
 }
 
 /*

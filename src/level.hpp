@@ -38,7 +38,17 @@ public:
 	string add_model(NodePath model);
 	
 	map<string, NodePath> models;
-	unsigned int id = 0;
+	unsigned int uuid = 0;
+	
+	int id;
+	
+	float spawn_x;
+	float spawn_y;
+	float spawn_z;
+	
+	Level(int idd,float sx,float sy,float sz);
+	
+	vector<ChangeRegion> exits;
 };
 
 #endif
