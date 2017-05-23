@@ -344,7 +344,7 @@ int main(int argc, char *argv[]) {
 	for(auto x:Dir)
 	{
 		//StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale=1){
-		ND.push_back(StaticObject(-8,42,0,mydir+x,&gameModels,window,&framework,2.6));
+		ND.push_back(StaticObject(-8,42,0,mydir+x,&gameModels,window,&framework,0,0,0,2.6));
 		
 	}
 	PT(CollisionNode) c_Node;
@@ -852,7 +852,7 @@ int main(int argc, char *argv[]) {
 				float ranD=rand()/(float)RAND_MAX;
 				ranD*=360;
 				
-				ND.push_back(StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0.5));
+				ND.push_back(StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0,0,0,0.5));
 				
 				if(ranD>180){
 					ND.back().model.set_hpr(ranD,-90,0);

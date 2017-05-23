@@ -1,6 +1,6 @@
 #include "staticObject.hpp"
 
-StaticObject::StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale=1){
+StaticObject::StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float h,float p,float r,float scale=1){
 	//setPos(xx,yy,zz);
 	//model=w->load_model(pf->get_models(),fn);
 	//model.set_scale(scale);
@@ -12,6 +12,7 @@ StaticObject::StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent
 	model.set_scale(scale);
 	//setPos(xx,yy,zz);
 	model.set_pos(xx,yy,zz);
+	model.set_hpr(h,p,r);
 	
 	NodePath coll_node = model.find("**/+CollisionNode");
 	if (!coll_node.is_empty()){
