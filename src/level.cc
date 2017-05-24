@@ -170,8 +170,8 @@ string Level::add_model(NodePath model){
 	string id_s = to_string(uuid);
 	models[id_s] = model;
 	models[id_s].set_tag("id", id_s);
-	
-	return to_string(uuid++);
+	++uuid;
+	return to_string(uuid - 1);
 }
 
 /*
