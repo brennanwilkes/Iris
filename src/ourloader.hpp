@@ -21,8 +21,7 @@
 
 class OurLoader{
 public:
-	void load_level(Level L);
-	
+	void load_level(Level L,WindowFramework* w,PandaFramework* pf);
 private:
 
 };

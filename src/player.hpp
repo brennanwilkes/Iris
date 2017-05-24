@@ -135,6 +135,7 @@ public:
 	
 	int pullout;
 	
+	void kaboom(NodePath root);
 	
 private:
 	//vector<Item> inventory;

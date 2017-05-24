@@ -62,6 +62,7 @@ void Player::tick() {
 							//gameLevels[player.lvlid]->load("Story/"+to_string(player.lvlid)+".isf");
 							
 							
+							//kaboom(gameModels);
 							
 							break;
 							
@@ -545,12 +546,11 @@ void Player::calc_arms(){
 		arms->hide();
 	}
 	
-	//cout<<"hji"<<endl;
+	
 	
 	ammoNodePath.hide();
 	ammoNodePath2.hide();
 	
-	//cout<<"yp"<<endl;
 	if (mainHand!=NULL){
 		
 		
@@ -617,5 +617,37 @@ void Player::calc_arms(){
 //}
 
 
-
+void Player::kaboom(NodePath root){
+	
+	
+	
+	int t;
+	StaticObject* t_stat;
+	Item* t_itm;
+	Enemy* t_enem;
+		
+	t=stats.size();
+	for (int i=0;i<t;i++){
+		stats[0]->model.remove_node();
+		t_stat=stats[0];
+		stats.erase(stats.begin());
+		delete t_stat;
+	}
+	
+	t=itms.size();
+	for (int i=0;i<t;i++){
+		itms[0]->model.remove_node();
+		t_itm=itms[0];
+		itms.erase(itms.begin());
+		delete t_itm;
+	}
+	
+	t=enems.size();
+	for (int i=0;i<t;i++){
+		enems[0]->model.remove_node();
+		t_enem=enems[0];
+		enems.erase(enems.begin());
+		delete t_enem;
+	}	
+}
 
