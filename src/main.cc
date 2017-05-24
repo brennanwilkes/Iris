@@ -388,17 +388,25 @@ int main(int argc, char *argv[]) {
 	*/
 	NodePath nd_hellothere=window->load_model(framework.get_models(),mydir+"Assets/Iris/Iris.egg");
 	nd_hellothere.reparent_to(window->get_render());
-	nd_hellothere.set_pos(0,30,-1.5);
+	nd_hellothere.set_pos(0,20,-1.0);
+	nd_hellothere.set_hpr(180,0,0);
+	
 	nd_hellothere.hide();
 	
 	
+	AnimControlCollection start_anim_collection;
+	NodePath loadnode2 = window->load_model(nd_hellothere, mydir + "Assets/Iris/Iris-Idle.egg");
+	auto_bind(nd_hellothere.node(), start_anim_collection);
+	PT(AnimControl) animPtrLoad2 = start_anim_collection.get_anim(0);
+	start_anim_collection.store_anim(animPtrLoad2, "load");
+	loadnode2.detach_node();
+	start_anim_collection.loop("load",1);
 	
 	
 	
 	
 	
-	
-	
+	startMenuItems.hide();
 	
 	
 	
@@ -844,11 +852,12 @@ int main(int argc, char *argv[]) {
 	gameModels.hide();
 	loadanim.hide();
 	NNS.hide();
-
+	startMenuItems.show();
+	nd_hellothere.show();
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread)){
-
+		
 		if (frameDelay>30){
 			//cout<<world.dt<<" "<<1/world.dt<<endl;
 			savedt+=(int)(1/world.dt);
@@ -867,10 +876,14 @@ int main(int argc, char *argv[]) {
 
 		// Things to do every frame
 		// Keybinds should not go here.
-		if (world.menuStatus==world.ms_game){
+		if(world.menuStatus==world.ms_start){
+			nd_hellothere.set_hpr(nd_hellothere.get_hpr().get_x()+1,0,0);
+		}
+		else if (world.menuStatus==world.ms_game){
 
 			if(temptickcount<=10){
 				temptickcount++;
+				nd_hellothere.hide();
 			}
 			player.volumeNodePath.show();
 			player.weightNodePath.show();
@@ -962,6 +975,7 @@ void startGame(const Event* eventPtr, void* dataPtr){
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
 	}
+	
 	world.menuStart();
 }
 
