@@ -2,6 +2,7 @@
 #include <cmath>
 #include <vector>
 #include <map>
+#include <algorithm>
 
 #include "pandaFramework.h"
 #include "pandaSystem.h"
@@ -18,14 +19,21 @@
 #include "filename.h"
 #include "executionEnvironment.h"
 
+#include "../src/level.hpp"
+
 void select_model(const Event* eventPtr, void* dataPtr);
 void toggle_mouse_mode(const Event* eventPtr = NULL, void* dataPtr = NULL);
 
 void load_new_model(const Event* eventPtr, void* dataPtr);
+void unload_model(const Event* eventPtr, void* dataPtr);
 void move_model(const Event* eventPtr, void* dataPtr);
 void rot_model(const Event* eventPtr, void* dataPtr);
+void edit_model(const Event* eventPtr, void* dataPtr);
 void mwheel_up(const Event* eventPtr, void* dataPtr);
 void mwheel_down(const Event* eventPtr, void* dataPtr);
+void save_level(const Event* eventPtr, void* dataPtr);
+void load_level(const Event* eventPtr, void* dataPtr);
+void append_level(const Event* eventPtr, void* dataPtr);
 
 void test_func(const Event* eventPtr, void* dataPtr);
 
@@ -35,19 +43,21 @@ void move_cam();
 void rot_cam_locked(GraphicsWindow* gw);
 void rot_cam_unlocked(GraphicsWindow* gw);
 
-void move_sel();
+void move_sel_locked();
+void move_sel_unlocked();
 
 // Current directory
 Filename mydir;
 
 // Global variables
 NodePath camera;
+PandaFramework fw;
 PT(WindowFramework) window;
 
+// Selected model 
 NodePath selected;
-bool moving_selected;
+NodePath empty;
 
-vector<NodePath> models;
 map<string, NodePath> nodes;
 
 // Picker ray to select NodePath
@@ -57,7 +67,7 @@ PT(CollisionRay) qray_pick;
 
 // Rotating Camera in unlocked mouse mode
 float prevMx(0), prevMy(0);
-bool mouse1_down(0);
+bool mouse2_down(0);
 
 // Global Clock object
 PT(ClockObject) globalClock = ClockObject::get_global_clock();
@@ -65,7 +75,7 @@ PT(ClockObject) globalClock = ClockObject::get_global_clock();
 // MouseWatcher object for keyboard/mouse input
 PT(MouseWatcher) mW;
 
-// Previous time; Delta time between frames
+// Timers
 float preTime(0);
 float dt(0);
 
@@ -74,9 +84,18 @@ bool mouse_mode(0);
 
 float mv_dist(5);
 
+// Current level
+Level level;
+
+// States
+enum state {base, sel, mov_sel, edit_sel};
+state cur_state = base;
+
+// Thread (our one and only)
+Thread *c_thr = Thread::get_current_thread();
+
 int main(int argc, char* argv[])
 {
-	PandaFramework fw;
 	fw.open_framework(argc, argv);
 	fw.set_window_title("Level Editor");
 	
@@ -103,16 +122,21 @@ int main(int argc, char* argv[])
 	pick_ND = camera.attach_new_node(c_Node);
 	qcoll_pick = new CollisionHandlerQueue;
 	qtrav_pick.add_collider(pick_ND, qcoll_pick);
-
+	// End pickup ray setup
+	
 	window -> get_panda_framework() -> define_key("mouse1", "Select Model", select_model, NULL); // RMB shifts mouse mode
 	window -> get_panda_framework() -> define_key("mouse3", "Change Mouse Mode", toggle_mouse_mode, window); // RMB shifts mouse mode
 	window -> get_panda_framework() -> define_key("l", "Load Model", load_new_model, window);
+	window -> get_panda_framework() -> define_key("u", "Unload Selected Model", unload_model, NULL);
 	window -> get_panda_framework() -> define_key("m", "Move Model", move_model, NULL);
-	window -> get_panda_framework() -> define_key("wheel_up", "Move Model", mwheel_up, NULL);
-	window -> get_panda_framework() -> define_key("wheel_down", "Move Model", mwheel_down, NULL);
+	window -> get_panda_framework() -> define_key("wheel_up", "Rotate Model", mwheel_up, NULL);
+	window -> get_panda_framework() -> define_key("wheel_down", "Rotate Model", mwheel_down, NULL);
+	window -> get_panda_framework() -> define_key("control-s", "Save Level to file", save_level, NULL);
+	window -> get_panda_framework() -> define_key("control-l", "Load Level from file", load_level, NULL);
+	window -> get_panda_framework() -> define_key("control-a", "Append Level from file", append_level, NULL);
+	window -> get_panda_framework() -> define_key("e", "Edit model attributes", edit_model, NULL);
 	window -> get_panda_framework() -> define_key("t", "Test Function", test_func, NULL);
 	
-	Thread *c_thr = Thread::get_current_thread();
 	while (fw.do_frame(c_thr))
 	{
 		dt = globalClock -> get_real_time() - preTime;
@@ -121,11 +145,12 @@ int main(int argc, char* argv[])
 		if (mouse_mode) // Locked mouse mode
 		{
 			rot_cam_locked(window -> get_graphics_window());
-			if (moving_selected) move_sel();
+			if (cur_state == mov_sel) move_sel_locked();
 		}
 		else
 		{
 			rot_cam_unlocked(window -> get_graphics_window());
+			if (cur_state == mov_sel) move_sel_unlocked();
 		}
 		
 		move_cam();
@@ -136,28 +161,31 @@ int main(int argc, char* argv[])
 
 void select_model(const Event* eventPtr, void* dataPtr){
 	qray_pick -> set_from_lens(window -> get_camera(0), mW -> get_mouse().get_x(), mW -> get_mouse().get_y());
-	
 	qtrav_pick.traverse(window -> get_render());
 	if (qcoll_pick -> get_num_entries() > 0)
 	{
-		NodePath new_sel = window -> get_render().find_path_to(qcoll_pick -> get_entry(0) -> get_into_node());
-		if (selected == new_sel)
+		qcoll_pick -> sort_entries();
+		NodePath new_sel = level.models[qcoll_pick -> get_entry(0) -> get_into_node_path().get_net_tag("id")];
+		if (cur_state == mov_sel)
 		{
-			if (!moving_selected)
+			cur_state = sel;
+			selected.set_collide_mask(BitMask32::all_on());
+			cout << "Done moving " << selected.get_name() << endl;
+		}
+		else if (selected == new_sel)
+		{
+			if (cur_state != mov_sel)
 			{
-				moving_selected = true;
+				cur_state = mov_sel;
+				selected.set_collide_mask(BitMask32::all_off());
 				cout << "Now moving selected object, " << selected.get_name() << endl;
-			}
-			else
-			{
-				moving_selected = false;
-				cout << "Done moving object, " << selected.get_name() << endl;
 			}
 		}
 		else
 		{
+			if (!selected.is_empty()) selected.set_collide_mask(BitMask32::all_on());
 			selected = new_sel;
-			moving_selected = false;
+			cur_state = sel;
 			cout << "Selected new object: " << selected.get_name() << endl;
 		}
 		//~ 
@@ -166,11 +194,10 @@ void select_model(const Event* eventPtr, void* dataPtr){
 	}
 	else
 	{
-		if (moving_selected) 
-		{
-			moving_selected = false;
-			cout << "Stopped moving selected object" << endl;
-		}
+		if (!selected.is_empty()) selected.set_collide_mask(BitMask32::all_on());
+		cout << "Deselected all objects." << endl;
+		cur_state = base;
+		selected = empty;
 	}
 }
 
@@ -184,20 +211,62 @@ void toggle_mouse_mode(const Event* eventPtr, void* dataPtr){
 
 void load_new_model(const Event* eventPtr, void* dataPtr){
 	// Prompts user for model to load into the scene graph
-	PT(WindowFramework) window = (WindowFramework*)dataPtr;
 	string parent;
 	string filepath;
+	
+	// Get parent
 	cout << "Attach to (Root / Static / Entity / Item / ...) :";
 	cin >> parent;
+	transform(parent.begin(), parent.end(), parent.begin(), ::tolower);
+	
+	// Check if parent exists
+	if (nodes.find(parent) == nodes.end())
+	{
+		cout << "ERROR: Invalid parent: " << parent << endl;
+		return;
+	}
+	
+	// Get path to model
 	cout << "Model path: ";
 	cin >> filepath;
-	models.push_back(window -> load_model(nodes[parent], mydir + filepath));
-	models.back().set_pos(camera, 0, 10, 0);
-	selected = models.back();
+	filepath = mydir + filepath;
+	
+	// Check if file exists
+	if (!level.file_exists(filepath))
+	{
+		cout << "ERROR: File does not exist: " << filepath << endl;
+		return;
+	}
+	
+	// Load the model
+	PT(WindowFramework) window = (WindowFramework*)dataPtr;
+	string id;
+	id = level.add_model(window -> load_model(nodes[parent], filepath));
+	selected = level.models[id];
+	cur_state = sel;
+	cout << "Loaded model: [" << id << "] " << selected.get_name() << endl;
 }
 
-void move_model(const Event* eventPtr, void* dataPtr){ if (selected) {
+void unload_model(const Event* eventPtr, void* dataPtr){
+	if (cur_state == sel)
+	{
+		string id = selected.get_tag("id");
+		cout << "Removed selected node, " << selected.get_name() << endl;
+		level.models[id].remove_node();
+		level.models.erase(id);
+		selected.remove_node();
+		cur_state = base;
+	}
+}
+
+void move_model(const Event* eventPtr, void* dataPtr){
 	// Prompts user for new positional values for selected object
+	if (selected.is_empty())
+	{
+		cout << "Nothing selected!" << endl;
+		return;
+	}
+	
 	float x(0), y(0), z(0);
 	cout << "Moving selected object: " << selected.get_name() << " to: " << endl;
 	cout << "New x: " << endl;
@@ -212,10 +281,16 @@ void move_model(const Event* eventPtr, void* dataPtr){ if (selected) {
 	selected.set_z(z);
 	
 	cout << "Moved " << selected.get_name() << " to " << x << ", " << y << ", " << z << endl;
-} else {cout << "Nothing selected!" << endl;}}
+}
 
-void rot_model(const Event* eventPtr, void* dataPtr){ if (selected) {
+void rot_model(const Event* eventPtr, void* dataPtr){
 	// Prompts user for new rotational values for selected object
+	if (selected.is_empty())
+	{
+		cout << "Nothing selected!" << endl;
+		return;
+	}
+	
 	float h(0), p(0), r(0);
 	cout << "New h: " << endl;
 	cin >> h;
@@ -225,15 +300,52 @@ void rot_model(const Event* eventPtr, void* dataPtr){ if (selected) {
 	cin >> r;
 	
 	cout << "Rotated Object!" << endl;
+}
+
+void edit_model(const Event* eventPtr, void* dataPtr){
+	if (selected.is_empty()) 
+	{
+		cout << "Nothing selected!" << endl;
+		return;
+	}
 	
-} else {cout << "Nothing selected!" << endl;}}
+	cur_state = edit_sel;
+	
+	string datum;
+	
+	while (true)
+	{
+		cout << "Class type: ";
+		cin >> datum;
+		if (Level::used_dat.find(datum) != Level::used_dat.end())
+		{
+			break;
+		}
+		cout << "Invalid class type. Valid class types are: ";
+		for (auto &x:Level::used_dat)
+		{
+			cout << x.first << ", ";
+		}
+		cout << endl;
+	}
+	
+	vector<string> data = Level::used_dat[datum];
+	for (const auto &dat:data)
+	{
+		cout << dat << ": ";
+		cin >> datum;
+		selected.set_tag(dat, datum);
+	}
+	cout << "Done editing!" << endl;
+	cur_state = sel;
+}
 
 void setup(WindowFramework* win){
 	// Creates the scene graph root nodes.
-	nodes["Root"] = win -> get_render().attach_new_node("All game models");
-	nodes["Static"] = nodes["Root"].attach_new_node("All Static (Terrain)");
-	nodes["Entity"] = nodes["Root"].attach_new_node("All Entities");
-	nodes["Item"] = nodes["Entity"].attach_new_node("All Items");
+	nodes["root"] = win -> get_render().attach_new_node("All game models");
+	nodes["static"] = nodes["root"].attach_new_node("All Static (Terrain)");
+	nodes["entity"] = nodes["root"].attach_new_node("All Entities");
+	nodes["item"] = nodes["entity"].attach_new_node("All Items");
 }
 
 void move_cam(){
@@ -253,34 +365,49 @@ void move_cam(){
 void rot_cam_locked(GraphicsWindow* gw){ if (gw) {
 	int dx = (gw -> get_properties().get_x_size() / 2) - gw -> get_pointer(0).get_x();
 	int dy = (gw -> get_properties().get_y_size() / 2) - gw -> get_pointer(0).get_y();
-	camera.set_h(camera.get_h() + dx * dt);
-	camera.set_p(camera.get_p() + dy * dt);
+	camera.set_h(camera.get_h() + dx * dt * 3);
+	camera.set_p(camera.get_p() + dy * dt * 3);
 	gw -> move_pointer(0, gw -> get_properties().get_x_size() / 2, gw -> get_properties().get_y_size() / 2);
 } else { cout << "ERROR! EMPTY GRAPHICS WINDOW!" << endl; } }
 
-void rot_cam_unlocked(GraphicsWindow* gw){ if (gw) { if (mW -> is_button_down(MouseButton::one())) {
-	if (!mouse1_down) {	prevMx = gw -> get_pointer(0).get_x(); prevMy = gw -> get_pointer(0).get_y(); }
-	mouse1_down = 1;
+void rot_cam_unlocked(GraphicsWindow* gw){ if (gw) { if (mW -> is_button_down(MouseButton::two())) {
+	if (!mouse2_down) {	prevMx = gw -> get_pointer(0).get_x(); prevMy = gw -> get_pointer(0).get_y(); }
+	mouse2_down = 1;
 	int dx = prevMx - gw -> get_pointer(0).get_x();
 	int dy = prevMy - gw -> get_pointer(0).get_y();
 	camera.set_h(camera.get_h() - dx * dt * 5);
 	camera.set_p(camera.get_p() - dy * dt * 5);
 	prevMx = gw -> get_pointer(0).get_x();
 	prevMy = gw -> get_pointer(0).get_y();
-} else {mouse1_down = 0;}} else { cout << "ERROR! EMPTY GRAPHICS WINDOW!" << endl; } }
-
+} else {mouse2_down = 0;}} else { cout << "ERROR! EMPTY GRAPHICS WINDOW!" << endl; } }
 
 void test_func(const Event* eventPtr, void* dataPtr){
 	selected.ls();
 }
 
-void move_sel(){
+void move_sel_locked(){
 	selected.set_pos(camera, 0, mv_dist, 0);
 	selected.set_hpr(camera, 0, 0, 0);
 }
 
+void move_sel_unlocked(){
+	if (mW -> has_mouse())
+	{
+	qray_pick -> set_from_lens(window -> get_camera(0), mW -> get_mouse().get_x(), mW -> get_mouse().get_y());
+	qtrav_pick.traverse(window -> get_render());
+	if (qcoll_pick -> get_num_entries() > 0)
+	{
+		qcoll_pick -> sort_entries();
+		selected.set_pos(qcoll_pick -> get_entry(0) -> get_surface_point(window -> get_render()));
+		
+		//~ for (int i(0); i < qcoll_pick -> get_num_entries(); ++i)
+			//~ cout << i << " : " << level.models[qcoll_pick -> get_entry(i) -> get_into_node_path().get_net_tag("id")].get_name() << endl;
+	}
+	}
+}
+
 void mwheel_up(const Event* eventPtr, void* dataPtr){
-	if (moving_selected) mv_dist += 0.5;
+	if (cur_state == mov_sel) mv_dist += 0.5;
 	else
 	{
 		selected.set_h(selected, 5);
@@ -288,10 +415,34 @@ void mwheel_up(const Event* eventPtr, void* dataPtr){
 }
 
 void mwheel_down(const Event* eventPtr, void* dataPtr){
-	if (moving_selected) mv_dist -= 0.5;
+	if (cur_state == mov_sel) mv_dist -= 0.5;
 	else
 	{
 		selected.set_h(selected, -5);
 	}
 }
 
+void save_level(const Event* eventPtr, void* dataPtr){
+	string filename;
+	cout << "Save to: ";
+	cin >> filename;
+	level.save(filename);
+	cout << "Saved level to " << filename << endl;
+}
+
+void load_level(const Event* eventPtr, void* dataPtr){
+	string filename;
+	level.clear();
+	cout << "Load level from file: ";
+	cin >> filename;
+	level.load(filename);
+	cout << "Loaded level from " << filename << endl;
+}
+
+void append_level(const Event* eventPtr, void* dataPtr){
+	string filename;
+	cout << "Append level from file: ";
+	cin >> filename;
+	level.load(filename);
+	cout << "Appended level from " << filename << endl;
+}

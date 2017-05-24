@@ -1,12 +1,11 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#include "staticObject.hpp"
-#include "player.hpp"
-#include "item.hpp"
-
 #include <string>
+#include <vector>
+#include <map>
 
+#include "nodePath.h"
 
 class ChangeRegion{
 public:
@@ -26,15 +25,24 @@ public:
 
 class Level{
 public:
-	// Add another vector or object here to be tracked by savefile
-	vector<StaticObject> statics;
-	vector<Item> items;
+	static map< const string, vector<string> > used_dat;
+	static map< const string, vector<string> > gen_used_dat();
 	
-	void save(std::string file); // Saves this instance of Level to a file
+	Level();
+	
+	void save(std::string file, bool ov = true); // Saves this instance of Level to a file
 	void load(std::string file); // Loads the save file into this instance of Level
+	void clear(); // Empties all loaded models
+	void tagify(); // Empties all loaded models
 	bool file_exists(std::string file); // Checks if a file exists
-	int id;
+	std::vector<std::string> split(std::string &inp, std::string delim = " "); // Splits a string by delimiter
+
+	string add_model(NodePath model);
 	
+	map<string, NodePath> models;
+	unsigned int uuid = 0;
+	
+	int id;
 	
 	float spawn_x;
 	float spawn_y;
@@ -43,7 +51,6 @@ public:
 	Level(int idd,float sx,float sy,float sz);
 	
 	vector<ChangeRegion> exits;
-	
 };
 
 #endif

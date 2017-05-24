@@ -12,7 +12,7 @@
 class GameObject{
 public:
 	GameObject();
-	
+	virtual ~GameObject();
 	//static CollisionTraverser gtrav;
 	//static CollisionTraverser ptrav;
 	

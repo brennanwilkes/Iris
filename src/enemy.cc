@@ -108,6 +108,13 @@ bool Enemy::check_sight(){
 	else{
 		return false;
 	}
+	
+	
+	if(model.get_distance(player.model)>250){
+		return false;
+	}
+	
+	
 	running=true;
 	return true;
 }

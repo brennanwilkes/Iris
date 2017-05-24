@@ -10,6 +10,11 @@ CollisionTraverser Item::ptrav;
 
 
 Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,int zzz,int xxx,int yyy,float rad,int zzzz,std::string fn2,float am,int idd){
+	
+	
+	float ran1=rand()/(float)RAND_MAX;
+	
+	
 	type=t;
 	amount=am;
 	id=idd;
@@ -18,9 +23,20 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	//z=zz;
 	model=w->load_model(pf->get_models(),fn);
 	model.set_scale(scale);
+	
+	float ran2=rand()/(float)RAND_MAX;
+	
 	model.set_pos(xx,yy,zz);
 	model.reparent_to(*parent);
 	
+	float ran3=rand()/(float)RAND_MAX;
+	
+	ran1=ran1/2.0;
+	ran2=ran2/2.0;
+	ran3=ran3/2.0;
+	
+	model.clear_color_scale();
+	model.set_color_scale(1-ran1,1-ran2,1-ran3,1.0);
 	gravFrame=0;
 	
 	//PT(CollisionNode) c_Node;

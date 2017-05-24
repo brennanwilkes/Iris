@@ -8,7 +8,9 @@ GameObject::GameObject(){
 	lastz=0.0;
 }
 
-
+GameObject::~GameObject(){
+	// cout << "Deleted GameObject"
+}
 
 void GameObject::init(){
 	PT(CollisionNode) c_Node;

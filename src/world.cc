@@ -280,31 +280,51 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	float rot = player.camera.get_hpr().get_x();
 	float dx(0), dy(0);
 	float walk(2);
-
+	float spin=-1;
 	player.speed=1;
 	if (keybinds["forward"].second) 
 	{
 		dx += -2.0 * sin(rot * (3.1416 / 180));
 		dy += 2.0 * cos(rot * (3.1416 / 180));
 		player.speed=4;
+		spin=0.0;
 	}
 	if (keybinds["backward"].second)
 	{
 		dx += 2.0 * sin(rot * (3.1416 / 180));
 		dy += -2.0 * cos(rot * (3.1416 / 180));
 		player.speed=4;
+		spin=180.0;
 	}
 	if (keybinds["left"].second)
 	{
 		dx += 2.0 * sin((rot - 90) * (3.1416 / 180));
 		dy += -2.0 * cos((rot - 90) * (3.1416 / 180));
 		player.speed=4;
+		if(spin==0){
+			spin=45.0;
+		}
+		else if (spin==180){
+			spin=135.0;
+		}
+		else{
+			spin=90.0;
+		}
 	}
 	if (keybinds["right"].second)
 	{
 		dx += 2.0 * sin((rot + 90) * (3.1416 / 180));
 		dy += -2.0 * cos((rot + 90) * (3.1416 / 180));
 		player.speed=4;
+		if(spin==0){
+			spin=315.0;
+		}
+		else if (spin==180){
+			spin=225.0;
+		}
+		else{
+			spin=270.0;
+		}
 	}
 	
 	if (keybinds["walk"].second){
@@ -349,7 +369,7 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 			player.main_collection.play("walk");
 		}
 		//cout<<"walk"<<endl;
-		player.model.set_hpr(player.camera.get_hpr().get_x(), 0, 0);
+		player.model.set_hpr(rot+spin, 0, 0);
 	}
 	else{
 		//cout<<"idle"<<endl;
