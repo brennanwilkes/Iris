@@ -943,16 +943,16 @@ int main(int argc, char *argv[]) {
 				ranD*=360;
 				stats.push_back(new StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0,0,0,0.5));
 				 //segfaults here 
-				/*if(ranD>180){
-					ND.back().model.set_hpr(ranD,-90,0);cout << "5" << endl;
+				if(ranD>180){
+					stats.back()->model.set_hpr(ranD,-90,0);cout << "5" << endl;
 				}
 				else{
-					ND.back().model.set_hpr(ranD,90,0);cout << "6" << endl;
-					ND.back().model.set_z(ND.back().model.get_z()+0.25);cout << "7" << endl;
-				}*/cout << "8" << endl;
+					stats.back()->model.set_hpr(ranD,90,0);cout << "6" << endl;
+					stats.back()->model.set_z(ND.back().model.get_z()+0.25);cout << "7" << endl;
+				}
 				//segfaults here
-				//player.death(itms,&entityModels);cout << "9" << endl;
-				//world.menuDeath();cout << "10" << endl;
+				player.death(itms,&entityModels);
+				world.menuDeath();
 			}
 			
 			
@@ -1009,9 +1009,11 @@ int main(int argc, char *argv[]) {
 }
 
 void startGame(const Event* eventPtr, void* dataPtr){
+	//cout<<1<<endl;
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
 	}
+	//cout<<2<<endl;
 	
 	world.menuStart();
 }
