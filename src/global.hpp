@@ -25,6 +25,7 @@ extern NodePath startMenuItems;
 extern NodePath gameModels;
 extern NodePath menuItems;
 extern NodePath optionMenuItems;
+extern NodePath deathMenuItems;
 extern NodePath staticModels;
 extern World world;
 extern WindowFramework *window;

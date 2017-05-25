@@ -101,6 +101,7 @@ NodePath gameModels;
 NodePath startMenuItems;
 NodePath menuItems;
 NodePath optionMenuItems;
+NodePath deathMenuItems;
 NodePath staticModels;
 PT(PGSliderBar) Slider=new PGSliderBar("MySliderBar");;
 PT(PGSliderBar) mouseSlider=new PGSliderBar("mouseSliderBar");;
@@ -373,6 +374,8 @@ int main(int argc, char *argv[]) {
 	PGButton* loadGameButton;
 	PGButton* realQuitButton;
 	PGButton* OptionTogButton3;
+		startMenuItems.hide();
+
 
 	/*
 	PT(Texture) tex_hellothere;
@@ -403,15 +406,9 @@ int main(int argc, char *argv[]) {
 	loadnode2.detach_node();
 	start_anim_collection.loop("load",1);
 	
-	
-	
-	
-	
-	startMenuItems.hide();
-	
-	
-	
 	doStep(&framework,Thread::get_current_thread());
+
+
 	StartGameButton = new PGButton("StartGameButton");
 	StartGameButton -> setup("Start Game");
 	NodePath bnp = window -> get_pixel_2d().attach_new_node(StartGameButton);
@@ -427,7 +424,9 @@ int main(int argc, char *argv[]) {
 	bnp2.set_pos(xs + 0.1, 0, 0.65);
 	bnp2.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+loadGameButton->get_id()] = loadGameButton;
+
 	doStep(&framework,Thread::get_current_thread());
+	
 	realQuitButton = new PGButton("QuitButton");
 	realQuitButton -> setup("Quit");
 	NodePath defbutNPk = window -> get_pixel_2d().attach_new_node(realQuitButton);
@@ -445,6 +444,9 @@ int main(int argc, char *argv[]) {
 	keys.buttonIndex["click-mouse1-"+OptionTogButton3->get_id()] = OptionTogButton3;
 
 	doStep(&framework,Thread::get_current_thread());
+	
+
+
 	// Menu items
 	PT(PGButton) QuitButton;
 	PGButton* HitTogButton;
@@ -458,7 +460,6 @@ int main(int argc, char *argv[]) {
 	defbutNP.set_pos(xs+0.1,0, 0.25);
 	defbutNP.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+QuitButton->get_id()] = QuitButton;
-
 
 	HitTogButton = new PGButton("HitTogButton");
 	HitTogButton -> setup("Toggle Hit Boxes");
@@ -484,6 +485,8 @@ int main(int argc, char *argv[]) {
 	defbutNP5.reparent_to(menuItems);
 	doStep(&framework,Thread::get_current_thread());
 
+
+
 	//Option Menu Items
 	PGButton* OptionTogButton2;
 	PGButton* mouseSensBut;
@@ -508,6 +511,7 @@ int main(int argc, char *argv[]) {
 		keys.keybindMenu.push_back(butt);
 		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
 	}
+
 	doStep(&framework,Thread::get_current_thread());
 	mouseSlider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
 	mouseSlider->set_range(0,1);
@@ -526,12 +530,35 @@ int main(int argc, char *argv[]) {
 	defbutNPmous.reparent_to(optionMenuItems);
 
 
+	//Death Menu Items
+	PGButton* respawnButton;
+	PGButton* restartButton;
 	
+	respawnButton = new PGButton("respawnButton");
+	respawnButton -> setup("Respawn");
+	NodePath bresp = window -> get_pixel_2d().attach_new_node(respawnButton);
+	bresp.set_scale(0.1);
+	bresp.set_pos(xs + 0.1, 0, 0.85);
+	bresp.reparent_to(deathMenuItems);
+	keys.buttonIndex["click-mouse1-"+respawnButton->get_id()] = respawnButton;
+
+	restartButton = new PGButton("restartButton");
+	restartButton -> setup("Restart");
+	NodePath brest = window -> get_pixel_2d().attach_new_node(restartButton);
+	brest.set_scale(0.1);
+	brest.set_pos(xs + 0.1, 0, 0.65);
+	brest.reparent_to(deathMenuItems);
+	keys.buttonIndex["click-mouse1-"+restartButton->get_id()] = restartButton;
+
+
+
 	//Status bar items
 	PT(Texture) redTex=TexturePool::load_texture(mydir+"Assets/Red.png");
 	PT(Texture) greenTex=TexturePool::load_texture(mydir+"Assets/Blue.png");
 	PT(Texture) blueTex=TexturePool::load_texture(mydir+"Assets/Green.png");
+
 	doStep(&framework,Thread::get_current_thread());
+	
 	PGWaitBar* HealthBar;
 	HealthBar = new PGWaitBar("HealthBar");
 	HealthBar->setup(10.0,0.5,100.0);
@@ -563,6 +590,7 @@ int main(int argc, char *argv[]) {
 	WaterNode.show();
 	WaterNode.reparent_to(Bars);
 	WaterNode.set_texture(greenTex);
+	
 	doStep(&framework,Thread::get_current_thread());
 
 	//HUD info items
@@ -571,31 +599,37 @@ int main(int argc, char *argv[]) {
 	player.ammoNodePath = window->get_aspect_2d().attach_new_node(player.ammoNode);
 	player.ammoNodePath.set_scale(0.07);
 	player.ammoNodePath.set_pos(xs+0.5,0, -0.9);
+	player.ammoNodePath.hide();
 	
 	player.ammoNode2 = new TextNode("ammoNode2");
 	player.ammoNode2->set_text("0");
 	player.ammoNodePath2 = window->get_aspect_2d().attach_new_node(player.ammoNode2);
 	player.ammoNodePath2.set_scale(0.04);
 	player.ammoNodePath2.set_pos(xs+0.6,0, -0.9);
-
+	player.ammoNodePath2.hide();
+	
 	player.weightNode = new TextNode("weightNode");
 	player.weightNode->set_text("0");
 	player.weightNodePath = window->get_aspect_2d().attach_new_node(player.weightNode);
 	player.weightNodePath.set_scale(0.07);
 	player.weightNodePath.set_pos(xs+0.5,0, -0.98);
+	player.weightNodePath.hide();
+	
 	doStep(&framework,Thread::get_current_thread());
+	
 	player.volumeNode = new TextNode("volumeNode");
 	player.volumeNode->set_text("0");
 	player.volumeNodePath = window->get_aspect_2d().attach_new_node(player.volumeNode);
 	player.volumeNodePath.set_scale(0.07);
 	player.volumeNodePath.set_pos(xs+0.8,0, -0.98);
+	player.volumeNodePath.hide();
 
 	PT(TextNode)fpsNode = new TextNode("fpsNode");
 	fpsNode->set_text("0");
 	NodePath fpsNodePath= window->get_aspect_2d().attach_new_node(fpsNode);
 	fpsNodePath.set_scale(0.07);
 	fpsNodePath.set_pos(xs,0, -0.98);
-	
+	fpsNodePath.hide();
 	doStep(&framework,Thread::get_current_thread());
 	
 				//This is example code for fancy buttons. Dont delete
@@ -652,7 +686,7 @@ int main(int argc, char *argv[]) {
 	invBut.set_scale(0.25);
 	invBut.set_pos(xs + 2, 0, 0.6);
 	invBut.reparent_to(menuItems);
-	invBut.show();
+	//invBut.show();
 	keys.buttonIndex["click-mouse1-"+InvButton1->get_id()] = InvButton1;
 
 	//////////////////////////////////////////////
@@ -667,7 +701,7 @@ int main(int argc, char *argv[]) {
 	invBut2.set_scale(0.25);
 	invBut2.set_pos(xs + 2, 0, 0.0);
 	invBut2.reparent_to(menuItems);
-	invBut2.show();
+	//invBut2.show();
 	keys.buttonIndex["click-mouse1-"+InvButton2->get_id()] = InvButton2;
 
 	//////////////////////////////////////////////
@@ -682,7 +716,7 @@ int main(int argc, char *argv[]) {
 	invBut3.set_scale(0.25);
 	invBut3.set_pos(xs + 2, 0, -0.6);
 	invBut3.reparent_to(menuItems);
-	invBut3.show();
+	//invBut3.show();
 	keys.buttonIndex["click-mouse1-"+InvButton3->get_id()] = InvButton3;
 
 	//////////////////////////////////////////////
@@ -742,7 +776,7 @@ int main(int argc, char *argv[]) {
 	player.handDisplay.set_transparency(TransparencyAttrib::M_alpha, 1);
 	player.handDisplay.set_scale(0.4);
 	player.handDisplay.set_pos(xs+0.1,0, -0.9);
-	player.handDisplay.show();
+	player.handDisplay.hide();
 	player.handDisplay.set_texture(blankTex);
 
 	doStep(&framework,Thread::get_current_thread());
@@ -757,7 +791,7 @@ int main(int argc, char *argv[]) {
 	nd_crosshair.set_pos(-0.25, 0 ,-0.25);
 	tex_crosshair=TexturePool::load_texture(mydir+"Assets/CrossHair.png");
 	nd_crosshair.set_texture(tex_crosshair);
-	
+	nd_crosshair.hide();
 	
 	
 	
@@ -811,7 +845,7 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(StartGameButton->get_click_event(keys.keybinds["use"].first ), "Start game button press", &startGame, NULL);
 	window -> get_panda_framework() -> define_key(loadGameButton->get_click_event(keys.keybinds["use"].first ), "Load game button press", &loadGame, NULL);
 	window -> get_panda_framework() -> define_key(realQuitButton->get_click_event(keys.keybinds["use"].first ), "Quit button press", &sys_exit, realQuitButton);
-	
+	//MouseButton::one()
 	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(keys.keybinds["use"].first ), "Menu button press", &startGame, QuitButton);
 	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hitbox button press", &toggleHitBox, HitTogButton);
 	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(keys.keybinds["use"].first ), "Double jump button press", &toggleDoubleJump, DoubleTogButton);
@@ -821,6 +855,8 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(OptionTogButton3->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton3);
 	window -> get_panda_framework() -> define_key(mouseSensBut->get_click_event(keys.keybinds["use"].first ), "Mousebind button press", &rebindMouseSens, mouseSensBut);
 
+	window -> get_panda_framework() -> define_key(respawnButton->get_click_event(keys.keybinds["use"].first ), "Respawn button press", &menu, respawnButton);
+	window -> get_panda_framework() -> define_key(restartButton->get_click_event(keys.keybinds["use"].first ), "Restart button press", &startGame, restartButton);
 	
 	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory 1 slot press", &invPress, &blankTex);
 	window -> get_panda_framework() -> define_key(InvButton2->get_click_event(keys.keybinds["use"].first ), "Inventory 2 slot press", &invPress, &blankTex);
@@ -854,7 +890,7 @@ int main(int argc, char *argv[]) {
 	gameModels.hide();
 	loadanim.hide();
 	NNS.hide();
-	startMenuItems.show();
+	startMenuItems.show();//	player.handDisplay.show();
 	nd_hellothere.show();
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
@@ -903,21 +939,20 @@ int main(int argc, char *argv[]) {
 			
 			if (player.health<=0){
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
-				
 				float ranD=rand()/(float)RAND_MAX;
 				ranD*=360;
-				
 				stats.push_back(new StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0,0,0,0.5));
-				
-				if(ranD>180){
-					ND.back().model.set_hpr(ranD,-90,0);
+				 //segfaults here 
+				/*if(ranD>180){
+					ND.back().model.set_hpr(ranD,-90,0);cout << "5" << endl;
 				}
 				else{
-					ND.back().model.set_hpr(ranD,90,0);
-					ND.back().model.set_z(ND.back().model.get_z()+0.25);
-				}
-				
-				player.death(itms,&entityModels);
+					ND.back().model.set_hpr(ranD,90,0);cout << "6" << endl;
+					ND.back().model.set_z(ND.back().model.get_z()+0.25);cout << "7" << endl;
+				}*/cout << "8" << endl;
+				//segfaults here
+				//player.death(itms,&entityModels);cout << "9" << endl;
+				//world.menuDeath();cout << "10" << endl;
 			}
 			
 			

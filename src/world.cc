@@ -415,6 +415,7 @@ void World::menu(){
 		gameModels.show();
 		menuItems.hide();
 		optionMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(true);
 		props.set_mouse_mode(WindowProperties::M_confined);
@@ -430,6 +431,7 @@ void World::menu(){
 		gameModels.hide();
 		menuItems.show();
 		optionMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -500,6 +502,7 @@ void World::menuOption(){
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.show();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -514,6 +517,7 @@ void World::menuOption(){
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -528,6 +532,7 @@ void World::menuOption(){
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.show();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -543,6 +548,7 @@ void World::menuOption(){
 		gameModels.hide();
 		menuItems.show();
 		optionMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -568,6 +574,7 @@ void World::menuStart(){
 		gameModels.show();
 		menuItems.hide();
 		optionMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(true);
 		props.set_mouse_mode(WindowProperties::M_confined);
@@ -583,6 +590,7 @@ void World::menuStart(){
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -590,3 +598,58 @@ void World::menuStart(){
 	}
 	
 }
+
+void World::menuDeath(){
+	Player player;
+	if (menuStatus==ms_death){
+		menuStatus=ms_start;
+	}
+	else{
+		menuStatus=ms_death;
+	}
+	
+	if (menuStatus==ms_start)
+	{	
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.show();
+		gameModels.hide();
+		menuItems.hide();
+		optionMenuItems.hide();
+		deathMenuItems.hide();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(true);
+		props.set_mouse_mode(WindowProperties::M_confined);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+	
+	if (menuStatus==ms_death)
+	{
+		//fade
+		/*
+		player.model.clear_color_scale();
+		player.model.set_color_scale(1.0,1.0,1.0,1.0);//-player.tint,1-player.tint,1.0);
+		//player.tint-=0.05;
+		//cout<<tint<<endl;
+		//if (player.tint<0){
+		//	player.tint=0;
+		//}
+		player.hitFog->set_exp_density(player.tint/200.0);
+		*/
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+		startMenuItems.hide();
+		gameModels.show();
+		menuItems.hide();
+		optionMenuItems.hide();
+		deathMenuItems.show();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}
+	
+}
+

@@ -496,6 +496,7 @@ void Player::play_anim(){
 	
 	
 }
+
 void Player::death(vector<Item*> &v,NodePath* parent){
 	float r,r2,r3;
 	unsigned int send_nudes=inventory.size();
