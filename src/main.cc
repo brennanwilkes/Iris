@@ -113,6 +113,7 @@ WindowFramework* window;
 
 // Forward declared functions
 void startGame(const Event* eventPtr, void* dataPtr);
+void loadGame(const Event* eventPtr, void* dataPtr);
 void sys_exit(const Event* eventPtr, void* dataPtr);
 void toggle(const Event* eventPtr, void* dataPtr);
 void toggleHitBox(const Event* eventPtr, void* dataPtr);
@@ -763,6 +764,7 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key("h", "hide_arms", hide_arms, NULL);
 
 	window -> get_panda_framework() -> define_key(StartGameButton->get_click_event(keys.keybinds["use"].first ), "Start game button press", &startGame, NULL);
+	window -> get_panda_framework() -> define_key(loadGameButton->get_click_event(keys.keybinds["use"].first ), "Load game button press", &loadGame, NULL);
 	window -> get_panda_framework() -> define_key(realQuitButton->get_click_event(keys.keybinds["use"].first ), "Quit button press", &sys_exit, realQuitButton);
 	
 	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(keys.keybinds["use"].first ), "Menu button press", &startGame, QuitButton);
@@ -923,6 +925,10 @@ int main(int argc, char *argv[]) {
 
 void startGame(const Event* eventPtr, void* dataPtr){
 	world.menuStart();
+}
+
+void loadGame(const Event* eventPtr, void* dataPtr){
+	cout << "load game" << endl;
 }
 
 void sys_exit(const Event* eventPtr, void* dataPtr){
