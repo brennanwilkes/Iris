@@ -63,7 +63,7 @@ void Player::tick() {
 							
 							
 							//kaboom(gameModels);
-							cout<<"wut"<<endl;
+							
 							break;
 							
 						}
@@ -546,12 +546,11 @@ void Player::calc_arms(){
 		arms->hide();
 	}
 	
-	//cout<<"hji"<<endl;
+	
 	
 	ammoNodePath.hide();
 	ammoNodePath2.hide();
 	
-	//cout<<"yp"<<endl;
 	if (mainHand!=NULL){
 		
 		
@@ -619,13 +618,36 @@ void Player::calc_arms(){
 
 
 void Player::kaboom(NodePath root){
-	cout<<root.get_num_nodes()<<endl;
-	cout<<root.get_name()<<endl;
-	for(int i=0;i<root.get_num_nodes();i++){
-		Player::kaboom(root.get_child(0));
+	
+	
+	
+	int t;
+	StaticObject* t_stat;
+	Item* t_itm;
+	Enemy* t_enem;
+		
+	t=stats.size();
+	for (int i=0;i<t;i++){
+		stats[0]->model.remove_node();
+		t_stat=stats[0];
+		stats.erase(stats.begin());
+		delete t_stat;
 	}
-	if(root!=gameModels){
-		root.remove_node();
+	
+	t=itms.size();
+	for (int i=0;i<t;i++){
+		itms[0]->model.remove_node();
+		t_itm=itms[0];
+		itms.erase(itms.begin());
+		delete t_itm;
 	}
+	
+	t=enems.size();
+	for (int i=0;i<t;i++){
+		enems[0]->model.remove_node();
+		t_enem=enems[0];
+		enems.erase(enems.begin());
+		delete t_enem;
+	}	
 }
 

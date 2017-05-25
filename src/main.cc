@@ -93,6 +93,7 @@ Filename mydir = ((Filename)ExecutionEnvironment::get_binary_name()).get_dirname
 vector<GameObject*> objs;
 vector<Enemy*> enems;
 vector<Item*> itms;
+vector<StaticObject*> stats;
 Player player;
 Keys keys;
 World world;
@@ -100,12 +101,13 @@ NodePath gameModels;
 NodePath startMenuItems;
 NodePath menuItems;
 NodePath optionMenuItems;
+NodePath staticModels;
 PT(PGSliderBar) Slider=new PGSliderBar("MySliderBar");;
 PT(PGSliderBar) mouseSlider=new PGSliderBar("mouseSliderBar");;
 
 vector<Level*> gameLevels;
 
-OurLoader ourloader;
+OurLoader gameloader;
 
 int scene;
 
@@ -144,6 +146,7 @@ void makeNegev(int x, int y, int z,NodePath* parentNode);
 void makeSpider(int x, int y, int z,NodePath* parentNode);
 void makeWaterbottle(int x, int y, int z,NodePath* parentNode);
 
+void doStep(PandaFramework* pf,Thread* current_thread);
 
 
 
@@ -224,7 +227,7 @@ int main(int argc, char *argv[]) {
 	
 	NodePath loadanim=window->load_model(framework.get_models(),mydir+"Assets/INSECT/insect.egg");
 	loadanim.reparent_to(window->get_render());
-	loadanim.set_pos(0,30,-3.5);
+	loadanim.set_pos(0,30,-1.5);
 	loadanim.show();
 	
 	
@@ -237,9 +240,10 @@ int main(int argc, char *argv[]) {
 	load_anim_collection.loop("load",1);
 	
 	
+	Thread *current_thread = Thread::get_current_thread();
 	
 	
-	
+	/*
 	
 	Thread *current_thread = Thread::get_current_thread();
 	if(framework.do_frame(current_thread))
@@ -247,6 +251,9 @@ int main(int argc, char *argv[]) {
 		framework.get_graphics_engine()->render_frame();
 		CIntervalManager::get_global_ptr() -> step();
 	}
+	
+	*/
+	doStep(&framework,Thread::get_current_thread());
 
 	// Lighting
 	al = new AmbientLight("my a_light");
@@ -260,11 +267,11 @@ int main(int argc, char *argv[]) {
 	window -> get_render().set_light(dlnp);
 	dl -> set_shadow_caster(true, 512, 512);
 	
-	
+	doStep(&framework,Thread::get_current_thread());
 	// Create a dummy node to attach things to. Does not affect anything,
 	// but makes it easier to hide all the game nodes at once.
 	gameModels = window -> get_render().attach_new_node("All game models");
-		NodePath staticModels = gameModels.attach_new_node("All Static (Terrain)");
+		staticModels = gameModels.attach_new_node("All Static (Terrain)");
 		NodePath entityModels = gameModels.attach_new_node("All Entities");
 			NodePath shootableModels = entityModels.attach_new_node("All Shootables");
 			NodePath itemModels = entityModels.attach_new_node("All items");
@@ -278,7 +285,7 @@ int main(int argc, char *argv[]) {
 	optionMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
 	
 	
-	
+	doStep(&framework,Thread::get_current_thread());
 	
 	/*
 	PT(Texture) tbak;
@@ -299,14 +306,14 @@ int main(int argc, char *argv[]) {
 	
 	*/
 	
-	
+	doStep(&framework,Thread::get_current_thread());
 	
 	
 	
 	NodePath Bars = window -> get_pixel_2d().attach_new_node("Status Bars");
 	Bars.set_transparency(TransparencyAttrib::M_alpha, 1);
 	Bars.reparent_to(window->get_aspect_2d());
-	
+	Bars.hide();
 	
 
 	menuItems.hide();
@@ -317,7 +324,7 @@ int main(int argc, char *argv[]) {
 	player.set_up(&gameModels,window,&framework,mydir);
 	
 	
-	
+	doStep(&framework,Thread::get_current_thread());
 	
 	
 	// the name of an animation is preceded in the .egg file with <BunBdle>:
@@ -347,9 +354,10 @@ int main(int argc, char *argv[]) {
 	vector<StaticObject> ND;
 	for(auto x:Dir)
 	{
+		doStep(&framework,Thread::get_current_thread());
 		//StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale=1){
-		ND.push_back(StaticObject(-8,42,0,mydir+x,&gameModels,window,&framework,0,0,0,2.6));
-		
+		stats.push_back(new StaticObject(-8,42,0,mydir+x,&gameModels,window,&framework,0,0,0,2.6));
+		stats.back()->model.hide();
 	}
 	PT(CollisionNode) c_Node;
 	//ptrav.set_respect_prev_transform(true);
@@ -358,7 +366,7 @@ int main(int argc, char *argv[]) {
 	player.coll_set_up();
 	player.model.set_pos(player.model.get_x(),player.model.get_y(),player.model.get_z()+25);
 
-
+	doStep(&framework,Thread::get_current_thread());
 
 	// Start Menu items
 	PGButton* StartGameButton;
@@ -366,6 +374,7 @@ int main(int argc, char *argv[]) {
 	PGButton* realQuitButton;
 	PGButton* OptionTogButton3;
 
+	/*
 	PT(Texture) tex_hellothere;
 	CardMaker cm_hellothere("cardMaker");
 	PT(PandaNode) rc_hellothere = cm_hellothere.generate();
@@ -377,7 +386,32 @@ int main(int argc, char *argv[]) {
 	nd_hellothere.set_scale(window->get_render(),1);
 	tex_hellothere=TexturePool::load_texture(mydir+"Assets/Hellothere.jpg");
 	nd_hellothere.set_texture(tex_hellothere);
-
+	*/
+	NodePath nd_hellothere=window->load_model(framework.get_models(),mydir+"Assets/Iris/Iris.egg");
+	nd_hellothere.reparent_to(window->get_render());
+	nd_hellothere.set_pos(0,20,-1.0);
+	nd_hellothere.set_hpr(180,0,0);
+	
+	nd_hellothere.hide();
+	
+	
+	AnimControlCollection start_anim_collection;
+	NodePath loadnode2 = window->load_model(nd_hellothere, mydir + "Assets/Iris/Iris-Idle.egg");
+	auto_bind(nd_hellothere.node(), start_anim_collection);
+	PT(AnimControl) animPtrLoad2 = start_anim_collection.get_anim(0);
+	start_anim_collection.store_anim(animPtrLoad2, "load");
+	loadnode2.detach_node();
+	start_anim_collection.loop("load",1);
+	
+	
+	
+	
+	
+	startMenuItems.hide();
+	
+	
+	
+	doStep(&framework,Thread::get_current_thread());
 	StartGameButton = new PGButton("StartGameButton");
 	StartGameButton -> setup("Start Game");
 	NodePath bnp = window -> get_pixel_2d().attach_new_node(StartGameButton);
@@ -393,7 +427,7 @@ int main(int argc, char *argv[]) {
 	bnp2.set_pos(xs + 0.1, 0, 0.65);
 	bnp2.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+loadGameButton->get_id()] = loadGameButton;
-
+	doStep(&framework,Thread::get_current_thread());
 	realQuitButton = new PGButton("QuitButton");
 	realQuitButton -> setup("Quit");
 	NodePath defbutNPk = window -> get_pixel_2d().attach_new_node(realQuitButton);
@@ -410,7 +444,7 @@ int main(int argc, char *argv[]) {
 	defbutNP7.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+OptionTogButton3->get_id()] = OptionTogButton3;
 
-
+	doStep(&framework,Thread::get_current_thread());
 	// Menu items
 	PT(PGButton) QuitButton;
 	PGButton* HitTogButton;
@@ -448,7 +482,7 @@ int main(int argc, char *argv[]) {
 	defbutNP5.set_scale(0.1);
 	defbutNP5.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP5.reparent_to(menuItems);
-
+	doStep(&framework,Thread::get_current_thread());
 
 	//Option Menu Items
 	PGButton* OptionTogButton2;
@@ -462,6 +496,7 @@ int main(int argc, char *argv[]) {
 	defbutNP6.reparent_to(optionMenuItems);
 
 	for (unsigned int i=0; i<keys.keybindItems.size(); i++){
+		doStep(&framework,Thread::get_current_thread());
 		PGButton* butt;
 		butt = new PGButton("Bind"+keys.keybindItems.at(i));
 		butt -> setup(keys.keybindItems.at(i)+":"+ keys.keybinds[keys.keybindItems.at(i)].first.get_name());
@@ -473,7 +508,7 @@ int main(int argc, char *argv[]) {
 		keys.keybindMenu.push_back(butt);
 		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
 	}
-
+	doStep(&framework,Thread::get_current_thread());
 	mouseSlider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
 	mouseSlider->set_range(0,1);
 	mouseSlider->set_value(0);
@@ -496,7 +531,7 @@ int main(int argc, char *argv[]) {
 	PT(Texture) redTex=TexturePool::load_texture(mydir+"Assets/Red.png");
 	PT(Texture) greenTex=TexturePool::load_texture(mydir+"Assets/Blue.png");
 	PT(Texture) blueTex=TexturePool::load_texture(mydir+"Assets/Green.png");
-	
+	doStep(&framework,Thread::get_current_thread());
 	PGWaitBar* HealthBar;
 	HealthBar = new PGWaitBar("HealthBar");
 	HealthBar->setup(10.0,0.5,100.0);
@@ -517,6 +552,8 @@ int main(int argc, char *argv[]) {
 	FoodNode.reparent_to(Bars);
 	FoodNode.set_texture(blueTex);
 	
+	doStep(&framework,Thread::get_current_thread());
+	
 	PGWaitBar* WaterBar;
 	WaterBar = new PGWaitBar("WaterBar");
 	WaterBar->setup(10.0,0.5,100.0);
@@ -526,7 +563,7 @@ int main(int argc, char *argv[]) {
 	WaterNode.show();
 	WaterNode.reparent_to(Bars);
 	WaterNode.set_texture(greenTex);
-
+	doStep(&framework,Thread::get_current_thread());
 
 	//HUD info items
 	player.ammoNode = new TextNode("ammoNode");
@@ -546,7 +583,7 @@ int main(int argc, char *argv[]) {
 	player.weightNodePath = window->get_aspect_2d().attach_new_node(player.weightNode);
 	player.weightNodePath.set_scale(0.07);
 	player.weightNodePath.set_pos(xs+0.5,0, -0.98);
-	
+	doStep(&framework,Thread::get_current_thread());
 	player.volumeNode = new TextNode("volumeNode");
 	player.volumeNode->set_text("0");
 	player.volumeNodePath = window->get_aspect_2d().attach_new_node(player.volumeNode);
@@ -558,7 +595,8 @@ int main(int argc, char *argv[]) {
 	NodePath fpsNodePath= window->get_aspect_2d().attach_new_node(fpsNode);
 	fpsNodePath.set_scale(0.07);
 	fpsNodePath.set_pos(xs,0, -0.98);
-
+	
+	doStep(&framework,Thread::get_current_thread());
 	
 				//This is example code for fancy buttons. Dont delete
 	/*
@@ -598,7 +636,7 @@ int main(int argc, char *argv[]) {
 	SliderNP.set_pos(0.15,0,0);
 	SliderNP.reparent_to(menuItems);
 	
-
+	doStep(&framework,Thread::get_current_thread());
 
 	PT(Texture) blankTex=TexturePool::load_texture(mydir+"Assets/blank_slot2.png");
 
@@ -607,7 +645,7 @@ int main(int argc, char *argv[]) {
 	PGButton* InvButton1;
 	InvButton1 = new PGButton("InvButton1");
 	InvButton1 -> setup(blank_plane);
-	
+	doStep(&framework,Thread::get_current_thread());
 	NodePath invBut = window -> get_pixel_2d().attach_new_node(InvButton1);
 	invBut.set_transparency(TransparencyAttrib::M_alpha, 1);
 	invBut.set_tag("invBut","1");
@@ -618,7 +656,7 @@ int main(int argc, char *argv[]) {
 	keys.buttonIndex["click-mouse1-"+InvButton1->get_id()] = InvButton1;
 
 	//////////////////////////////////////////////
-
+	doStep(&framework,Thread::get_current_thread());
 	PGButton* InvButton2;
 	InvButton2 = new PGButton("InvButton2");
 	InvButton2 -> setup(blank_plane);
@@ -637,7 +675,7 @@ int main(int argc, char *argv[]) {
 	PGButton* InvButton3;
 	InvButton3 = new PGButton("InvButton3");
 	InvButton3 -> setup(blank_plane);
-	
+	doStep(&framework,Thread::get_current_thread());
 	NodePath invBut3 = window -> get_pixel_2d().attach_new_node(InvButton3);
 	invBut3.set_transparency(TransparencyAttrib::M_alpha, 1);
 	invBut3.set_tag("invBut","3");
@@ -648,7 +686,7 @@ int main(int argc, char *argv[]) {
 	keys.buttonIndex["click-mouse1-"+InvButton3->get_id()] = InvButton3;
 
 	//////////////////////////////////////////////
-		
+	doStep(&framework,Thread::get_current_thread());
 	
 	Level testlevel(0,0,0,5);
 	
@@ -694,7 +732,7 @@ int main(int argc, char *argv[]) {
 		player.weapons.back().Node.hide();
 	}
 	*/
-
+	doStep(&framework,Thread::get_current_thread());
 	//Hand display
 	CardMaker cm("cardMaker");
 	PT(PandaNode) readyCard = cm.generate();
@@ -707,7 +745,7 @@ int main(int argc, char *argv[]) {
 	player.handDisplay.show();
 	player.handDisplay.set_texture(blankTex);
 
-
+	doStep(&framework,Thread::get_current_thread());
 	//Crosshair
 	PT(Texture) tex_crosshair;
 	CardMaker cm_crosshair("cardMaker");
@@ -728,33 +766,40 @@ int main(int argc, char *argv[]) {
 	
 	// define_key("event_name", "description", function, data);
 	// data is a void pointer, so it can take anything.
-
+	
 	if ("hide this"){
 	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
 	keys.wildKeys["menu"] = &menu;
 	keys.dataPtrs["menu"] = window;
+	doStep(&framework,Thread::get_current_thread());
 	window -> get_panda_framework() -> define_key(keys.keybinds["jump"].first.get_name(), "jump", &jump, NULL);
 	keys.wildKeys["jump"] = &jump;
 	keys.dataPtrs["jump"] = NULL;
+	doStep(&framework,Thread::get_current_thread());
 	window -> get_panda_framework() -> define_key(keys.keybinds["cameraToggle"].first.get_name(), "cameraToggle", &toggle, NULL);
 	keys.wildKeys["cameraToggle"] = &toggle;
 	keys.dataPtrs["cameraToggle"] = NULL;
+	doStep(&framework,Thread::get_current_thread());
 	window -> get_panda_framework() -> define_key(keys.keybinds["use"].first.get_name(), "use", &onMouse1, &blankTex);
 	keys.wildKeys["use"] = &onMouse1;
 	keys.dataPtrs["use"] = &blankTex;
+	doStep(&framework,Thread::get_current_thread());
 	window -> get_panda_framework() -> define_key(keys.keybinds["pickup"].first.get_name(), "pickup", &onE, NULL);
 	keys.wildKeys["pickup"] = &onE;
 	keys.dataPtrs["pickup"] = NULL;
+	doStep(&framework,Thread::get_current_thread());
 	window -> get_panda_framework() -> define_key(keys.keybinds["reload"].first.get_name(), "reload", &onR, NULL);
 	keys.wildKeys["reload"] = &onR;
 	keys.dataPtrs["reload"] = NULL;
+	doStep(&framework,Thread::get_current_thread());
 	window -> get_panda_framework() -> define_key(keys.keybinds["drop"].first.get_name(), "drop", &drop, &blankTex);
 	keys.wildKeys["drop"] = &drop;
 	keys.dataPtrs["drop"] = &blankTex;
+	doStep(&framework,Thread::get_current_thread());
 	window -> get_panda_framework() -> define_key(keys.keybinds["spider"].first.get_name(), "spider", &spiderClick, &shootableModels);
 	keys.wildKeys["spider"] = &spiderClick;
 	keys.dataPtrs["spider"] = &shootableModels;
-
+	doStep(&framework,Thread::get_current_thread());
 	for (int i=1; i<10; i++){
 		window -> get_panda_framework() -> define_key(keys.keybinds["inv"+to_string(i)].first.get_name(), "inv"+to_string(i), &invHotkey, &blankTex);
 		keys.wildKeys["inv"+to_string(i)] = &invHotkey;
@@ -783,7 +828,7 @@ int main(int argc, char *argv[]) {
 	}
 	
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
+	doStep(&framework,Thread::get_current_thread());
 	//Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,int zzz,int xxx,int yyy,float rad,int zzzz)
 	makeKalashnikov(35, 0, 20,&gameModels);
 	makeNegev(30,0,20, &gameModels);
@@ -809,11 +854,12 @@ int main(int argc, char *argv[]) {
 	gameModels.hide();
 	loadanim.hide();
 	NNS.hide();
-
+	startMenuItems.show();
+	nd_hellothere.show();
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread)){
-
+		
 		if (frameDelay>30){
 			//cout<<world.dt<<" "<<1/world.dt<<endl;
 			savedt+=(int)(1/world.dt);
@@ -832,10 +878,14 @@ int main(int argc, char *argv[]) {
 
 		// Things to do every frame
 		// Keybinds should not go here.
-		if (world.menuStatus==world.ms_game){
+		if(world.menuStatus==world.ms_start){
+			nd_hellothere.set_hpr(nd_hellothere.get_hpr().get_x()+1,0,0);
+		}
+		else if (world.menuStatus==world.ms_game){
 
 			if(temptickcount<=10){
 				temptickcount++;
+				nd_hellothere.hide();
 			}
 			player.volumeNodePath.show();
 			player.weightNodePath.show();
@@ -857,7 +907,7 @@ int main(int argc, char *argv[]) {
 				float ranD=rand()/(float)RAND_MAX;
 				ranD*=360;
 				
-				ND.push_back(StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0,0,0,0.5));
+				stats.push_back(new StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0,0,0,0.5));
 				
 				if(ranD>180){
 					ND.back().model.set_hpr(ranD,-90,0);
@@ -924,6 +974,10 @@ int main(int argc, char *argv[]) {
 }
 
 void startGame(const Event* eventPtr, void* dataPtr){
+	for (unsigned int i=0;i<stats.size();i++){
+		stats[i]->model.show();
+	}
+	
 	world.menuStart();
 }
 
@@ -1531,3 +1585,17 @@ void makeWaterbottle(int x, int y, int z,NodePath* parentNode){
 	WaterItem* booootle = new WaterItem('c',x,y,z,1.0f,1.0f, mydir+"blenderFiles/Bootle.egg",parentNode,window,window->get_panda_framework(),0.5f,1,0,0,1.5f,0,mydir+"blenderFiles/BottleIcon.png",80.0,6);
 	itms.push_back(booootle);
 }
+
+void doStep(PandaFramework* pf,Thread *current_thread){
+	if(pf->do_frame(current_thread))
+	{
+		pf->get_graphics_engine()->render_frame();
+		CIntervalManager::get_global_ptr() -> step();
+	}
+}
+
+
+
+
+
+
