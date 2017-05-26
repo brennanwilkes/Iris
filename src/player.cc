@@ -40,9 +40,7 @@ void Player::tick() {
 			
 			//coll_grav->set_velocity(0.0);
 		}
-		/*cout<<model<<" height "<<coll_grav->get_airborne_height()<<endl;
-		cout<<model<<" speed "<<coll_grav->get_impact_velocity()<<endl;
-		cout<<model<<" health "<<health<<endl;*/
+		
 	}
 	
 	//GameObject::tick(); 
@@ -498,6 +496,8 @@ void Player::play_anim(){
 }
 
 void Player::death(vector<Item*> &v,NodePath* parent){
+	cout<<"begin"<<endl;
+	
 	float r,r2,r3;
 	unsigned int send_nudes=inventory.size();
 	for (unsigned int i=0;i<send_nudes;i++){
@@ -509,7 +509,7 @@ void Player::death(vector<Item*> &v,NodePath* parent){
 		drop(0,v,parent);
 		v.back() -> accel((r-0.5),(r2-0.5),r3);
 	}
-	
+	cout<<"a1"<<endl;
 	deaths++;
 	xp+=1;
 	health=100;
@@ -519,12 +519,14 @@ void Player::death(vector<Item*> &v,NodePath* parent){
 	player.mainHand=NULL;
 	calc_arms();
 	
-	
+	cout<<"a2"<<endl;
 	
 	
 	player.model.set_x(gameLevels[player.lvlid]->spawn_x);
 	player.model.set_y(gameLevels[player.lvlid]->spawn_y);
 	player.model.set_z(gameLevels[player.lvlid]->spawn_z);
+	
+	cout<<"end"<<endl;
 	
 }
 void Player::calc_arms(){

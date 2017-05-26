@@ -53,7 +53,7 @@ public:
 	AnimControlCollection name_collection;
 	AnimControlCollection anim_collection;
 	
-	void set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string fn,float HEALTH,int xx,int yy,int zz,float dmg,int ifc,int mfc,int afc,float xpe);
+	void set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string fn,float HEALTH,int xx,int yy,int zz,float dmg,int ifc,int mfc,int afc,float xpe,float id);
 	void coll_set_up(int dist);
 	
 	void attack();
@@ -79,6 +79,9 @@ public:
 	
 	bool running;
 	
+	float range;
+	float target;
+	int id;
 	
 	//bool pick_up(PandaNode* itm,vector<Item*> itms);
 	//bool drop(int itr,vector<Item*> itms,NodePath* parent);

@@ -609,7 +609,7 @@ void World::menuStart(){
 }
 
 void World::menuDeath(){
-	Player player;
+	cout<<"Death start"<<endl;
 	if (menuStatus==ms_death){
 		menuStatus=ms_start;
 	}
@@ -659,6 +659,6 @@ void World::menuDeath(){
 		props.set_mouse_mode(WindowProperties::M_absolute);
 		window -> get_graphics_window() -> request_properties(props);
 	}
-	
+	cout<<"Death end"<<endl;
 }
 

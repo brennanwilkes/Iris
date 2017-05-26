@@ -28,7 +28,7 @@ void Enemy::tick(int m) {
 	
 		td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
 	
-		if (td<130 && check_sight()){			//CHANGE TO VARIABLE
+		if (td<range && check_sight()){			//CHANGE TO VARIABLE
 			attack();
 		}
 	}
@@ -39,7 +39,7 @@ void Enemy::tick(int m) {
 	
 	
 	if (running){
-		bas_mov(25);			//CHANGE TO VARIABLE
+		bas_mov(target);			//CHANGE TO VARIABLE
 		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="idle"){
 			anim_collection.loop("walk",true);
 		}
@@ -171,7 +171,7 @@ void Enemy::adv_mov(){
 	
 }
 
-void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string fn,float HEALTH,int xx,int yy,int zz,float dmg,int ifc,int mfc,int afc,float xpe){
+void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string fn,float HEALTH,int xx,int yy,int zz,float dmg,int ifc,int mfc,int afc,float xpe,float idd){
 	
 	model = w -> load_model(pf->get_models(),fn);
 	model.set_scale(0.5);
@@ -208,15 +208,24 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 	
 	setVel(0,0,0);
 	
+	id=idd;
+	
+	if(id==50){
+		range=30;
+		target=0.25;
+	}
+	else if(id==51){
+		range=130;
+		target=25;
+	}
+	
+	
 	
 	
 	AnimControlCollection name_collection;
-	cout<<"hi"<<endl;
+
 	
-	cout<<fn<<endl;
-	cout<<mydir.get_dirname()+"Assets/INSECT/insect.egg"<<endl;
-	
-	if(fn==mydir.get_dirname()+"/Assets/INSECT/insect.egg"){
+	if(id==50){
 		NodePath animNp1 = w->load_model(model, mydir + "Assets/INSECT/insect-Idle.egg");
 		auto_bind(model.node(), name_collection);
 		PT(AnimControl) animPtr = name_collection.get_anim(0);
@@ -226,7 +235,6 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 		animNp1.detach_node();
 		anim_collection.play("idle");
 		
-		cout<<"hi2"<<endl;
 		
 		NodePath animNp2 = w->load_model(model, mydir + "Assets/INSECT/insect-Move.egg");
 		auto_bind(model.node(), name_collection);
@@ -237,7 +245,6 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 		animNp2.detach_node();
 		anim_collection.play("walk");
 		
-		cout<<"hi3"<<endl;
 		
 		NodePath animNp3 = w->load_model(model, mydir + "Assets/INSECT/insect-Attack.egg");
 		auto_bind(model.node(), name_collection);
@@ -247,9 +254,8 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 		name_collection.unbind_anim(animName);
 		animNp3.detach_node();
 		anim_collection.play("attack");
-		cout<<"hi4"<<endl;
 	}
-	else{
+	else if(id==51){
 		NodePath animNp1 = w->load_model(model, mydir + "Assets/bandit/Bandit-idle.egg");
 		auto_bind(model.node(), name_collection);
 		PT(AnimControl) animPtr = name_collection.get_anim(0);

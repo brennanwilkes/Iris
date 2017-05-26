@@ -55,7 +55,7 @@ void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf){
 			
 			//void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string fn,float HEALTH,int xx,int yy,int zz,float dmg,int ifc,int mfc,int afc,float xpe){
 			
-			romar->set_up(&gameModels, w, pf, mydir+i.second.get_tag("file"),stof(i.second.get_tag("heal")),stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),stof(i.second.get_tag("dmg")),40,24,0,stof(i.second.get_tag("xp")));
+			romar->set_up(&gameModels, w, pf, mydir+i.second.get_tag("file"),stof(i.second.get_tag("heal")),stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),stof(i.second.get_tag("dmg")),40,24,0,stof(i.second.get_tag("xp")),stof(i.second.get_tag("id")));
 			romar->init();
 			romar->coll_set_up(1000);
 			enems.push_back(romar);
