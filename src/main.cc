@@ -1613,20 +1613,21 @@ void makeNegev(int x, int y, int z,NodePath* parentNode){
 }
 
 void makeSpider(int x, int y, int z, NodePath* parentNode){
+	/*
 	Enemy* romar = new Enemy;
 	romar->set_up(parentNode, window, window->get_panda_framework(), mydir+"Assets/INSECT/insect.egg",50.0,x,y,z,15.0,40,24,0,10.0);
 	romar->init();
 	romar->coll_set_up(1000);
 	enems.push_back(romar);
 	cout<<"Spider!"<<endl;
+	*/
 	
-	/*
 	Enemy* romar = new Enemy;
 	romar->set_up(parentNode, window, window->get_panda_framework(), mydir+"Assets/bandit/Bandit.egg",50.0,x,y,z,15.0,40,24,0,10.0);
 	romar->init();
 	romar->coll_set_up(1000);
 	enems.push_back(romar);
-	*/
+	
 }
 
 void makeWaterbottle(int x, int y, int z,NodePath* parentNode){

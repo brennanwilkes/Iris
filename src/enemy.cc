@@ -28,7 +28,7 @@ void Enemy::tick(int m) {
 	
 		td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
 	
-		if (td<30 && check_sight()){			//CHANGE TO VARIABLE
+		if (td<130 && check_sight()){			//CHANGE TO VARIABLE
 			attack();
 		}
 	}
@@ -39,7 +39,7 @@ void Enemy::tick(int m) {
 	
 	
 	if (running){
-		bas_mov(0.25);			//CHANGE TO VARIABLE
+		bas_mov(25);			//CHANGE TO VARIABLE
 		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="idle"){
 			anim_collection.loop("walk",true);
 		}
