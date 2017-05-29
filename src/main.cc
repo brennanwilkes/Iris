@@ -296,7 +296,8 @@ int main(int argc, char *argv[]) {
 	menuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
 	optionMenuItems = window -> get_aspect_2d().attach_new_node("Option Menu Buttons");
 	optionMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
-	
+	deathMenuItems = window -> get_aspect_2d().attach_new_node("Death Menu Buttons");
+	deathMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
 	
 	doStep(&framework,Thread::get_current_thread());
 	
@@ -331,7 +332,7 @@ int main(int argc, char *argv[]) {
 
 	menuItems.hide();
 	optionMenuItems.hide();
-
+	deathMenuItems.hide();
 	
 	// Set up player camera and model
 	player.set_up(&gameModels,window,&framework,mydir);
@@ -408,7 +409,6 @@ int main(int argc, char *argv[]) {
 	nd_hellothere.set_hpr(180,0,0);
 	
 	nd_hellothere.hide();
-	
 	
 	AnimControlCollection start_anim_collection;
 	NodePath loadnode2 = window->load_model(nd_hellothere, mydir + "Assets/Iris/Iris-Idle.egg");
@@ -953,20 +953,22 @@ int main(int argc, char *argv[]) {
 			}
 			
 			if (player.health<=0){
+				//cout << "AA" << endl;
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				float ranD=rand()/(float)RAND_MAX;
 				ranD*=360;
 				stats.push_back(new StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0,0,0,0.5));
-				 //segfaults here 
 				if(ranD>180){
-					stats.back()->model.set_hpr(ranD,-90,0);cout << "5" << endl;
+					stats.back()->model.set_hpr(ranD,-90,0);//cout << "5" << endl;
 				}
 				else{
-					stats.back()->model.set_hpr(ranD,90,0);cout << "6" << endl;
-					stats.back()->model.set_z(ND.back().model.get_z()+0.25);cout << "7" << endl;
+					stats.back()->model.set_hpr(ranD,90,0);//cout << "6" << endl;
+					//this segfaults
+					//stats.back()->model.set_z(ND.back().model.get_z()+0.25);cout << "7" << endl;
 				}
-				//segfaults here
+				//cout << "AB" << endl;
 				player.death(itms,&entityModels);
+				//cout << "AC" << endl;
 				world.menuDeath();
 			}
 			
@@ -991,6 +993,19 @@ int main(int argc, char *argv[]) {
 			world.draw();
 			nd_crosshair.show();
 
+		}
+		else if (world.menuStatus==world.ms_death){
+			player.volumeNodePath.hide();
+			player.weightNodePath.hide();
+			player.ammoNodePath.hide();
+			player.ammoNodePath2.hide();
+			Bars.hide();
+			nd_crosshair.hide();
+			if (world.deathFogIncrease < 200){
+				world.deathFogIncrease+=world.dt;
+			}
+			player.deathFog->set_exp_density(world.deathFogIncrease/200.0);
+			window->get_render().set_fog(player.deathFog);
 		}
 		else if(world.menuStatus==world.ms_pause){
 			player.volumeNodePath.hide();

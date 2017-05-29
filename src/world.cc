@@ -26,6 +26,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include <cstdlib>
 
 World::World(){
+	deathFogIncrease = 0.0;
 	menuStatus = 3;
 	//ms = {ms_game=0, ms_pause=1, ms_option=2, ms_start=3, ms_optionfromstart=4};
 }
@@ -410,13 +411,18 @@ void World::apply_grav(){
 }
 
 void World::menu(){
+	if (menuStatus == ms_death){
+		deathFogIncrease=0.0;
+		player.deathFog->set_exp_density(0.0);
+		window->get_render().set_fog(player.deathFog);
+	}
 	if (menuStatus==ms_game){
 		menuStatus=ms_pause;
 	}
 	else{
 		menuStatus=ms_game;
 	}
-	
+
 	if (menuStatus==ms_game)
 	{
 		if (player.arms!=NULL){
@@ -426,7 +432,7 @@ void World::menu(){
 		gameModels.show();
 		menuItems.hide();
 		optionMenuItems.hide();
-		//deathMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(true);
 		props.set_mouse_mode(WindowProperties::M_confined);
@@ -437,12 +443,13 @@ void World::menu(){
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
+		
 		startMenuItems.hide();
 
 		gameModels.hide();
 		menuItems.show();
 		optionMenuItems.hide();
-		//deathMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -513,7 +520,7 @@ void World::menuOption(){
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.show();
-		//deathMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -528,7 +535,7 @@ void World::menuOption(){
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.hide();
-		//deathMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -569,9 +576,14 @@ void World::menuOption(){
 }
 
 void World::menuStart(){
+	if (menuStatus == ms_death){
+		deathFogIncrease=0.0;
+		player.deathFog->set_exp_density(0.0);
+		window->get_render().set_fog(player.deathFog);
+	}
+	
 	if (menuStatus==ms_start){
 		menuStatus=ms_game;
-		//cout<<"hello"<<endl;
 	}
 	else{
 		menuStatus=ms_start;
@@ -579,26 +591,18 @@ void World::menuStart(){
 	
 	if (menuStatus==ms_game)
 	{	
-		//cout<<"hi"<<endl;
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
-		//cout<<1<<endl;
 		startMenuItems.hide();
-		//cout<<2<<endl;
 		gameModels.show();
-		//cout<<3<<endl;
 		menuItems.hide();
-		//cout<<4<<endl;
 		optionMenuItems.hide();
-		//cout<<5<<endl;
-		//deathMenuItems.hide();
-		//cout<<"aiya"<<endl;
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(true);
 		props.set_mouse_mode(WindowProperties::M_confined);
 		window -> get_graphics_window() -> request_properties(props);
-		//cout<<"yo"<<endl;
 	}
 	
 	if (menuStatus==ms_start)
@@ -610,7 +614,7 @@ void World::menuStart(){
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.hide();
-		//deathMenuItems.hide();
+		deathMenuItems.hide();
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -628,8 +632,24 @@ void World::menuDeath(){
 		menuStatus=ms_death;
 	}
 	
-	if (menuStatus==ms_start)
-	{	
+
+	if (menuStatus==ms_death)
+	{
+		if (player.arms!=NULL){
+			player.arms->hide();
+		}
+
+		startMenuItems.hide();
+		gameModels.show();
+		menuItems.hide();
+		optionMenuItems.hide();
+		deathMenuItems.show();
+		WindowProperties props = window -> get_graphics_window() -> get_properties();
+		props.set_cursor_hidden(false);
+		props.set_mouse_mode(WindowProperties::M_absolute);
+		window -> get_graphics_window() -> request_properties(props);
+	}else
+	{	// (menuStatus==ms_start)
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
@@ -637,37 +657,14 @@ void World::menuDeath(){
 		gameModels.hide();
 		menuItems.hide();
 		optionMenuItems.hide();
-		//deathMenuItems.hide();
+		deathMenuItems.hide();
+		
+		player.deathFog->set_exp_density(0.0);
+		window->get_render().set_fog(player.deathFog);
+
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(true);
 		props.set_mouse_mode(WindowProperties::M_confined);
-		window -> get_graphics_window() -> request_properties(props);
-	}
-	
-	if (menuStatus==ms_death)
-	{
-		//fade
-		/*
-		player.model.clear_color_scale();
-		player.model.set_color_scale(1.0,1.0,1.0,1.0);//-player.tint,1-player.tint,1.0);
-		//player.tint-=0.05;
-		//cout<<tint<<endl;
-		//if (player.tint<0){
-		//	player.tint=0;
-		//}
-		player.hitFog->set_exp_density(player.tint/200.0);
-		*/
-		if (player.arms!=NULL){
-			player.arms->hide();
-		}
-		startMenuItems.hide();
-		gameModels.show();
-		menuItems.hide();
-		optionMenuItems.hide();
-		//deathMenuItems.show();
-		WindowProperties props = window -> get_graphics_window() -> get_properties();
-		props.set_cursor_hidden(false);
-		props.set_mouse_mode(WindowProperties::M_absolute);
 		window -> get_graphics_window() -> request_properties(props);
 	}
 	cout<<"Death end"<<endl;

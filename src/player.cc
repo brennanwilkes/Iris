@@ -39,6 +39,7 @@ void Player::tick() {
 			tint=0;
 		}
 		hitFog->set_exp_density(tint/200.0);
+		window->get_render().set_fog(hitFog);
 	}
 	
 	if (coll_grav->get_velocity()<-50.0){
@@ -312,7 +313,12 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	hitFog->set_color(1.0,0.0,0.0);
 	hitFog->set_exp_density(0.0);
 	w->get_render().set_fog(hitFog);
-	
+
+	deathFog = new Fog("deathFog");
+	deathFog->set_color(0.0,0.0,0.0);
+	deathFog->set_exp_density(0.0);
+	w->get_render().set_fog(deathFog);
+
 	ground = false;
 	
 	lvlid=0;
@@ -531,11 +537,14 @@ void Player::death(vector<Item*> &v,NodePath* parent){
 	calc_arms();
 	
 	cout<<"a2"<<endl;
-	
-	
-	player.model.set_x(gameLevels[player.lvlid]->spawn_x);
-	player.model.set_y(gameLevels[player.lvlid]->spawn_y);
-	player.model.set_z(gameLevels[player.lvlid]->spawn_z);
+	player.model.set_x(gameLevels[0]->spawn_x);
+	player.model.set_y(gameLevels[0]->spawn_y);
+	player.model.set_z(gameLevels[0]->spawn_z);
+
+	//this was segfaulting 
+	//player.model.set_x(gameLevels[player.lvlid]->spawn_x);
+	//player.model.set_y(gameLevels[player.lvlid]->spawn_y);
+	//player.model.set_z(gameLevels[player.lvlid]->spawn_z);
 	
 	cout<<"end"<<endl;
 	

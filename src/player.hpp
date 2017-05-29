@@ -70,6 +70,7 @@ public:
 	
 	float tint;
 	PT(Fog) hitFog;
+	PT(Fog) deathFog;
 	
 	PT(TextNode) ammoNode;
 	NodePath ammoNodePath;
