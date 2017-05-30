@@ -735,7 +735,7 @@ int main(int argc, char *argv[]) {
 	
 	Level testlevel(0,0,0,5);
 	
-	ChangeRegion testregion(-10,10,-10,10,2,10,1);
+	ChangeRegion testregion(-10,10,-10,10,2,10,0);
 	
 	testlevel.exits.push_back(testregion);
 	
@@ -812,8 +812,11 @@ int main(int argc, char *argv[]) {
 	// define_key("event_name", "description", function, data);
 	// data is a void pointer, so it can take anything.
 	
+	bool temp_bool = false;
+	bool temp_bool2 = true;
+	
 	if ("hide keybinds"){
-	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
+	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, &temp_bool2);
 	keys.wildKeys["menu"] = &menu;
 	keys.dataPtrs["menu"] = window;
 	doStep(&framework,Thread::get_current_thread());
@@ -866,7 +869,7 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(OptionTogButton3->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton3);
 	window -> get_panda_framework() -> define_key(mouseSensBut->get_click_event(keys.keybinds["use"].first ), "Mousebind button press", &rebindMouseSens, mouseSensBut);
 
-	window -> get_panda_framework() -> define_key(respawnButton->get_click_event(keys.keybinds["use"].first ), "Respawn button press", &menu, respawnButton);
+	window -> get_panda_framework() -> define_key(respawnButton->get_click_event(keys.keybinds["use"].first ), "Respawn button press", &menu, &temp_bool);
 	window -> get_panda_framework() -> define_key(restartButton->get_click_event(keys.keybinds["use"].first ), "Restart button press", &startGame, restartButton);
 	
 	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory 1 slot press", &invPress, &blankTex);
@@ -1213,7 +1216,7 @@ void rebindMouseSens(const Event* eventPtr, void* dataPtr){
 }
 
 void menu(const Event* eventPtr, void* dataPtr){
-	world.menu();
+	world.menu(*(static_cast<PT(Texture)*>(dataPtr)));
 }
 
 void spiderClick(const Event* eventPtr, void* dataPtr){

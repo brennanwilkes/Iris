@@ -39,7 +39,7 @@ public:
 	
 	Sounds gameSounds;
 	
-	void menu();
+	void menu(bool esc);
 	void menuOption();
 	void menuStart();
 	void menuDeath();
