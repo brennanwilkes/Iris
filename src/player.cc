@@ -87,7 +87,6 @@ void Player::tick() {
 	
 	
 	
-	
 }
 
 void Player::init() {
@@ -287,6 +286,19 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 	name_collection.unbind_anim(animName);
 	animNp10.detach_node();
 	main_collection.play("idle");
+	
+	NodePath animNp11 = w->load_model(model, dir + "Assets/Iris/Iris-Death.egg");
+	auto_bind(model.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	main_collection.store_anim(animPtr, "Death.1");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp11.detach_node();
+	main_collection.play("Death.1");
+	
+	
+	
+	
 	
 	w->load_model(empty_arms, dir + "Assets/Iris/EmptyHands-Idle.egg");
 	auto_bind(empty_arms.node(), empty_collection);
