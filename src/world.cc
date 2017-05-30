@@ -28,7 +28,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 World::World(){
 	deathFogIncrease = 0.0;
 	menuStatus = 3;
-	//ms = {ms_game=0, ms_pause=1, ms_option=2, ms_start=3, ms_optionfromstart=4};
+	//ms = {ms_game=0, ms_pause=1, ms_option=2, ms_start=3, ms_optionfromstart=4, ms_deathfog=5, ms_dead=6};
 }
 
 void World::init(){
@@ -57,7 +57,7 @@ void World::tick(){
 	}
 	if(tickCount%12==0){
 		Item::gtrav.traverse(window -> get_render());
-		Enemy::gtrav.traverse(window -> get_render());	
+		Enemy::gtrav.traverse(window -> get_render());
 	}
 	for (unsigned int i=0;i<itms.size();i++){
 		itms[i]->tick();
@@ -410,16 +410,22 @@ void World::apply_grav(){
 	*/
 }
 
-void World::menu(){
-	if (menuStatus == ms_death){
+void World::menu(bool esc){
+	
+	if (menuStatus >= ms_deathfog){
 		deathFogIncrease=0.0;
 		player.deathFog->set_exp_density(0.0);
 		window->get_render().set_fog(player.deathFog);
 	}
+	if (esc){
+		if (menuStatus == ms_start || menuStatus == ms_deathfog || menuStatus == ms_dead){
+			return;
+		}
+	}
+	
 	if (menuStatus==ms_game){
 		menuStatus=ms_pause;
-	}
-	else{
+	}	else{
 		menuStatus=ms_game;
 	}
 
@@ -576,7 +582,7 @@ void World::menuOption(){
 }
 
 void World::menuStart(){
-	if (menuStatus == ms_death){
+	if (menuStatus == ms_deathfog){
 		deathFogIncrease=0.0;
 		player.deathFog->set_exp_density(0.0);
 		window->get_render().set_fog(player.deathFog);
@@ -624,16 +630,15 @@ void World::menuStart(){
 }
 
 void World::menuDeath(){
-	cout<<"Death start"<<endl;
-	if (menuStatus==ms_death){
+	if (menuStatus>=ms_deathfog){
 		menuStatus=ms_start;
 	}
 	else{
-		menuStatus=ms_death;
+		menuStatus=ms_deathfog;
 	}
 	
 
-	if (menuStatus==ms_death)
+	if (menuStatus>=ms_deathfog)
 	{
 		if (player.arms!=NULL){
 			player.arms->hide();
@@ -643,7 +648,7 @@ void World::menuDeath(){
 		gameModels.show();
 		menuItems.hide();
 		optionMenuItems.hide();
-		deathMenuItems.show();
+		//deathMenuItems.show(); //this shows later after the fog happens
 		WindowProperties props = window -> get_graphics_window() -> get_properties();
 		props.set_cursor_hidden(false);
 		props.set_mouse_mode(WindowProperties::M_absolute);
@@ -667,6 +672,5 @@ void World::menuDeath(){
 		props.set_mouse_mode(WindowProperties::M_confined);
 		window -> get_graphics_window() -> request_properties(props);
 	}
-	cout<<"Death end"<<endl;
 }
 

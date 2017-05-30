@@ -198,25 +198,20 @@ int main(int argc, char *argv[]) {
 	props = window -> get_graphics_window() -> get_properties();
 	props.set_cursor_hidden(false);
 	props.set_mouse_mode(WindowProperties::M_absolute);
+
 	window -> get_graphics_window() -> request_properties(props);
-
-	
-	
-	
-
 	window -> get_display_region_3d() -> set_clear_color( LColor(0.53,0.81,0.92, 1) );
-	
+
+
 	// Create a mousewatcher (needed to check for key held)
 	mouseWatcher = (MouseWatcher*)window -> get_mouse().node();
-	
+
+
 	//loadscreen
 	float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
 	
-	
-	
 	NodePath blank_plane = window->load_model(framework.get_models(),mydir+"Assets/plane.egg");
 	blank_plane.set_transparency(TransparencyAttrib::M_alpha, 1);
-	
 	
 
 	//////////////////////////////////////////////
@@ -281,6 +276,7 @@ int main(int argc, char *argv[]) {
 	dl -> set_shadow_caster(true, 512, 512);
 	
 	doStep(&framework,Thread::get_current_thread());
+
 	// Create a dummy node to attach things to. Does not affect anything,
 	// but makes it easier to hide all the game nodes at once.
 	gameModels = window -> get_render().attach_new_node("All game models");
@@ -321,19 +317,16 @@ int main(int argc, char *argv[]) {
 	*/
 	
 	doStep(&framework,Thread::get_current_thread());
-	
-	
-	
+
+
 	NodePath Bars = window -> get_pixel_2d().attach_new_node("Status Bars");
 	Bars.set_transparency(TransparencyAttrib::M_alpha, 1);
 	Bars.reparent_to(window->get_aspect_2d());
 	Bars.hide();
 	
 
-	menuItems.hide();
-	optionMenuItems.hide();
-	deathMenuItems.hide();
-	
+
+
 	// Set up player camera and model
 	player.set_up(&gameModels,window,&framework,mydir);
 	
@@ -387,7 +380,7 @@ int main(int argc, char *argv[]) {
 	PGButton* loadGameButton;
 	PGButton* realQuitButton;
 	PGButton* OptionTogButton3;
-		startMenuItems.hide();
+	startMenuItems.hide();
 
 
 	/*
@@ -409,6 +402,7 @@ int main(int argc, char *argv[]) {
 	nd_hellothere.set_hpr(180,0,0);
 	
 	nd_hellothere.hide();
+	
 	
 	AnimControlCollection start_anim_collection;
 	NodePath loadnode2 = window->load_model(nd_hellothere, mydir + "Assets/Iris/Iris-Idle.egg");
@@ -464,6 +458,8 @@ int main(int argc, char *argv[]) {
 	PGButton* HitTogButton;
 	PGButton* DoubleTogButton;
 	PGButton* OptionTogButton;
+	menuItems.hide();
+
 
 	QuitButton = new PGButton("MenuButton");
 	QuitButton -> setup("Main Menu");
@@ -502,6 +498,8 @@ int main(int argc, char *argv[]) {
 	//Option Menu Items
 	PGButton* OptionTogButton2;
 	PGButton* mouseSensBut;
+	optionMenuItems.hide();
+
 
 	OptionTogButton2 = new PGButton("OptionTogButton");
 	OptionTogButton2 -> setup("Toggle Option Menu");
@@ -545,7 +543,9 @@ int main(int argc, char *argv[]) {
 	//Death Menu Items
 	PGButton* respawnButton;
 	PGButton* restartButton;
-	
+	deathMenuItems.hide();
+
+
 	respawnButton = new PGButton("respawnButton");
 	respawnButton -> setup("Respawn");
 	NodePath bresp = window -> get_pixel_2d().attach_new_node(respawnButton);
@@ -736,7 +736,7 @@ int main(int argc, char *argv[]) {
 	
 	Level testlevel(0,0,0,5);
 	
-	ChangeRegion testregion(-10,10,-10,10,2,10,1);
+	ChangeRegion testregion(-10,10,-10,10,2,10,0);
 	
 	testlevel.exits.push_back(testregion);
 	
@@ -813,8 +813,11 @@ int main(int argc, char *argv[]) {
 	// define_key("event_name", "description", function, data);
 	// data is a void pointer, so it can take anything.
 	
-	if ("hide this"){
-	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, window);
+	bool temp_bool = false;
+	bool temp_bool2 = true;
+	
+	if ("hide keybinds"){
+	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, &temp_bool2);
 	keys.wildKeys["menu"] = &menu;
 	keys.dataPtrs["menu"] = window;
 	doStep(&framework,Thread::get_current_thread());
@@ -867,7 +870,7 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(OptionTogButton3->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton3);
 	window -> get_panda_framework() -> define_key(mouseSensBut->get_click_event(keys.keybinds["use"].first ), "Mousebind button press", &rebindMouseSens, mouseSensBut);
 
-	window -> get_panda_framework() -> define_key(respawnButton->get_click_event(keys.keybinds["use"].first ), "Respawn button press", &menu, respawnButton);
+	window -> get_panda_framework() -> define_key(respawnButton->get_click_event(keys.keybinds["use"].first ), "Respawn button press", &menu, &temp_bool);
 	window -> get_panda_framework() -> define_key(restartButton->get_click_event(keys.keybinds["use"].first ), "Restart button press", &startGame, restartButton);
 	
 	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory 1 slot press", &invPress, &blankTex);
@@ -930,13 +933,20 @@ int main(int argc, char *argv[]) {
 		// Things to do every frame
 		// Keybinds should not go here.
 		if(world.menuStatus==world.ms_start){
+			nd_hellothere.show();
+			//cout<<player.camera.get_pos()<<endl;
+			//cout<<player.camera.get_hpr()<<endl;
+			
+			player.camera.set_pos(0,0,6);
+			player.camera.set_hpr(0,0,0);
+			
 			nd_hellothere.set_hpr(nd_hellothere.get_hpr().get_x()+1,0,0);
 		}
 		else if (world.menuStatus==world.ms_game){
-
+			nd_hellothere.hide();
 			if(temptickcount<=10){
 				temptickcount++;
-				nd_hellothere.hide();
+				//nd_hellothere.hide();
 			}
 			player.volumeNodePath.show();
 			player.weightNodePath.show();
@@ -951,7 +961,8 @@ int main(int argc, char *argv[]) {
 			if(temptickcount>=10){		//buffer zone for loading
 				world.tick();
 			}
-			
+
+			//if u ded
 			if (player.health<=0){
 				//cout << "AA" << endl;
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
@@ -966,9 +977,8 @@ int main(int argc, char *argv[]) {
 					//this segfaults
 					//stats.back()->model.set_z(ND.back().model.get_z()+0.25);cout << "7" << endl;
 				}
-				//cout << "AB" << endl;
-				player.death(itms,&entityModels);
-				//cout << "AC" << endl;
+
+				//player.death(itms,&entityModels); //i put player.death after the fog bit
 				world.menuDeath();
 			}
 			
@@ -994,18 +1004,23 @@ int main(int argc, char *argv[]) {
 			nd_crosshair.show();
 
 		}
-		else if (world.menuStatus==world.ms_death){
+		else if (world.menuStatus==world.ms_deathfog){
 			player.volumeNodePath.hide();
 			player.weightNodePath.hide();
 			player.ammoNodePath.hide();
 			player.ammoNodePath2.hide();
 			Bars.hide();
 			nd_crosshair.hide();
-			if (world.deathFogIncrease < 200){
-				world.deathFogIncrease+=world.dt;
+			world.deathFogIncrease+=world.dt;
+			if (world.deathFogIncrease < 5){
+				player.deathFog->set_exp_density(world.deathFogIncrease/50.0);
+				window->get_render().set_fog(player.deathFog);
+				player.model.hide();
+			} else{
+				player.death(itms,&entityModels);
+				deathMenuItems.show();
+				world.menuStatus=world.ms_dead;
 			}
-			player.deathFog->set_exp_density(world.deathFogIncrease/200.0);
-			window->get_render().set_fog(player.deathFog);
 		}
 		else if(world.menuStatus==world.ms_pause){
 			player.volumeNodePath.hide();
@@ -1039,12 +1054,9 @@ int main(int argc, char *argv[]) {
 }
 
 void startGame(const Event* eventPtr, void* dataPtr){
-	//cout<<1<<endl;
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
 	}
-	//cout<<2<<endl;
-	
 	world.menuStart();
 }
 
@@ -1156,7 +1168,6 @@ void invHotkey(const Event* eventPtr, void* dataPtr){
 		return;
 	}
 	//int t = stoi(eventPtr->get_name()); //int key
-	//fix this bit to use indices
 	player.handInd=t-1;
 	if ((int)player.inventory.size()>=t){
 		player.mainHand=player.inventory[t-1];
@@ -1213,7 +1224,7 @@ void rebindMouseSens(const Event* eventPtr, void* dataPtr){
 }
 
 void menu(const Event* eventPtr, void* dataPtr){
-	world.menu();
+	world.menu(*(static_cast<PT(Texture)*>(dataPtr)));
 }
 
 void spiderClick(const Event* eventPtr, void* dataPtr){

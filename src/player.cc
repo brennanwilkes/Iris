@@ -513,7 +513,6 @@ void Player::play_anim(){
 }
 
 void Player::death(vector<Item*> &v,NodePath* parent){
-	cout<<"begin"<<endl;
 	
 	float r,r2,r3;
 	unsigned int send_nudes=inventory.size();
@@ -526,7 +525,6 @@ void Player::death(vector<Item*> &v,NodePath* parent){
 		drop(0,v,parent);
 		v.back() -> accel((r-0.5),(r2-0.5),r3);
 	}
-	cout<<"a1"<<endl;
 	deaths++;
 	xp+=1;
 	health=100;
@@ -536,17 +534,19 @@ void Player::death(vector<Item*> &v,NodePath* parent){
 	player.mainHand=NULL;
 	calc_arms();
 	
-	cout<<"a2"<<endl;
 	player.model.set_x(gameLevels[0]->spawn_x);
 	player.model.set_y(gameLevels[0]->spawn_y);
 	player.model.set_z(gameLevels[0]->spawn_z);
 
 	//this was segfaulting 
-	//player.model.set_x(gameLevels[player.lvlid]->spawn_x);
-	//player.model.set_y(gameLevels[player.lvlid]->spawn_y);
-	//player.model.set_z(gameLevels[player.lvlid]->spawn_z);
 	
-	cout<<"end"<<endl;
+	//cout<<player.lvlid<<endl;
+	//cout<<gameLevels.size()<<endl;
+	
+	player.model.set_x(gameLevels[player.lvlid]->spawn_x);
+	player.model.set_y(gameLevels[player.lvlid]->spawn_y);
+	player.model.set_z(gameLevels[player.lvlid]->spawn_z);
+	
 	
 }
 void Player::calc_arms(){
@@ -622,7 +622,6 @@ void Player::calc_arms(){
 		on=true;
 	}
 	
-	//cout<<on<<endl;
 	if (!on){
 		arms=NULL;
 		arms_shown=false;
@@ -632,7 +631,6 @@ void Player::calc_arms(){
 	else{
 		//arms->show();
 	}
-	//cout<<"Blah"<<endl;
 }
 
 //void recoil(int fc, float mult){
