@@ -897,7 +897,7 @@ int main(int argc, char *argv[]) {
 	world.init();
 	world.tickCount=0;
 	
-	player.health=50;
+	player.health=1;
 	int temptickcount=0;
 	int frameDelay=0;
 	int savedt=0;
@@ -967,8 +967,8 @@ int main(int argc, char *argv[]) {
 					//stats.back()->model.set_z(ND.back().model.get_z()+0.25);cout << "7" << endl;
 				}
 				//cout << "AB" << endl;
-				player.death(itms,&entityModels);
 				//cout << "AC" << endl;
+				//player.death(itms,&entityModels); //i need to put player.death after the fog bit
 				world.menuDeath();
 			}
 			
@@ -994,18 +994,23 @@ int main(int argc, char *argv[]) {
 			nd_crosshair.show();
 
 		}
-		else if (world.menuStatus==world.ms_death){
+		else if (world.menuStatus==world.ms_deathfog){
 			player.volumeNodePath.hide();
 			player.weightNodePath.hide();
 			player.ammoNodePath.hide();
 			player.ammoNodePath2.hide();
 			Bars.hide();
 			nd_crosshair.hide();
-			if (world.deathFogIncrease < 200){
-				world.deathFogIncrease+=world.dt;
+			world.deathFogIncrease+=world.dt;
+			if (world.deathFogIncrease < 5){
+				player.deathFog->set_exp_density(world.deathFogIncrease/50.0);
+				window->get_render().set_fog(player.deathFog);
+				player.model.hide();
+			} else{
+				player.death(itms,&entityModels);
+				deathMenuItems.show();
+				world.menuStatus=world.ms_dead;
 			}
-			player.deathFog->set_exp_density(world.deathFogIncrease/200.0);
-			window->get_render().set_fog(player.deathFog);
 		}
 		else if(world.menuStatus==world.ms_pause){
 			player.volumeNodePath.hide();
@@ -1039,13 +1044,12 @@ int main(int argc, char *argv[]) {
 }
 
 void startGame(const Event* eventPtr, void* dataPtr){
-	//cout<<1<<endl;
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
 	}
-	//cout<<2<<endl;
 	
 	world.menuStart();
+
 }
 
 void loadGame(const Event* eventPtr, void* dataPtr){
@@ -1156,7 +1160,6 @@ void invHotkey(const Event* eventPtr, void* dataPtr){
 		return;
 	}
 	//int t = stoi(eventPtr->get_name()); //int key
-	//fix this bit to use indices
 	player.handInd=t-1;
 	if ((int)player.inventory.size()>=t){
 		player.mainHand=player.inventory[t-1];

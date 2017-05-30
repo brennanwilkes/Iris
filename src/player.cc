@@ -622,7 +622,6 @@ void Player::calc_arms(){
 		on=true;
 	}
 	
-	//cout<<on<<endl;
 	if (!on){
 		arms=NULL;
 		arms_shown=false;
@@ -632,7 +631,6 @@ void Player::calc_arms(){
 	else{
 		//arms->show();
 	}
-	//cout<<"Blah"<<endl;
 }
 
 //void recoil(int fc, float mult){
