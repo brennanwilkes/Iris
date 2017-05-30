@@ -403,6 +403,7 @@ int main(int argc, char *argv[]) {
 	
 	nd_hellothere.hide();
 	
+	
 	AnimControlCollection start_anim_collection;
 	NodePath loadnode2 = window->load_model(nd_hellothere, mydir + "Assets/Iris/Iris-Idle.egg");
 	auto_bind(nd_hellothere.node(), start_anim_collection);
@@ -932,13 +933,20 @@ int main(int argc, char *argv[]) {
 		// Things to do every frame
 		// Keybinds should not go here.
 		if(world.menuStatus==world.ms_start){
+			nd_hellothere.show();
+			//cout<<player.camera.get_pos()<<endl;
+			//cout<<player.camera.get_hpr()<<endl;
+			
+			player.camera.set_pos(0,0,6);
+			player.camera.set_hpr(0,0,0);
+			
 			nd_hellothere.set_hpr(nd_hellothere.get_hpr().get_x()+1,0,0);
 		}
 		else if (world.menuStatus==world.ms_game){
-
+			nd_hellothere.hide();
 			if(temptickcount<=10){
 				temptickcount++;
-				nd_hellothere.hide();
+				//nd_hellothere.hide();
 			}
 			player.volumeNodePath.show();
 			player.weightNodePath.show();
