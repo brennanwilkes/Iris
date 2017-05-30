@@ -965,6 +965,9 @@ int main(int argc, char *argv[]) {
 			//if u ded
 			if (player.health<=0){
 				//cout << "AA" << endl;
+				
+				player.main_collection.play("Death.1");
+				
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				float ranD=rand()/(float)RAND_MAX;
 				ranD*=360;
@@ -1012,10 +1015,13 @@ int main(int argc, char *argv[]) {
 			Bars.hide();
 			nd_crosshair.hide();
 			world.deathFogIncrease+=world.dt;
+			
+			
+			
 			if (world.deathFogIncrease < 5){
 				player.deathFog->set_exp_density(world.deathFogIncrease/50.0);
 				window->get_render().set_fog(player.deathFog);
-				player.model.hide();
+				//player.model.hide();
 			} else{
 				player.death(itms,&entityModels);
 				deathMenuItems.show();
@@ -1231,6 +1237,7 @@ void spiderClick(const Event* eventPtr, void* dataPtr){
 	NodePath* shootableModels = static_cast<NodePath*>(dataPtr);
 	makeSpider(player.model.get_x()+50, player.model.get_y(), player.model.get_z()+6, shootableModels);
 	makeBandit(player.model.get_x()+25, player.model.get_y(), player.model.get_z()+6, shootableModels);
+	//player.main_collection.play("Death.1");
 }
 
 void drop(const Event* eventPtr, void* dataPtr){
