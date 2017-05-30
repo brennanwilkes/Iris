@@ -410,15 +410,17 @@ void World::apply_grav(){
 	*/
 }
 
-void World::menu(){
+void World::menu(bool esc){
+	
 	if (menuStatus >= ms_deathfog){
 		deathFogIncrease=0.0;
 		player.deathFog->set_exp_density(0.0);
 		window->get_render().set_fog(player.deathFog);
 	}
-
-	if (menuStatus == ms_start){
-		return;
+	if (esc){
+		if (menuStatus == ms_start || menuStatus == ms_deathfog || menuStatus == ms_dead){
+			return;
+		}
 	}
 	
 	if (menuStatus==ms_game){

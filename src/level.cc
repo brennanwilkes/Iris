@@ -60,11 +60,10 @@ void Level::save(string filename, bool ov){
 	
 	for (const auto &np:models)
 	{
-		t_np = np.second;
 		to_save = {};
-		
-		// Check class tag and save to file
-		if (!t_np.has_tag("class") || t_np.get_tag("class") == "" || Level::used_dat.find(t_np.get_tag("class")) == Level::used_dat.end())
+		t_np = np.second;
+		// Check class data and save to file
+		if (Level::used_dat.find(nd_dat[np.first]["class"]) == Level::used_dat.end())
 		{
 			cout << "ERROR: Nodepath " << t_np.get_name() << " has invalid class attribute!" << endl;
 			cout << "\tThis object will not be saved!" << endl;
@@ -73,25 +72,24 @@ void Level::save(string filename, bool ov){
 		}
 		else
 		{
-			f << t_np.get_tag("class") << " " << t_np.get_name();
+			f << nd_dat[np.first]["class"] << " " << t_np.get_name();
 		}
 		
-		
 		// Get data that needs to be saved
-		to_save = used_dat[t_np.get_tag("class")];	
+		to_save = used_dat[nd_dat[np.first]["class"]];	
 
 		// Check data and save to file
 		for (const auto &dat:to_save)
 		{
-			if (!t_np.has_tag(dat) || t_np.get_tag(dat) == "")
+			if (nd_dat[np.first][dat] == "")
 			{
 				cout << "WARNING: NodePath " << t_np.get_name() << " has no data for " << dat << "!" << endl;
 				cout << "\tUsing value of 0" << endl;
-				f << 0;
+				f << "0";
 			}
 			else
 			{
-				f << t_np.get_tag(dat);
+				f << nd_dat[np.first][dat];
 			}
 		}
 		f << "\n";
@@ -106,14 +104,12 @@ void Level::load(string filename){
 		std::cout << "Level, " << filename << " does not exist!";
 		return;
 	}
-	
-	
-	
+
 	ifstream f(filename);
 	
 	vector<string> data;
 	vector<string> to_load;
-	
+	string t_id;
 	for (string line; getline(f, line);)
 	{
 		data = split(line);
@@ -123,12 +119,13 @@ void Level::load(string filename){
 			cout << "\tClass type " << data[0] << " not valid" << endl;
 			continue;
 		}
+		
 		NodePath temp_model;
+		t_id = add_model(temp_model);
 		for (unsigned int i(0); i < min( (Level::used_dat[data[0]]).size() + 2, data.size() ); ++i)
 		{
-			temp_model.set_tag(Level::used_dat[data[0]][i], data[i + 2]);
+			nd_dat[t_id][Level::used_dat[data[0]][i]] = data[i + 2];
 		}
-		add_model(temp_model);
 	}
 }
 
@@ -137,6 +134,11 @@ void Level::clear(){
 	{
 		np.second.remove_node();
 	}
+	for (auto &d:nd_dat)
+	{
+		d.second.clear();
+	}
+	nd_dat.clear();
 	models.clear();
 	id = 0;
 }
@@ -144,13 +146,13 @@ void Level::clear(){
 void Level::tagify(){
 	for (auto &p:models)
 	{
-		p.second.set_tag("x", to_string(p.second.get_x()));
-		p.second.set_tag("y", to_string(p.second.get_y()));
-		p.second.set_tag("z", to_string(p.second.get_z()));
-		p.second.set_tag("h", to_string(p.second.get_h()));
-		p.second.set_tag("p", to_string(p.second.get_p()));
-		p.second.set_tag("r", to_string(p.second.get_r()));
-		p.second.set_tag("s", to_string(p.second.get_scale().get_x()));
+		nd_dat[p.first]["x"] = to_string(p.second.get_x());
+		nd_dat[p.first]["y"] = to_string(p.second.get_y());
+		nd_dat[p.first]["z"] = to_string(p.second.get_z());
+		nd_dat[p.first]["h"] = to_string(p.second.get_h());
+		nd_dat[p.first]["p"] = to_string(p.second.get_p());
+		nd_dat[p.first]["r"] = to_string(p.second.get_r());
+		nd_dat[p.first]["s"] = to_string(p.second.get_scale().get_x());
 	}
 }
 
@@ -180,10 +182,12 @@ bool Level::file_exists(string filename){
 string Level::add_model(NodePath model){
 	string id_s = to_string(uuid);
 	models[id_s] = model;
-	models[id_s].set_tag("id", id_s);
+	nd_dat[id_s]["uuid"] = id_s;
 	++uuid;
 	return to_string(uuid - 1);
 }
+
+void
 
 /*
  * ChangeRegion class
