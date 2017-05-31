@@ -133,6 +133,7 @@ void toggle(const Event* eventPtr, void* dataPtr);
 void toggleHitBox(const Event* eventPtr, void* dataPtr);
 void toggleDoubleJump(const Event* eventPtr, void* dataPtr);
 void toggleOptionMenu(const Event* eventPtr, void* dataPtr);
+void toggleFPS(const Event* eventPtr, void* dataPtr);
 void invHotkey(const Event* eventPtr, void* dataPtr);
 void invPress(const Event* eventPtr, void* dataPtr);
 void jump(const Event* eventPtr, void* dataPtr);
@@ -846,6 +847,11 @@ int main(int argc, char *argv[]) {
 	keys.wildKeys["spider"] = &spiderClick;
 	keys.dataPtrs["spider"] = &shootableModels;
 	doStep(&framework,Thread::get_current_thread());
+	window -> get_panda_framework() -> define_key(keys.keybinds["toggleFPS"].first.get_name(), "toggleFPS", &toggleFPS, NULL);
+	keys.wildKeys["toggleFPS"] = &toggleFPS;
+	keys.dataPtrs["toggleFPS"] = NULL;
+	doStep(&framework,Thread::get_current_thread());
+	
 	for (int i=1; i<10; i++){
 		window -> get_panda_framework() -> define_key(keys.keybinds["inv"+to_string(i)].first.get_name(), "inv"+to_string(i), &invHotkey, &blankTex);
 		keys.wildKeys["inv"+to_string(i)] = &invHotkey;
@@ -897,7 +903,7 @@ int main(int argc, char *argv[]) {
 	world.init();
 	world.tickCount=0;
 	
-	player.health=50;
+	player.health=1;
 	int temptickcount=0;
 	int frameDelay=0;
 	int savedt=0;
@@ -910,7 +916,6 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread)){
-		
 		if (frameDelay>30){
 			//cout<<world.dt<<" "<<1/world.dt<<endl;
 			savedt+=(int)(1/world.dt);
@@ -919,11 +924,17 @@ int main(int argc, char *argv[]) {
 		}
 		if(frameDelayCount==4){
 			fpsNode->set_text(to_string(savedt/4)+" fps");
-			fpsNodePath.show();
+			//fpsNodePath.show();
 			frameDelayCount=0;
 			savedt=0.0;
 		}
 		
+		if (keys.showFPS){
+			fpsNodePath.show();
+		} else{
+			fpsNodePath.hide();
+		}
+
 		
 		frameDelay++;
 
@@ -964,7 +975,7 @@ int main(int argc, char *argv[]) {
 				//cout << "AA" << endl;
 				
 				player.main_collection.play("Death.1");
-				
+				//is it possible to make the dead body appear after the animation is done?
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				float ranD=rand()/(float)RAND_MAX;
 				ranD*=360;
@@ -1132,6 +1143,10 @@ void toggleOptionMenu(const Event* eventPtr, void* dataPtr){
 	world.menuOption();
 }
 
+void toggleFPS(const Event* eventPtr, void* dataPtr){
+	keys.showFPS = 1-keys.showFPS;
+}
+
 void invPress(const Event* eventPtr, void* dataPtr){
 	int si=getMenuSliderInd();
 	int t=0;
@@ -1227,7 +1242,7 @@ void rebindMouseSens(const Event* eventPtr, void* dataPtr){
 }
 
 void menu(const Event* eventPtr, void* dataPtr){
-	world.menu();//*(static_cast<PT(Texture)*>(dataPtr)));
+	world.menu();
 }
 
 void spiderClick(const Event* eventPtr, void* dataPtr){

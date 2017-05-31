@@ -18,7 +18,8 @@ Keys::Keys(){
 	} */
 	//https://www.panda3d.org/manual/index.php/Keyboard_Support
 	mouseSens = 0.0;
-
+	showFPS = true;
+	
 	keybinds["menu"] = std::make_pair(KeyboardButton::escape(), false);
 	keybinds["jump"] = std::make_pair(KeyboardButton::space(), false);
 	keybinds["cameraToggle" ] = std::make_pair(KeyboardButton::ascii_key('f'), false);
@@ -36,7 +37,7 @@ Keys::Keys(){
 	keybinds["sprint"] = std::make_pair( KeyboardButton::shift(), false);
 	keybinds["zoomOut"] = std::make_pair(KeyboardButton::ascii_key('-'), false);
 	keybinds["zoomIn"] = std::make_pair(KeyboardButton::ascii_key('='), false);
-	;
+	keybinds["toggleFPS"] = std::make_pair(KeyboardButton::ascii_key('m'), false);
 
 	string nums = "123456789";
 	for (auto i: nums){
