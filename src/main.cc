@@ -556,7 +556,7 @@ int main(int argc, char *argv[]) {
 	keys.buttonIndex["click-mouse1-"+respawnButton->get_id()] = respawnButton;
 
 	restartButton = new PGButton("restartButton");
-	restartButton -> setup("Restart");
+	restartButton -> setup("Main Menu");
 	NodePath brest = window -> get_pixel_2d().attach_new_node(restartButton);
 	brest.set_scale(0.1);
 	brest.set_pos(xs + 0.1, 0, 0.65);
@@ -644,7 +644,15 @@ int main(int argc, char *argv[]) {
 	fpsNodePath.set_pos(xs,0, -0.98);
 	fpsNodePath.hide();
 	doStep(&framework,Thread::get_current_thread());
-	
+
+	//death message
+	PT(TextNode)deathNode = new TextNode("deathNode");
+	deathNode->set_text("u ded");
+	NodePath deathMessage= window->get_aspect_2d().attach_new_node(deathNode);
+	deathMessage.set_scale(0.2);
+	deathMessage.set_pos(xs+0.5,0, 0.5);
+	deathMessage.hide();
+
 				//This is example code for fancy buttons. Dont delete
 	/*
 	PT(PGButton) MyButton;
@@ -916,20 +924,19 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread)){
-		if (frameDelay>30){
-			//cout<<world.dt<<" "<<1/world.dt<<endl;
-			savedt+=(int)(1/world.dt);
-			frameDelay =0;
-			frameDelayCount++;
-		}
-		if(frameDelayCount==4){
-			fpsNode->set_text(to_string(savedt/4)+" fps");
-			//fpsNodePath.show();
-			frameDelayCount=0;
-			savedt=0.0;
-		}
-		
+		//Things to do every frame regardless of menu status
 		if (keys.showFPS){
+			if (frameDelay>30){
+				//cout<<world.dt<<" "<<1/world.dt<<endl;
+				savedt+=(int)(1/world.dt);
+				frameDelay =0;
+				frameDelayCount++;
+			}
+			if(frameDelayCount==4){
+				fpsNode->set_text(to_string(savedt/4)+" fps");
+				frameDelayCount=0;
+				savedt=0.0;
+			}
 			fpsNodePath.show();
 		} else{
 			fpsNodePath.hide();
@@ -938,7 +945,7 @@ int main(int argc, char *argv[]) {
 		
 		frameDelay++;
 
-		// Things to do every frame
+		// Things to do every frame dependant on menu status
 		// Keybinds should not go here.
 		if(world.menuStatus==world.ms_start){
 			nd_hellothere.show();
@@ -1022,6 +1029,7 @@ int main(int argc, char *argv[]) {
 			player.ammoNodePath2.hide();
 			Bars.hide();
 			nd_crosshair.hide();
+			deathMessage.show();
 			world.deathFogIncrease+=world.dt;
 			
 			
@@ -1033,6 +1041,7 @@ int main(int argc, char *argv[]) {
 			} else{
 				player.death(itms,&entityModels);
 				deathMenuItems.show();
+				deathMessage.hide();
 				world.menuStatus=world.ms_dead;
 			}
 		}
@@ -1678,9 +1687,8 @@ void makeSpider(int x, int y, int z, NodePath* parentNode){
 	romar->coll_set_up(1000);
 	enems.push_back(romar);
 	cout<<"Spider!"<<endl;
-	
-	
 }
+
 void makeBandit(int x, int y, int z, NodePath* parentNode){
 	Enemy* bryan = new Enemy;
 	bryan->set_up(parentNode, window, window->get_panda_framework(), mydir+"Assets/bandit/Bandit.egg",50.0,x,y,z,15.0,40,24,0,10.0,51);
