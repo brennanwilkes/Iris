@@ -982,10 +982,10 @@ int main(int argc, char *argv[]) {
 				
 				StaticObject* tempStat = new StaticObject(&gameModels,window,&framework,mydir.get_dirname());
 				stats.push_back(tempStat);
-				stats.back()->main_collection.play("Death.1");
-				
-				
-				
+				float ranStat=rand()/(float)RAND_MAX;
+				if(ranStat>0){
+					stats.back()->main_collection.play("Death.1");
+				}
 				
 				//is it possible to make the dead body appear after the animation is done?		YES IT IS I JUST DID IT! :D
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
