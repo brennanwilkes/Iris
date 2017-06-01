@@ -16,16 +16,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include "nodePath.h"
 #include "windowFramework.h"
 #include "pandaFramework.h"
+#include <animControlCollection.h>
+#include <auto_bind.h>
 
 class StaticObject{
 public:
 	void setPos(float x,float y, float z);
 	StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,float h,float p,float r);
-	StaticObject(NodePath* parent,WindowFramework* w,PandaFramework* pf);
+	StaticObject(NodePath* parent,WindowFramework* w,PandaFramework* pf,string dir);
 	float getX();
 	float getY();
 	float getZ();
-	
+	AnimControlCollection main_collection;
 	NodePath model;
 	std::string filename;
 private:

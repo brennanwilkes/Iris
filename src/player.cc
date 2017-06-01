@@ -593,10 +593,10 @@ void Player::death(vector<Item*> &v,NodePath* parent){
 	//cout<<player.lvlid<<endl;
 	//cout<<gameLevels.size()<<endl;
 	
-	player.model.set_x(gameLevels[player.lvlid]->spawn_x);
-	player.model.set_y(gameLevels[player.lvlid]->spawn_y);
-	player.model.set_z(gameLevels[player.lvlid]->spawn_z);
-	
+	model.set_x(gameLevels[lvlid]->spawn_x);
+	model.set_y(gameLevels[lvlid]->spawn_y);
+	model.set_z(gameLevels[lvlid]->spawn_z);
+	model.show();
 	
 }
 void Player::calc_arms(){
