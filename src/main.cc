@@ -993,7 +993,7 @@ int main(int argc, char *argv[]) {
 					stats.back()->main_collection.play("Death.3");
 				}
 				//else 
-				
+				//window->get_render().analyze();
 				//is it possible to make the dead body appear after the animation is done?		YES IT IS I JUST DID IT! :D
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				float ranD=rand()/(float)RAND_MAX;
