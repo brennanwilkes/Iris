@@ -21,6 +21,7 @@ class StaticObject{
 public:
 	void setPos(float x,float y, float z);
 	StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,float h,float p,float r);
+	StaticObject(NodePath* parent,WindowFramework* w,PandaFramework* pf);
 	float getX();
 	float getY();
 	float getZ();

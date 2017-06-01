@@ -329,7 +329,7 @@ int main(int argc, char *argv[]) {
 
 
 	// Set up player camera and model
-	player.set_up(&gameModels,window,&framework,mydir);
+	player.set_up(&gameModels,window,&framework,mydir,false);
 	
 	
 	doStep(&framework,Thread::get_current_thread());
@@ -980,12 +980,17 @@ int main(int argc, char *argv[]) {
 			//if u ded
 			if (player.health<=0){
 				//cout << "AA" << endl;
-				
+				//StaticObject* tempStat = new StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0,0,0,0.5);
+				//tempStat->model=player.model;
+				//stats.push_back(tempStat);
 				player.main_collection.play("Death.1");
 				//is it possible to make the dead body appear after the animation is done?
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				float ranD=rand()/(float)RAND_MAX;
 				ranD*=360;
+				
+				/*
+				
 				stats.push_back(new StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0,0,0,0.5));
 				if(ranD>180){
 					stats.back()->model.set_hpr(ranD,-90,0);//cout << "5" << endl;
@@ -995,6 +1000,13 @@ int main(int argc, char *argv[]) {
 					//this segfaults
 					//stats.back()->model.set_z(ND.back().model.get_z()+0.25);cout << "7" << endl;
 				}
+				
+				*/
+				
+				//StaticObject* tempStat;
+				//tempStat=&player.model;
+				//stats.push_back(tempStat)
+
 
 				//player.death(itms,&entityModels); //i put player.death after the fog bit
 				world.menuDeath();
@@ -1039,10 +1051,16 @@ int main(int argc, char *argv[]) {
 				window->get_render().set_fog(player.deathFog);
 				//player.model.hide();
 			} else{
+				
+				
+				
+				//player.set_up(&gameModels,window,&framework,mydir,true);
+				
 				player.death(itms,&entityModels);
 				deathMenuItems.show();
 				deathMessage.hide();
 				world.menuStatus=world.ms_dead;
+				
 			}
 		}
 		else if(world.menuStatus==world.ms_pause){

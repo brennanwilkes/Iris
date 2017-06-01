@@ -31,5 +31,7 @@ StaticObject::StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent
 	}
 	
 }
-
+StaticObject::StaticObject(NodePath* parent,WindowFramework* w,PandaFramework* pf){
+	
+}
 
