@@ -56,15 +56,23 @@ StaticObject::StaticObject(NodePath* parent,WindowFramework* w,PandaFramework* p
 	name_collection.unbind_anim(animName);
 	animNp0.detach_node();
 	
-	/*
-	NodePath animNp1 = w->load_model(model, dir + "/Assets/Iris/Iris-Death.egg");
+	
+	NodePath animNp1 = w->load_model(model, dir + "/Assets/Iris/Iris-Death2.egg");
 	auto_bind(model.node(), name_collection);
 	animPtr = name_collection.get_anim(0);
-	main_collection.store_anim(animPtr, "Death.1");
+	main_collection.store_anim(animPtr, "Death.2");
 	animName = name_collection.get_anim_name(0);
 	name_collection.unbind_anim(animName);
 	animNp1.detach_node();
-	*/
+	
+	NodePath animNp2 = w->load_model(model, dir + "/Assets/Iris/Iris-DeathE.egg");
+	auto_bind(model.node(), name_collection);
+	animPtr = name_collection.get_anim(0);
+	main_collection.store_anim(animPtr, "Death.3");
+	animName = name_collection.get_anim_name(0);
+	name_collection.unbind_anim(animName);
+	animNp2.detach_node();
+	
 	
 	
 	
