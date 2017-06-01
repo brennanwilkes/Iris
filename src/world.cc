@@ -410,17 +410,14 @@ void World::apply_grav(){
 	*/
 }
 
-void World::menu(bool esc){
-	
+void World::menu(){
+	if ((menuStatus==ms_start) || (menuStatus==ms_optionfromstart) || (menuStatus==ms_deathfog)){//if (world.menuStatus>world.ms_option){ //if the menustatus is start, optionfromstart, death, deathfog,
+		return;
+	}
 	if (menuStatus >= ms_deathfog){
 		deathFogIncrease=0.0;
 		player.deathFog->set_exp_density(0.0);
 		window->get_render().set_fog(player.deathFog);
-	}
-	if (esc){
-		if (menuStatus == ms_start || menuStatus == ms_deathfog || menuStatus == ms_dead){
-			return;
-		}
 	}
 	
 	if (menuStatus==ms_game){
@@ -582,12 +579,12 @@ void World::menuOption(){
 }
 
 void World::menuStart(){
-	if (menuStatus == ms_deathfog){
+	if (menuStatus >= ms_deathfog){
 		deathFogIncrease=0.0;
 		player.deathFog->set_exp_density(0.0);
 		window->get_render().set_fog(player.deathFog);
 	}
-	
+
 	if (menuStatus==ms_start){
 		menuStatus=ms_game;
 	}
