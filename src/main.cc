@@ -537,7 +537,7 @@ int main(int argc, char *argv[]) {
 	mouseSensBut -> setup("Change mouse sens");
 	NodePath defbutNPmous = window -> get_pixel_2d().attach_new_node(mouseSensBut);
 	defbutNPmous.set_scale(0.1);
-	defbutNPmous.set_pos(xs+0.1*(17/8*8+1), 0, 0.85);
+	defbutNPmous.set_pos(xs+0.1*(17/8*8+1),0, 0.85);
 	defbutNPmous.reparent_to(optionMenuItems);
 
 
@@ -562,6 +562,13 @@ int main(int argc, char *argv[]) {
 	brest.set_pos(xs + 0.1, 0, 0.65);
 	brest.reparent_to(deathMenuItems);
 	keys.buttonIndex["click-mouse1-"+restartButton->get_id()] = restartButton;
+
+	//Death message
+	PT(TextNode) deathNode = new TextNode("deathNode");
+	NodePath deathMessage= window->get_aspect_2d().attach_new_node(deathNode);
+	deathMessage.set_scale(0.2);
+	deathMessage.set_pos(xs+0.1,0, 0.5);
+	deathMessage.hide();
 
 
 
@@ -613,14 +620,18 @@ int main(int argc, char *argv[]) {
 	player.ammoNodePath.set_scale(0.07);
 	player.ammoNodePath.set_pos(xs+0.5,0, -0.9);
 	player.ammoNodePath.hide();
-	
+
+	doStep(&framework,Thread::get_current_thread());
+
 	player.ammoNode2 = new TextNode("ammoNode2");
 	player.ammoNode2->set_text("0");
 	player.ammoNodePath2 = window->get_aspect_2d().attach_new_node(player.ammoNode2);
 	player.ammoNodePath2.set_scale(0.04);
 	player.ammoNodePath2.set_pos(xs+0.6,0, -0.9);
 	player.ammoNodePath2.hide();
-	
+
+	doStep(&framework,Thread::get_current_thread());
+
 	player.weightNode = new TextNode("weightNode");
 	player.weightNode->set_text("0");
 	player.weightNodePath = window->get_aspect_2d().attach_new_node(player.weightNode);
@@ -645,15 +656,9 @@ int main(int argc, char *argv[]) {
 	fpsNodePath.hide();
 	doStep(&framework,Thread::get_current_thread());
 
-	//death message
-	PT(TextNode)deathNode = new TextNode("deathNode");
-	deathNode->set_text("u ded");
-	NodePath deathMessage= window->get_aspect_2d().attach_new_node(deathNode);
-	deathMessage.set_scale(0.2);
-	deathMessage.set_pos(xs+0.5,0, 0.5);
-	deathMessage.hide();
 
-				//This is example code for fancy buttons. Dont delete
+
+	//This is example code for fancy buttons. Dont delete
 	/*
 	PT(PGButton) MyButton;
 	MyButton = new PGButton("MyButton");
@@ -801,6 +806,7 @@ int main(int argc, char *argv[]) {
 	player.handDisplay.set_texture(blankTex);
 
 	doStep(&framework,Thread::get_current_thread());
+
 	//Crosshair
 	PT(Texture) tex_crosshair;
 	CardMaker cm_crosshair("cardMaker");
@@ -924,26 +930,6 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread)){
-		//Things to do every frame regardless of menu status
-		if (keys.showFPS){
-			if (frameDelay>30){
-				//cout<<world.dt<<" "<<1/world.dt<<endl;
-				savedt+=(int)(1/world.dt);
-				frameDelay =0;
-				frameDelayCount++;
-			}
-			if(frameDelayCount==4){
-				fpsNode->set_text(to_string(savedt/4)+" fps");
-				frameDelayCount=0;
-				savedt=0.0;
-			}
-			fpsNodePath.show();
-		} else{
-			fpsNodePath.hide();
-		}
-
-		
-		frameDelay++;
 
 		// Things to do every frame dependant on menu status
 		// Keybinds should not go here.
@@ -983,10 +969,10 @@ int main(int argc, char *argv[]) {
 				StaticObject* tempStat = new StaticObject(&gameModels,window,&framework,mydir.get_dirname());
 				stats.push_back(tempStat);
 				float ranStat=rand()/(float)RAND_MAX;
-				if(ranStat>0.66){
+				if(ranStat>(2.0/3)){
 					stats.back()->main_collection.play("Death.1");
 				}
-				else if(ranStat>0.33){
+				else if(ranStat>(1.0/3)){
 					stats.back()->main_collection.play("Death.2");
 				}
 				else if(ranStat>0.0){
@@ -994,15 +980,11 @@ int main(int argc, char *argv[]) {
 				}
 				//else 
 				//window->get_render().analyze();
-				//is it possible to make the dead body appear after the animation is done?		YES IT IS I JUST DID IT! :D
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				float ranD=rand()/(float)RAND_MAX;
 				ranD*=360;
-				
-				
-
-				//player.death(itms,&entityModels); //i put player.death after the fog bit
-				world.menuDeath();
+				world.menuDeath(); //changes menu status to start death fog and then player.death
+				deathNode->set_text(world.deathMessageList.at(rand()%world.deathMessageList.size())); //set death message
 			}
 			
 			
@@ -1044,15 +1026,10 @@ int main(int argc, char *argv[]) {
 				window->get_render().set_fog(player.deathFog);
 				//player.model.hide();
 			} else{
-				
-				
-				
-				
 				player.death(itms,&entityModels);
 				deathMenuItems.show();
 				deathMessage.hide();
 				world.menuStatus=world.ms_dead;
-				
 			}
 		}
 		else if(world.menuStatus==world.ms_pause){
@@ -1072,10 +1049,29 @@ int main(int argc, char *argv[]) {
 			Bars.hide();
 			nd_crosshair.hide();
 		}
-		
+
+		//Things to do every frame regardless of menu status
+		if (keys.showFPS){
+			if (frameDelay>30){
+				//cout<<world.dt<<" "<<1/world.dt<<endl;
+				savedt+=(int)(1/world.dt);
+				frameDelay =0;
+				frameDelayCount++;
+			}
+			if(frameDelayCount==4){
+				fpsNode->set_text(to_string(savedt/4)+" fps");
+				frameDelayCount=0;
+				savedt=0.0;
+			}
+			fpsNodePath.show();
+		} else{
+			fpsNodePath.hide();
+		}
+
+		frameDelay++;
+
 		world.dt = globalClock -> get_real_time() - world.preTime;
 		world.preTime = globalClock -> get_real_time();
-		
 		calc_inv(InvButton1,InvButton2,InvButton3,&blankTex);
 		
 		// Step the interval manager
@@ -1195,7 +1191,6 @@ void invPress(const Event* eventPtr, void* dataPtr){
 void invHotkey(const Event* eventPtr, void* dataPtr){
 	int t=0;
 	for (int i=1; i<10; i++){
-		//cout << "i" << i << " - inv" + to_string(i) << " - " <<keys.keybinds["inv" + to_string(i)].first.get_name() << " evnt " <<eventPtr->get_name()<< endl;
 		if (keys.keybinds["inv" + to_string(i)].first.get_name() == eventPtr->get_name()){
 			t = i;
 			break;
@@ -1204,7 +1199,6 @@ void invHotkey(const Event* eventPtr, void* dataPtr){
 	if (!t){
 		return;
 	}
-	//int t = stoi(eventPtr->get_name()); //int key
 	player.handInd=t-1;
 	if ((int)player.inventory.size()>=t){
 		player.mainHand=player.inventory[t-1];
