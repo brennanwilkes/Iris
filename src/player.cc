@@ -29,6 +29,9 @@ void Player::tick() {
 	
 	totaltickcount++;
 	
+	if (model.get_airborn_height()>0.2){
+		main_collection.play("Jump");
+	}
 	
 	if (tint>0){
 		model.clear_color_scale();
@@ -143,15 +146,17 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 		name_collection.unbind_anim(animName);
 		animNp10.detach_node();
 		main_collection.play("idle");
+		
+		
 	
-		NodePath animNp11 = w->load_model(model, dir + "Assets/Iris/Iris-Death.egg");
+		NodePath animNp11 = w->load_model(model, dir + "Assets/Iris/Iris-Jump.egg");
 		auto_bind(model.node(), name_collection);
 		animPtr = name_collection.get_anim(0);
-		main_collection.store_anim(animPtr, "Death.1");
+		main_collection.store_anim(animPtr, "Jump");
 		animName = name_collection.get_anim_name(0);
 		name_collection.unbind_anim(animName);
 		animNp11.detach_node();
-		main_collection.play("Death.1");
+		main_collection.play("Jump");
 	
 	}
 	else{
