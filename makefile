@@ -5,7 +5,7 @@ CFLAGS=-Wall -g -std=c++11 -lglut -Wno-reorder -Wno-unused-local-typedefs $(INCL
 LDFLAGS=-L/usr/lib64/panda3d
 #LDFLAGS=-L/usr/lib/x86_64-linux-gnu/panda3d -L/usr/include/eigen3 
 #LDFLAGS=-L/usr/lib/x86_64-linux-gnu/panda3d -L/usr/local/include/eigen3
-LDLIBS=-lp3framework -lpanda -lpandafx -lpandaexpress -lp3dtoolconfig -lp3dtool -lp3pystub -lp3direct
+LDLIBS=-lp3framework -lpanda -lpandafx -lpandaexpress -lp3dtoolconfig -lp3dtool -lp3pystub 
 #LDLIBS=-lp3framework -lpanda -lpandafx -lpandaexpress -lp3dtoolconfig -lp3dtool -lp3pystub -lp3direct -pthread
 
 SOURCES=$(wildcard src/*.cc)
