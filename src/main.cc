@@ -1075,7 +1075,7 @@ int main(int argc, char *argv[]) {
 		calc_inv(InvButton1,InvButton2,InvButton3,&blankTex);
 		
 		// Step the interval manager
-		CIntervalManager::get_global_ptr() -> step();
+		//CIntervalManager::get_global_ptr() -> step();
 	}
 	// Once the game is finished, close everything
 	framework.close_framework();
@@ -1711,7 +1711,7 @@ void doStep(PandaFramework* pf,Thread *current_thread){
 	if(pf->do_frame(current_thread))
 	{
 		pf->get_graphics_engine()->render_frame();
-		CIntervalManager::get_global_ptr() -> step();
+		//CIntervalManager::get_global_ptr() -> step();
 	}
 }
 
