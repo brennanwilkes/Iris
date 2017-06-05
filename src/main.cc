@@ -133,6 +133,7 @@ void toggle(const Event* eventPtr, void* dataPtr);
 void toggleHitBox(const Event* eventPtr, void* dataPtr);
 void toggleDoubleJump(const Event* eventPtr, void* dataPtr);
 void toggleOptionMenu(const Event* eventPtr, void* dataPtr);
+void toggleFPS(const Event* eventPtr, void* dataPtr);
 void invHotkey(const Event* eventPtr, void* dataPtr);
 void invPress(const Event* eventPtr, void* dataPtr);
 void jump(const Event* eventPtr, void* dataPtr);
@@ -328,7 +329,7 @@ int main(int argc, char *argv[]) {
 
 
 	// Set up player camera and model
-	player.set_up(&gameModels,window,&framework,mydir);
+	player.set_up(&gameModels,window,&framework,mydir,false);
 	
 	
 	doStep(&framework,Thread::get_current_thread());
@@ -536,7 +537,7 @@ int main(int argc, char *argv[]) {
 	mouseSensBut -> setup("Change mouse sens");
 	NodePath defbutNPmous = window -> get_pixel_2d().attach_new_node(mouseSensBut);
 	defbutNPmous.set_scale(0.1);
-	defbutNPmous.set_pos(xs+0.1*(17/8*8+1), 0, 0.85);
+	defbutNPmous.set_pos(xs+0.1*(17/8*8+1),0, 0.85);
 	defbutNPmous.reparent_to(optionMenuItems);
 
 
@@ -555,12 +556,19 @@ int main(int argc, char *argv[]) {
 	keys.buttonIndex["click-mouse1-"+respawnButton->get_id()] = respawnButton;
 
 	restartButton = new PGButton("restartButton");
-	restartButton -> setup("Restart");
+	restartButton -> setup("Main Menu");
 	NodePath brest = window -> get_pixel_2d().attach_new_node(restartButton);
 	brest.set_scale(0.1);
 	brest.set_pos(xs + 0.1, 0, 0.65);
 	brest.reparent_to(deathMenuItems);
 	keys.buttonIndex["click-mouse1-"+restartButton->get_id()] = restartButton;
+
+	//Death message
+	PT(TextNode) deathNode = new TextNode("deathNode");
+	NodePath deathMessage= window->get_aspect_2d().attach_new_node(deathNode);
+	deathMessage.set_scale(0.2);
+	deathMessage.set_pos(xs+0.1,0, 0.5);
+	deathMessage.hide();
 
 
 
@@ -612,14 +620,18 @@ int main(int argc, char *argv[]) {
 	player.ammoNodePath.set_scale(0.07);
 	player.ammoNodePath.set_pos(xs+0.5,0, -0.9);
 	player.ammoNodePath.hide();
-	
+
+	doStep(&framework,Thread::get_current_thread());
+
 	player.ammoNode2 = new TextNode("ammoNode2");
 	player.ammoNode2->set_text("0");
 	player.ammoNodePath2 = window->get_aspect_2d().attach_new_node(player.ammoNode2);
 	player.ammoNodePath2.set_scale(0.04);
 	player.ammoNodePath2.set_pos(xs+0.6,0, -0.9);
 	player.ammoNodePath2.hide();
-	
+
+	doStep(&framework,Thread::get_current_thread());
+
 	player.weightNode = new TextNode("weightNode");
 	player.weightNode->set_text("0");
 	player.weightNodePath = window->get_aspect_2d().attach_new_node(player.weightNode);
@@ -643,8 +655,10 @@ int main(int argc, char *argv[]) {
 	fpsNodePath.set_pos(xs,0, -0.98);
 	fpsNodePath.hide();
 	doStep(&framework,Thread::get_current_thread());
-	
-				//This is example code for fancy buttons. Dont delete
+
+
+
+	//This is example code for fancy buttons. Dont delete
 	/*
 	PT(PGButton) MyButton;
 	MyButton = new PGButton("MyButton");
@@ -792,6 +806,7 @@ int main(int argc, char *argv[]) {
 	player.handDisplay.set_texture(blankTex);
 
 	doStep(&framework,Thread::get_current_thread());
+
 	//Crosshair
 	PT(Texture) tex_crosshair;
 	CardMaker cm_crosshair("cardMaker");
@@ -813,11 +828,8 @@ int main(int argc, char *argv[]) {
 	// define_key("event_name", "description", function, data);
 	// data is a void pointer, so it can take anything.
 	
-	bool temp_bool = false;
-	bool temp_bool2 = true;
-	
 	if ("hide keybinds"){
-	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, &temp_bool2);
+	window -> get_panda_framework() -> define_key(keys.keybinds["menu"].first.get_name(), "menu", &menu, NULL);
 	keys.wildKeys["menu"] = &menu;
 	keys.dataPtrs["menu"] = window;
 	doStep(&framework,Thread::get_current_thread());
@@ -849,6 +861,11 @@ int main(int argc, char *argv[]) {
 	keys.wildKeys["spider"] = &spiderClick;
 	keys.dataPtrs["spider"] = &shootableModels;
 	doStep(&framework,Thread::get_current_thread());
+	window -> get_panda_framework() -> define_key(keys.keybinds["toggleFPS"].first.get_name(), "toggleFPS", &toggleFPS, NULL);
+	keys.wildKeys["toggleFPS"] = &toggleFPS;
+	keys.dataPtrs["toggleFPS"] = NULL;
+	doStep(&framework,Thread::get_current_thread());
+	
 	for (int i=1; i<10; i++){
 		window -> get_panda_framework() -> define_key(keys.keybinds["inv"+to_string(i)].first.get_name(), "inv"+to_string(i), &invHotkey, &blankTex);
 		keys.wildKeys["inv"+to_string(i)] = &invHotkey;
@@ -870,7 +887,7 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(OptionTogButton3->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton3);
 	window -> get_panda_framework() -> define_key(mouseSensBut->get_click_event(keys.keybinds["use"].first ), "Mousebind button press", &rebindMouseSens, mouseSensBut);
 
-	window -> get_panda_framework() -> define_key(respawnButton->get_click_event(keys.keybinds["use"].first ), "Respawn button press", &menu, &temp_bool);
+	window -> get_panda_framework() -> define_key(respawnButton->get_click_event(keys.keybinds["use"].first ), "Respawn button press", &menu, NULL);
 	window -> get_panda_framework() -> define_key(restartButton->get_click_event(keys.keybinds["use"].first ), "Restart button press", &startGame, restartButton);
 	
 	window -> get_panda_framework() -> define_key(InvButton1->get_click_event(keys.keybinds["use"].first ), "Inventory 1 slot press", &invPress, &blankTex);
@@ -900,7 +917,7 @@ int main(int argc, char *argv[]) {
 	world.init();
 	world.tickCount=0;
 	
-	player.health=50;
+	player.health=1;
 	int temptickcount=0;
 	int frameDelay=0;
 	int savedt=0;
@@ -913,24 +930,8 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.background1->set_loop(true);
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread)){
-		
-		if (frameDelay>30){
-			//cout<<world.dt<<" "<<1/world.dt<<endl;
-			savedt+=(int)(1/world.dt);
-			frameDelay =0;
-			frameDelayCount++;
-		}
-		if(frameDelayCount==4){
-			fpsNode->set_text(to_string(savedt/4)+" fps");
-			fpsNodePath.show();
-			frameDelayCount=0;
-			savedt=0.0;
-		}
-		
-		
-		frameDelay++;
 
-		// Things to do every frame
+		// Things to do every frame dependant on menu status
 		// Keybinds should not go here.
 		if(world.menuStatus==world.ms_start){
 			nd_hellothere.show();
@@ -964,22 +965,26 @@ int main(int argc, char *argv[]) {
 
 			//if u ded
 			if (player.health<=0){
-				//cout << "AA" << endl;
+				
+				StaticObject* tempStat = new StaticObject(&gameModels,window,&framework,mydir.get_dirname());
+				stats.push_back(tempStat);
+				float ranStat=rand()/(float)RAND_MAX;
+				if(ranStat>(2.0/3)){
+					stats.back()->main_collection.play("Death.1");
+				}
+				else if(ranStat>(1.0/3)){
+					stats.back()->main_collection.play("Death.2");
+				}
+				else if(ranStat>0.0){
+					stats.back()->main_collection.play("Death.3");
+				}
+				//else 
+				//window->get_render().analyze();
 				player.handDisplay.set_texture(*(static_cast<PT(Texture)*>(&blankTex)));
 				float ranD=rand()/(float)RAND_MAX;
 				ranD*=360;
-				stats.push_back(new StaticObject(player.model.get_x(),player.model.get_y(),player.model.get_z(),mydir+"Assets/Iris/Iris.egg",&gameModels,window,&framework,0,0,0,0.5));
-				if(ranD>180){
-					stats.back()->model.set_hpr(ranD,-90,0);//cout << "5" << endl;
-				}
-				else{
-					stats.back()->model.set_hpr(ranD,90,0);//cout << "6" << endl;
-					//this segfaults
-					//stats.back()->model.set_z(ND.back().model.get_z()+0.25);cout << "7" << endl;
-				}
-
-				//player.death(itms,&entityModels); //i put player.death after the fog bit
-				world.menuDeath();
+				world.menuDeath(); //changes menu status to start death fog and then player.death
+				deathNode->set_text(world.deathMessageList.at(rand()%world.deathMessageList.size())); //set death message
 			}
 			
 			
@@ -1011,14 +1016,19 @@ int main(int argc, char *argv[]) {
 			player.ammoNodePath2.hide();
 			Bars.hide();
 			nd_crosshair.hide();
+			deathMessage.show();
 			world.deathFogIncrease+=world.dt;
+			player.model.hide();
+			
+			
 			if (world.deathFogIncrease < 5){
 				player.deathFog->set_exp_density(world.deathFogIncrease/50.0);
 				window->get_render().set_fog(player.deathFog);
-				player.model.hide();
+				//player.model.hide();
 			} else{
 				player.death(itms,&entityModels);
 				deathMenuItems.show();
+				deathMessage.hide();
 				world.menuStatus=world.ms_dead;
 			}
 		}
@@ -1039,14 +1049,33 @@ int main(int argc, char *argv[]) {
 			Bars.hide();
 			nd_crosshair.hide();
 		}
-		
+
+		//Things to do every frame regardless of menu status
+		if (keys.showFPS){
+			if (frameDelay>30){
+				//cout<<world.dt<<" "<<1/world.dt<<endl;
+				savedt+=(int)(1/world.dt);
+				frameDelay =0;
+				frameDelayCount++;
+			}
+			if(frameDelayCount==4){
+				fpsNode->set_text(to_string(savedt/4)+" fps");
+				frameDelayCount=0;
+				savedt=0.0;
+			}
+			fpsNodePath.show();
+		} else{
+			fpsNodePath.hide();
+		}
+
+		frameDelay++;
+
 		world.dt = globalClock -> get_real_time() - world.preTime;
 		world.preTime = globalClock -> get_real_time();
-		
 		calc_inv(InvButton1,InvButton2,InvButton3,&blankTex);
 		
 		// Step the interval manager
-		CIntervalManager::get_global_ptr() -> step();
+		//CIntervalManager::get_global_ptr() -> step();
 	}
 	// Once the game is finished, close everything
 	framework.close_framework();
@@ -1129,6 +1158,10 @@ void toggleOptionMenu(const Event* eventPtr, void* dataPtr){
 	world.menuOption();
 }
 
+void toggleFPS(const Event* eventPtr, void* dataPtr){
+	keys.showFPS = 1-keys.showFPS;
+}
+
 void invPress(const Event* eventPtr, void* dataPtr){
 	int si=getMenuSliderInd();
 	int t=0;
@@ -1158,7 +1191,6 @@ void invPress(const Event* eventPtr, void* dataPtr){
 void invHotkey(const Event* eventPtr, void* dataPtr){
 	int t=0;
 	for (int i=1; i<10; i++){
-		//cout << "i" << i << " - inv" + to_string(i) << " - " <<keys.keybinds["inv" + to_string(i)].first.get_name() << " evnt " <<eventPtr->get_name()<< endl;
 		if (keys.keybinds["inv" + to_string(i)].first.get_name() == eventPtr->get_name()){
 			t = i;
 			break;
@@ -1167,7 +1199,6 @@ void invHotkey(const Event* eventPtr, void* dataPtr){
 	if (!t){
 		return;
 	}
-	//int t = stoi(eventPtr->get_name()); //int key
 	player.handInd=t-1;
 	if ((int)player.inventory.size()>=t){
 		player.mainHand=player.inventory[t-1];
@@ -1224,13 +1255,14 @@ void rebindMouseSens(const Event* eventPtr, void* dataPtr){
 }
 
 void menu(const Event* eventPtr, void* dataPtr){
-	world.menu(*(static_cast<PT(Texture)*>(dataPtr)));
+	world.menu();
 }
 
 void spiderClick(const Event* eventPtr, void* dataPtr){
 	NodePath* shootableModels = static_cast<NodePath*>(dataPtr);
 	makeSpider(player.model.get_x()+50, player.model.get_y(), player.model.get_z()+6, shootableModels);
 	makeBandit(player.model.get_x()+25, player.model.get_y(), player.model.get_z()+6, shootableModels);
+	//player.main_collection.play("Death.1");
 }
 
 void drop(const Event* eventPtr, void* dataPtr){
@@ -1659,9 +1691,8 @@ void makeSpider(int x, int y, int z, NodePath* parentNode){
 	romar->coll_set_up(1000);
 	enems.push_back(romar);
 	cout<<"Spider!"<<endl;
-	
-	
 }
+
 void makeBandit(int x, int y, int z, NodePath* parentNode){
 	Enemy* bryan = new Enemy;
 	bryan->set_up(parentNode, window, window->get_panda_framework(), mydir+"Assets/bandit/Bandit.egg",50.0,x,y,z,15.0,40,24,0,10.0,51);
@@ -1680,7 +1711,7 @@ void doStep(PandaFramework* pf,Thread *current_thread){
 	if(pf->do_frame(current_thread))
 	{
 		pf->get_graphics_engine()->render_frame();
-		CIntervalManager::get_global_ptr() -> step();
+		//CIntervalManager::get_global_ptr() -> step();
 	}
 }
 

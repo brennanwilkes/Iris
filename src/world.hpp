@@ -18,6 +18,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include "asyncTaskManager.h"
 #include "genericAsyncTask.h"
 #include "mouseWatcher.h"
+#include "textNode.h"
+#include "nodePath.h"
 class WindowFramework;
 
 
@@ -39,12 +41,14 @@ public:
 	
 	Sounds gameSounds;
 	
-	void menu(bool esc);
+	void menu();
 	void menuOption();
 	void menuStart();
 	void menuDeath();
 	float deathFogIncrease;
 
+	std::vector<std::string> deathMessageList;
+	
 	int menuStatus;
 	enum ms  {ms_game, ms_pause, ms_option, ms_start, ms_optionfromstart, ms_deathfog, ms_dead};
 

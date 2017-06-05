@@ -27,6 +27,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 World::World(){
 	deathFogIncrease = 0.0;
+	deathMessageList = {
+		////////////////max length
+		"Oh, you are slain",
+		"Wasted",
+		":(",
+		"RIP"
+	};
+	
 	menuStatus = 3;
 	//ms = {ms_game=0, ms_pause=1, ms_option=2, ms_start=3, ms_optionfromstart=4, ms_deathfog=5, ms_dead=6};
 }
@@ -410,17 +418,14 @@ void World::apply_grav(){
 	*/
 }
 
-void World::menu(bool esc){
-	
-	if (menuStatus >= ms_deathfog){
+void World::menu(){
+	if ((menuStatus==ms_start) || (menuStatus==ms_optionfromstart) || (menuStatus==ms_deathfog)){
+		return;
+	}
+	if (menuStatus == ms_deathfog || menuStatus==ms_dead){
 		deathFogIncrease=0.0;
 		player.deathFog->set_exp_density(0.0);
 		window->get_render().set_fog(player.deathFog);
-	}
-	if (esc){
-		if (menuStatus == ms_start || menuStatus == ms_deathfog || menuStatus == ms_dead){
-			return;
-		}
 	}
 	
 	if (menuStatus==ms_game){
@@ -582,12 +587,12 @@ void World::menuOption(){
 }
 
 void World::menuStart(){
-	if (menuStatus == ms_deathfog){
+	if (menuStatus == ms_deathfog || menuStatus==ms_dead){
 		deathFogIncrease=0.0;
 		player.deathFog->set_exp_density(0.0);
 		window->get_render().set_fog(player.deathFog);
 	}
-	
+
 	if (menuStatus==ms_start){
 		menuStatus=ms_game;
 	}
@@ -630,7 +635,7 @@ void World::menuStart(){
 }
 
 void World::menuDeath(){
-	if (menuStatus>=ms_deathfog){
+	if (menuStatus == ms_deathfog || menuStatus==ms_dead){
 		menuStatus=ms_start;
 	}
 	else{
@@ -638,7 +643,7 @@ void World::menuDeath(){
 	}
 	
 
-	if (menuStatus>=ms_deathfog)
+	if (menuStatus == ms_deathfog || menuStatus==ms_dead)
 	{
 		if (player.arms!=NULL){
 			player.arms->hide();
@@ -663,7 +668,6 @@ void World::menuDeath(){
 		menuItems.hide();
 		optionMenuItems.hide();
 		deathMenuItems.hide();
-		
 		player.deathFog->set_exp_density(0.0);
 		window->get_render().set_fog(player.deathFog);
 
