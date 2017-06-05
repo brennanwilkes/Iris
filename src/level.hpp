@@ -46,14 +46,11 @@ public:
 	void clear(); // Empties all loaded models
 	void tagify(); // Empties all loaded models
 	bool file_exists(std::string file); // Checks if a file exists
-	void remove_nd(std::string uuid); // Checks if a file exists
 	std::vector<std::string> split(std::string &inp, std::string delim = " "); // Splits a string by delimiter
 
 	string add_model(NodePath model);
 	
 	map<string, NodePath> models;
-	map<string, map<string, string> > nd_dat;	// First string is uuid, same as parent model
-												// Map in map is data_name:value
 	unsigned int uuid = 0;
 	
 	int id;
