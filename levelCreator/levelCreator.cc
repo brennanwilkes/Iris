@@ -319,6 +319,7 @@ void edit_model(const Event* eventPtr, void* dataPtr){
 		cin >> datum;
 		if (Level::used_dat.find(datum) != Level::used_dat.end())
 		{
+			selected.set_tag("class", datum);
 			break;
 		}
 		cout << "Invalid class type. Valid class types are: ";
@@ -388,6 +389,7 @@ void test_func(const Event* eventPtr, void* dataPtr){
 void move_sel_locked(){
 	selected.set_pos(camera, 0, mv_dist, 0);
 	selected.set_hpr(camera, 0, 0, 0);
+	selected.set_p(0);
 }
 
 void move_sel_unlocked(){
