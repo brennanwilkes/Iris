@@ -29,8 +29,9 @@ void Player::tick() {
 	
 	totaltickcount++;
 	
-	if (model.get_airborn_height()>0.2){
+	if (coll_grav->get_airborne_height()>0.2){
 		main_collection.play("Jump");
+		//cout<<"YAAAS"<<endl;
 	}
 	
 	if (tint>0){
