@@ -275,14 +275,14 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 		name_collection.unbind_anim(animName);
 		animNp1.detach_node();
 		anim_collection.play("idle");
-		/*NodePath animNp2 = w->load_model(model, mydir + "Assets/bandit/Bandit-move.egg");
+		NodePath animNp2 = w->load_model(model, mydir + "Assets/bandit/Bandit-Walk.egg");
 		auto_bind(model.node(), name_collection);
 		animPtr = name_collection.get_anim(0);
 		anim_collection.store_anim(animPtr, "walk");
 		animName = name_collection.get_anim_name(0);
 		name_collection.unbind_anim(animName);
 		animNp2.detach_node();
-		anim_collection.play("walk");*/
+		anim_collection.play("walk");
 		NodePath animNp3 = w->load_model(model, mydir + "Assets/bandit/Bandit-shoot.egg");
 		auto_bind(model.node(), name_collection);
 		animPtr = name_collection.get_anim(0);
