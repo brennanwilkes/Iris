@@ -608,8 +608,8 @@ void Player::death(vector<Item*> &v,NodePath* parent){
 void Player::calc_arms(){
 	
 	
-	weightNode->set_text(to_string((int)weight)+" lbs");
-	volumeNode->set_text(to_string((int)volume)+" m^3");
+	weightNode->set_text(to_string((int)weight)+" kg");
+	volumeNode->set_text(to_string((int)volume)+" L");
 	weightNodePath.show();
 	volumeNodePath.show();
 	
