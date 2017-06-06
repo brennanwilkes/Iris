@@ -29,10 +29,11 @@ World::World(){
 	deathFogIncrease = 0.0;
 	deathMessageList = {
 		////////////////max length
-		"Oh, you are slain",
-		"Wasted",
-		":(",
-		"RIP"
+		"You have died"
+		//"Oh, you are slain",
+		//"Wasted",
+		//":(",
+		//"RIP"
 	};
 	
 	menuStatus = 3;
