@@ -58,6 +58,8 @@ void Level::save(string filename, bool ov){
 	vector<string> to_save = {};
 	vector<string> equiv_data = {"item", "food_item", "health_item", "water_item"};
 	
+	tagify();
+	
 	for (const auto &np:models)
 	{
 		t_np = np.second;
@@ -75,7 +77,6 @@ void Level::save(string filename, bool ov){
 		{
 			f << t_np.get_tag("class") << " " << t_np.get_name() << " ";
 		}
-		
 		
 		// Get data that needs to be saved
 		to_save = used_dat[t_np.get_tag("class")];	
@@ -180,7 +181,7 @@ bool Level::file_exists(string filename){
 string Level::add_model(NodePath model){
 	string id_s = to_string(uuid);
 	models[id_s] = model;
-	models[id_s].set_tag("id", id_s);
+	models[id_s].set_tag("uuid", id_s);
 	++uuid;
 	return to_string(uuid - 1);
 }

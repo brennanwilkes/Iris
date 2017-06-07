@@ -165,7 +165,7 @@ void select_model(const Event* eventPtr, void* dataPtr){
 	if (qcoll_pick -> get_num_entries() > 0)
 	{
 		qcoll_pick -> sort_entries();
-		NodePath new_sel = level.models[qcoll_pick -> get_entry(0) -> get_into_node_path().get_net_tag("id")];
+		NodePath new_sel = level.models[qcoll_pick -> get_entry(0) -> get_into_node_path().get_net_tag("uuid")];
 		if (cur_state == mov_sel)
 		{
 			cur_state = sel;
@@ -330,7 +330,10 @@ void edit_model(const Event* eventPtr, void* dataPtr){
 		cout << endl;
 	}
 	
+
+	
 	vector<string> data = Level::used_dat[datum];
+
 	for (const auto &dat:data)
 	{
 		cout << dat << ": ";
