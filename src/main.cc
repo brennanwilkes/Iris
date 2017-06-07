@@ -179,7 +179,6 @@ int main(int argc, char *argv[]) {
 	// Other variables
 	
 	//ConfigVariableFilename a;
-	//cout<<a.get_fullpath()<<endl;
 	//load_prc_file("Config.prc");
 
 
@@ -208,16 +207,9 @@ int main(int argc, char *argv[]) {
 	mouseWatcher = (MouseWatcher*)window -> get_mouse().node();
 
 
-	//loadscreen
-	float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
-	
-	NodePath blank_plane = window->load_model(framework.get_models(),mydir+"Assets/plane.egg");
-	blank_plane.set_transparency(TransparencyAttrib::M_alpha, 1);
-	
-
-	//////////////////////////////////////////////
-	
 	//Loading screen
+	float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
+
 
 	PT(Texture) wts;
 	wts=TexturePool::load_texture(mydir+"Assets/loadscreen.png");
@@ -230,7 +222,6 @@ int main(int argc, char *argv[]) {
 	NNS.set_transparency(TransparencyAttrib::M_alpha, 1);
 	NNS.set_scale(2.0);
 	NNS.set_pos(xs,0,-1);
-	//NNS.show();
 	NNS.set_texture(wts);
 	NNS.hide();
 	
@@ -318,14 +309,6 @@ int main(int argc, char *argv[]) {
 	*/
 	
 	doStep(&framework,Thread::get_current_thread());
-
-
-	NodePath Bars = window -> get_pixel_2d().attach_new_node("Status Bars");
-	Bars.set_transparency(TransparencyAttrib::M_alpha, 1);
-	Bars.reparent_to(window->get_aspect_2d());
-	Bars.hide();
-	
-
 
 
 	// Set up player camera and model
@@ -495,7 +478,6 @@ int main(int argc, char *argv[]) {
 	doStep(&framework,Thread::get_current_thread());
 
 
-
 	//Option Menu Items
 	PGButton* OptionTogButton2;
 	PGButton* mouseSensBut;
@@ -570,6 +552,7 @@ int main(int argc, char *argv[]) {
 	deathMessage.set_pos(xs+0.1,0, 0.5);
 	deathMessage.hide();
 
+	doStep(&framework,Thread::get_current_thread());
 
 
 	//Status bar items
@@ -577,9 +560,15 @@ int main(int argc, char *argv[]) {
 	PT(Texture) greenTex=TexturePool::load_texture(mydir+"Assets/Blue.png");
 	PT(Texture) blueTex=TexturePool::load_texture(mydir+"Assets/Green.png");
 
-	doStep(&framework,Thread::get_current_thread());
-	
+	NodePath Bars = window -> get_pixel_2d().attach_new_node("Status Bars");
+	Bars.set_transparency(TransparencyAttrib::M_alpha, 1);
+	Bars.reparent_to(window->get_aspect_2d());
+	Bars.hide();
 	PGWaitBar* HealthBar;
+	PGWaitBar* FoodBar;
+	PGWaitBar* WaterBar;
+
+
 	HealthBar = new PGWaitBar("HealthBar");
 	HealthBar->setup(10.0,0.5,100.0);
 	NodePath HealthNode = window -> get_pixel_2d().attach_new_node(HealthBar);
@@ -588,8 +577,9 @@ int main(int argc, char *argv[]) {
 	HealthNode.show();
 	HealthNode.reparent_to(Bars);
 	HealthNode.set_texture(redTex);
-	
-	PGWaitBar* FoodBar;
+
+	doStep(&framework,Thread::get_current_thread());
+
 	FoodBar = new PGWaitBar("FoodBar");
 	FoodBar->setup(10.0,0.5,100.0);
 	NodePath FoodNode = window -> get_pixel_2d().attach_new_node(FoodBar);
@@ -601,7 +591,6 @@ int main(int argc, char *argv[]) {
 	
 	doStep(&framework,Thread::get_current_thread());
 	
-	PGWaitBar* WaterBar;
 	WaterBar = new PGWaitBar("WaterBar");
 	WaterBar->setup(10.0,0.5,100.0);
 	NodePath WaterNode = window -> get_pixel_2d().attach_new_node(WaterBar);
@@ -610,8 +599,10 @@ int main(int argc, char *argv[]) {
 	WaterNode.show();
 	WaterNode.reparent_to(Bars);
 	WaterNode.set_texture(greenTex);
-	
+
 	doStep(&framework,Thread::get_current_thread());
+
+
 
 	//HUD info items
 	player.ammoNode = new TextNode("ammoNode");
@@ -648,12 +639,15 @@ int main(int argc, char *argv[]) {
 	player.volumeNodePath.set_pos(xs+0.8,0, -0.98);
 	player.volumeNodePath.hide();
 
+	doStep(&framework,Thread::get_current_thread());
+
 	PT(TextNode)fpsNode = new TextNode("fpsNode");
 	fpsNode->set_text("0");
 	NodePath fpsNodePath= window->get_aspect_2d().attach_new_node(fpsNode);
 	fpsNodePath.set_scale(0.07);
 	fpsNodePath.set_pos(xs,0, -0.98);
 	fpsNodePath.hide();
+
 	doStep(&framework,Thread::get_current_thread());
 
 
@@ -698,7 +692,11 @@ int main(int argc, char *argv[]) {
 	
 	doStep(&framework,Thread::get_current_thread());
 
+
 	PT(Texture) blankTex=TexturePool::load_texture(mydir+"Assets/blank_slot2.png");
+
+	NodePath blank_plane = window->load_model(framework.get_models(),mydir+"Assets/plane.egg");
+	blank_plane.set_transparency(TransparencyAttrib::M_alpha, 1);
 
 	//////////////////////////////////////////////
 
@@ -931,17 +929,13 @@ int main(int argc, char *argv[]) {
 	world.gameSounds.background1->play();
 	while(framework.do_frame(current_thread)){
 
-		// Things to do every frame dependant on menu status
-		// Keybinds should not go here.
+		// Things to do every frame dependent on menu status
 		if(world.menuStatus==world.ms_start){
 			nd_hellothere.show();
-			//cout<<player.camera.get_pos()<<endl;
-			//cout<<player.camera.get_hpr()<<endl;
-			
+			nd_hellothere.set_hpr(nd_hellothere.get_hpr().get_x()+1,0,0);
+
 			player.camera.set_pos(0,0,6);
 			player.camera.set_hpr(0,0,0);
-			
-			nd_hellothere.set_hpr(nd_hellothere.get_hpr().get_x()+1,0,0);
 		}
 		else if (world.menuStatus==world.ms_game){
 			nd_hellothere.hide();
@@ -1053,7 +1047,6 @@ int main(int argc, char *argv[]) {
 		//Things to do every frame regardless of menu status
 		if (keys.showFPS){
 			if (frameDelay>30){
-				//cout<<world.dt<<" "<<1/world.dt<<endl;
 				savedt+=(int)(1/world.dt);
 				frameDelay =0;
 				frameDelayCount++;
@@ -1064,11 +1057,12 @@ int main(int argc, char *argv[]) {
 				savedt=0.0;
 			}
 			fpsNodePath.show();
+
+			frameDelay++;
 		} else{
 			fpsNodePath.hide();
 		}
 
-		frameDelay++;
 
 		world.dt = globalClock -> get_real_time() - world.preTime;
 		world.preTime = globalClock -> get_real_time();
@@ -1112,8 +1106,6 @@ void jump(const Event* eventPtr, void* dataPtr){
 		}
 		//player.coll_grav->set_velocity(25.0);
 		world.tickCount=121;
-		
-		
 	}
 }
 
@@ -1137,21 +1129,11 @@ void toggle(const Event* eventPtr, void* dataPtr){
 }
 
 void toggleHitBox(const Event* eventPtr, void* dataPtr){
-	if (player.hitbox){
-		player.hitbox=false;
-	}
-	else{
-		player.hitbox=true;
-	}
+	player.hitbox = 1 - player.hitbox;
 }
 
 void toggleDoubleJump(const Event* eventPtr, void* dataPtr){
-	if (player.doublejump){
-		player.doublejump=false;
-	}
-	else{
-		player.doublejump=true;
-	}
+	player.doublejump = 1-player.doublejump;
 }
 
 void toggleOptionMenu(const Event* eventPtr, void* dataPtr){
@@ -1510,7 +1492,6 @@ void onMouse1(const Event* eventPtr, void* dataPtr){
 										dmg=dmg*(1+(player.kills/50)+(player.xp/1000));
 										
 										enems[i]->health-=dmg;
-										//cout<<enems[i]->health<<endl;
 										
 										if (dmg>0){
 											enems[i]->tint=1.0;
@@ -1672,25 +1653,23 @@ void makePistol(int x, int y, int z,NodePath* parentNode){
 }
 
 void makeKalashnikov(int x, int y, int z,NodePath* parentNode){
-	WeaponObject* ak47 = new WeaponObject('g',x,y,z,8.0f,1.0f, mydir+"blenderFiles/AK47.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
+	WeaponObject* ak47 = new WeaponObject('g',x,y,z,3.1f,2.0f, mydir+"blenderFiles/AK47.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/ak47icon.png",24.0,10);
 	ak47->weapon_init(24,25.0,1.0,0,64,1);
 	itms.push_back(ak47);
 }
 
 void makeNegev(int x, int y, int z,NodePath* parentNode){
-	WeaponObject* nedgev = new WeaponObject('g',x,y,z,17.0f,2.0f, mydir+"blenderFiles/negevitem.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/negevicon.png",140.0,11);
+	WeaponObject* nedgev = new WeaponObject('g',x,y,z,7.6f,3.0f, mydir+"blenderFiles/negevitem.egg",parentNode,window,window->get_panda_framework(),1.0f,1,0,0,1.5f,0,mydir+"blenderFiles/negevicon.png",140.0,11);
 	nedgev->weapon_init(140,27.0,1.0,0,560,1);
 	itms.push_back(nedgev);
 }
 
 void makeSpider(int x, int y, int z, NodePath* parentNode){
-	
 	Enemy* romar = new Enemy;
 	romar->set_up(parentNode, window, window->get_panda_framework(), mydir+"Assets/INSECT/insect.egg",50.0,x,y,z,15.0,40,24,0,10.0,50);
 	romar->init();
 	romar->coll_set_up(1000);
 	enems.push_back(romar);
-	cout<<"Spider!"<<endl;
 }
 
 void makeBandit(int x, int y, int z, NodePath* parentNode){
@@ -1699,7 +1678,6 @@ void makeBandit(int x, int y, int z, NodePath* parentNode){
 	bryan->init();
 	bryan->coll_set_up(1000);
 	enems.push_back(bryan);
-	
 }
 
 void makeWaterbottle(int x, int y, int z,NodePath* parentNode){

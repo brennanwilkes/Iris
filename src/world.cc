@@ -29,14 +29,14 @@ World::World(){
 	deathFogIncrease = 0.0;
 	deathMessageList = {
 		////////////////max length
-		"Oh, you are slain",
-		"Wasted",
-		":(",
-		"RIP"
+		"You have died"
+		//"Oh, you are slain",
+		//"Wasted",
+		//":(",
+		//"RIP"
 	};
 	
-	menuStatus = 3;
-	//ms = {ms_game=0, ms_pause=1, ms_option=2, ms_start=3, ms_optionfromstart=4, ms_deathfog=5, ms_dead=6};
+	menuStatus = 3; //ms = {ms_game=0, ms_pause=1, ms_option=2, ms_start=3, ms_optionfromstart=4, ms_deathfog=5, ms_dead=6};
 }
 
 void World::init(){
@@ -277,17 +277,12 @@ void World::draw(){
 
 void World::get_keys(MouseWatcher* mw, map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	for (auto& k:keybinds)
-		if (mw -> is_button_down((k.second).first))
-			(k.second).second = true;
-		else
-			(k.second).second = false;
+		(k.second).second = mw -> is_button_down((k.second).first);
 }
 
 void World::look(WindowFramework *win, float mouseSens){
-
 	GraphicsWindow *gw = win -> get_graphics_window();
-	if (gw)
-	{
+	if (gw){
 		int dx = (gw -> get_properties().get_x_size() / 2) - gw -> get_pointer(0).get_x();
 		int dy = (gw -> get_properties().get_y_size() / 2) - gw -> get_pointer(0).get_y();
 
@@ -382,11 +377,12 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 	*/
 	
 	
-	if (dx != 0  || dy != 0)
-	{
+	if (dx != 0  || dy != 0){
 		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
 		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1 || player.main_collection.which_anim_playing()=="idle"){
-			player.main_collection.play("walk");
+			if(player.coll_grav->get_airborne_height()<0.2){
+				player.main_collection.play("walk");
+			}
 		}
 		//cout<<"walk"<<endl;
 		player.model.set_hpr(rot+spin, 0, 0);
@@ -395,8 +391,9 @@ void World::move(map <std::string, pair<ButtonHandle, bool> > &keybinds){
 		//cout<<"idle"<<endl;
 		//cout<<player.main_collection.get_frame()<<" - "<<player.main_collection.get_num_frames()<<endl;
 		if(player.main_collection.get_frame()-player.main_collection.get_num_frames()==-1 || player.main_collection.which_anim_playing()=="walk"){
-			player.main_collection.play("idle");
-			//cout<<"start idle"<<endl;
+			if(player.coll_grav->get_airborne_height()<0.2){
+				player.main_collection.play("idle");
+			}
 		}
 	}
 	

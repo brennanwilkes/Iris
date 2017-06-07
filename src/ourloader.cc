@@ -55,11 +55,11 @@ void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf){
 			StaticObject* wall = new StaticObject(stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),mydir+i.second.get_tag("file"),&gameModels,window,pf,stoi(i.second.get_tag("h")),stoi(i.second.get_tag("p")),stoi(i.second.get_tag("r")),1.0);
 			//this may need to be push_backed to a vector idk tbh
 		}
-		else if (i.second.get_tag("class") == "Ammo"){
+		else if (i.second.get_tag("class") == "ammo_item"){
 				Item* Ammo= new Item('a',stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),1.0f,1.0f, mydir+i.second.get_tag("file"),&gameModels,w,pf,0.5f,1,0,0,1.5f,0,mydir+i.second.get_tag("icon"),stoi(i.second.get_tag("amo")),stoi(i.second.get_tag("id")));
 				itms.push_back(Ammo);
 		}
-		else if (i.second.get_tag("class") == "Enemy"){
+		else if (i.second.get_tag("class") == "enemy"){
 			Enemy* romar = new Enemy;
 			
 			//romar->set_up(parentNode, window, window->get_panda_framework(), mydir+"Assets/INSECT/insect.egg",50.0,x,y,z,15.0,40,24,0,10.0);
