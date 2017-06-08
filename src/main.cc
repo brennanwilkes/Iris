@@ -945,9 +945,9 @@ int main(int argc, char *argv[]) {
 			}
 			player.volumeNodePath.show();
 			player.weightNodePath.show();
-			//Main Game
 			player.handDisplay.show();
-			
+
+			//Main Game
 			world.get_keys(mouseWatcher, keys.keybinds); // updates keybinds held status . THIS SHOULD BE DONE FIRST
 			world.look(window, keys.mouseSens);
 			world.move(keys.keybinds);

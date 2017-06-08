@@ -570,6 +570,8 @@ void World::menuOption(){
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
+		player.handDisplay.show();
+
 		startMenuItems.hide();
 		gameModels.hide();
 		menuItems.show();
@@ -618,6 +620,7 @@ void World::menuStart(){
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
+		player.handDisplay.hide();
 		startMenuItems.show();
 		gameModels.hide();
 		menuItems.hide();
