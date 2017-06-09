@@ -124,9 +124,14 @@ void Level::load(string filename){
 			cout << "\tClass type " << data[0] << " not valid" << endl;
 			continue;
 		}
-		NodePath temp_model;
-		for (unsigned int i(0); i < min( (Level::used_dat[data[0]]).size() + 2, data.size() ); ++i)
+		NodePath temp_model("Temp_node");
+		cout << "Level size: " << Level::used_dat[data[0]].size() << endl;
+		cout << "Data size: " << data.size() << endl;
+		cout << "Caleb: " << min( (Level::used_dat[data[0]]).size(), data.size() );
+		for (unsigned int i(0); i < min( (Level::used_dat[data[0]]).size(), data.size() ); ++i)
 		{
+			
+			cout << "Setting tag, " << Level::used_dat[data[0]][i] << " to value of " << data[i+2] << endl;
 			temp_model.set_tag(Level::used_dat[data[0]][i], data[i + 2]);
 		}
 		add_model(temp_model);
