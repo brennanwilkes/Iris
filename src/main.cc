@@ -928,10 +928,6 @@ int main(int argc, char *argv[]) {
 	
 	
 	
-	Level firstlevel;
-	firstlevel.load("levelCreator/level.brennan");
-	gameloader.load_level(firstlevel,window,&framework);
-	
 	
 	
 	
@@ -1111,6 +1107,10 @@ void startGame(const Event* eventPtr, void* dataPtr){
 }
 
 void loadGame(const Event* eventPtr, void* dataPtr){
+	Level firstlevel;
+	firstlevel.load("levelCreator/level.brennan");
+	gameloader.load_level(firstlevel,window,window->get_panda_framework());
+	
 	cout << "load game" << endl;
 }
 
