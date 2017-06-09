@@ -338,6 +338,8 @@ int main(int argc, char *argv[]) {
 	//vector<string> Dir ={"Assets/starea/lag_.egg"};
 	//vector<NodePath> ND;
 
+	/*
+	
 	vector<string> Dir = {"Assets/Stage/Terrain_C.egg","Assets/Stage/SkyBox.egg","Assets/Stage/Grave.egg","Assets/Stage/Building_C.egg","Assets/Stage/Stone_C.egg","Assets/Stage/Ramp_C.egg","Assets/Stage/Stairs_C.egg","Assets/sphere/sphere.egg"};
 	
 	//vector<string> Dir = {"Assets/starea/lag_.egg"};
@@ -350,6 +352,11 @@ int main(int argc, char *argv[]) {
 		stats.push_back(new StaticObject(-8,42,0,mydir+x,&gameModels,window,&framework,0,0,0,2.6));
 		stats.back()->model.hide();
 	}
+	
+	*/
+	
+	//load static objects
+	
 	PT(CollisionNode) c_Node;
 	//ptrav.set_respect_prev_transform(true);
 
@@ -746,6 +753,8 @@ int main(int argc, char *argv[]) {
 	//////////////////////////////////////////////
 	doStep(&framework,Thread::get_current_thread());
 	
+	
+	/*
 	Level testlevel(0,0,0,5);
 	
 	ChangeRegion testregion(-10,10,-10,10,2,10,0);
@@ -753,6 +762,10 @@ int main(int argc, char *argv[]) {
 	testlevel.exits.push_back(testregion);
 	
 	gameLevels.push_back(&testlevel);
+	*/
+	
+	//example levels
+	
 	
 	
 	//Deprecated but useful notes so dont delete
@@ -896,6 +909,8 @@ int main(int argc, char *argv[]) {
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 	doStep(&framework,Thread::get_current_thread());
 	//Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodePath* parent,WindowFramework* w,PandaFramework* pf,float scale,int zzz,int xxx,int yyy,float rad,int zzzz)
+	
+	/*
 	makeKalashnikov(35, 0, 20,&gameModels);
 	makeNegev(30,0,20, &gameModels);
 	makeBat(15,0,20, &gameModels);
@@ -906,6 +921,18 @@ int main(int argc, char *argv[]) {
 	makeWaterbottle(45,5,20, &gameModels);
 	makeCheese(55,0,20, &gameModels);
 	makeAmmobox(0,5,20, &gameModels);
+	*/
+	// make the items
+	
+	
+	
+	
+	
+	Level firstlevel;
+	firstlevel.load("levelCreator/level.brennan");
+	gameloader.load_level(firstlevel,window,&framework);
+	
+	
 	
 	
 	
