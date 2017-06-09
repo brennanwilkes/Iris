@@ -617,6 +617,7 @@ void World::menuStart(){
 	
 	if (menuStatus==ms_start)
 	{
+		player.kaboom(gameModels);
 		if (player.arms!=NULL){
 			player.arms->hide();
 		}
