@@ -52,8 +52,9 @@ void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf){
 			itms.push_back(BOOZE);
 		}
 		else if (i.second.get_tag("class") == "static"){
+			//cout<<"Yesy"<<endl;
 			StaticObject* wall = new StaticObject(stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),mydir+i.second.get_tag("file"),&gameModels,window,pf,stoi(i.second.get_tag("h")),stoi(i.second.get_tag("p")),stoi(i.second.get_tag("r")),1.0);
-			
+			//wall->model.show();
 			stats.push_back(wall);
 			
 			//this may need to be push_backed to a vector idk tbh
