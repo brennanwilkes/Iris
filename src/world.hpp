@@ -45,12 +45,13 @@ public:
 	void menuOption();
 	void menuStart();
 	void menuDeath();
+	void menuLoad();
 	float deathFogIncrease;
 
 	std::vector<std::string> deathMessageList;
 	
 	int menuStatus;
-	enum ms  {ms_game, ms_pause, ms_option, ms_start, ms_optionfromstart, ms_deathfog, ms_dead};
+	enum ms  {ms_game, ms_pause, ms_option, ms_start, ms_optionfromstart, ms_deathfog, ms_dead, ms_load};
 
 //	static AsyncTask::DoneStatus	addToTime		(GenericAsyncTask* task, void* data);
 //	static AsyncTask::DoneStatus	CamLookTask		(GenericAsyncTask* task, void* data);
