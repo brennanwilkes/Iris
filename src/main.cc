@@ -42,6 +42,7 @@ https://www.panda3d.org/manual/index.php/Common_State_Changes
 //#include <tostring>
 #include <vector>
 #include <cmath>
+#include <fstream>
 
 // Please keep includes in alphabetical order from now on
 #include "ambientLight.h"
@@ -1164,14 +1165,25 @@ void loadGame(const Event* eventPtr, void* dataPtr){
 void loadLevel(const Event* eventPtr, void* dataPtr){
 	//load the selected world as selected by the button pressed - the button tag is the filename
 	string tag = keys.buttonIndex[eventPtr->get_name()]->get_name();
-
+	
+	
+	ifstream myfile("saves/"+tag+"/data");
+	
+	
+	string temp;
+	getline(myfile,temp);
+	myfile.close();
+	
 	Level firstlevel;
-	firstlevel.load("saves/"+tag+"/0.lvl");
+	firstlevel.load("saves/"+tag+"/"+temp+".lvl");
+	
+	cout<<"saves/"+tag+"/"+temp+".lvl"<<endl;
+	
 	if (tag == "spagoot"){
 		cout << "do not TOUCHH spagoot" << endl;
 	}
 
-	cout << "loading" <<  tag << endl;
+	cout << "loading " <<  tag << endl;
 
 	gameloader.load_level(firstlevel,window,window->get_panda_framework());
 	for (unsigned int i=0;i<stats.size();i++){
