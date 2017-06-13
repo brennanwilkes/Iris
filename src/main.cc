@@ -1148,6 +1148,7 @@ int main(int argc, char *argv[]) {
 
 
 void startGame(const Event* eventPtr, void* dataPtr){
+	/*
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
 	}
@@ -1156,6 +1157,25 @@ void startGame(const Event* eventPtr, void* dataPtr){
 	cout << "loading default" << endl;
 	gameloader.load_level(firstlevel,window,window->get_panda_framework());
 	world.menuStart();
+	*/
+	
+	string savename = "newstuff";
+	//Gather input from user
+	
+	
+	system(("cp -R saves/.default saves/"+savename).c_str());
+	
+	Level firstlevel;
+	firstlevel.load("saves/"+savename+"/0.lvl");
+	cout << "loading default" << endl;
+	gameloader.load_level(firstlevel,window,window->get_panda_framework());
+	for (unsigned int i=0;i<stats.size();i++){
+		stats[i]->model.show();
+	}
+	world.menuStart();
+	
+	
+	
 }
 
 void loadGame(const Event* eventPtr, void* dataPtr){
@@ -1166,25 +1186,14 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 	//load the selected world as selected by the button pressed - the button tag is the filename
 	string tag = keys.buttonIndex[eventPtr->get_name()]->get_name();
 	
-	
 	ifstream myfile("saves/"+tag+"/data");
-	
-	
 	string temp;
 	getline(myfile,temp);
 	myfile.close();
 	
 	Level firstlevel;
 	firstlevel.load("saves/"+tag+"/"+temp+".lvl");
-	
-	cout<<"saves/"+tag+"/"+temp+".lvl"<<endl;
-	
-	if (tag == "spagoot"){
-		cout << "do not TOUCHH spagoot" << endl;
-	}
-
 	cout << "loading " <<  tag << endl;
-
 	gameloader.load_level(firstlevel,window,window->get_panda_framework());
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
