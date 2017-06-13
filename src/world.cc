@@ -250,6 +250,9 @@ void World::draw(){
 		player.sphereModelTwo.hide();
 		player.rayModel.hide();
 		for (unsigned ij=0;ij<itms.size();ij++){
+			
+			// THESE CAUSE ASSERT FAILED
+			
 			itms[ij]->sphereModel.hide();
 			itms[ij]->sphereModelTwo.hide();
 			itms[ij]->rayModel.hide();

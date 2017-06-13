@@ -1151,7 +1151,7 @@ void startGame(const Event* eventPtr, void* dataPtr){
 		stats[i]->model.show();
 	}
 	Level firstlevel;
-	firstlevel.load("saves/.default");
+	firstlevel.load("saves/.default/0.lvl");
 	cout << "loading default" << endl;
 	gameloader.load_level(firstlevel,window,window->get_panda_framework());
 	world.menuStart();
@@ -1166,7 +1166,7 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 	string tag = keys.buttonIndex[eventPtr->get_name()]->get_name();
 
 	Level firstlevel;
-	firstlevel.load("saves/"+tag);
+	firstlevel.load("saves/"+tag+"/0.lvl");
 	if (tag == "spagoot"){
 		cout << "do not TOUCHH spagoot" << endl;
 	}
