@@ -1204,6 +1204,30 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 
 void saveLevel(const Event* eventPtr, void* dataPtr){
 	cout <<"save level not working yet" << endl;
+	
+	//sudo for saving
+	/*
+	
+	Determine what level # you're on. This should be saved in the Level object possibly under level.id
+	update your save's "data" file with this number
+	
+	gather all satics, items, gameobjects etc etc
+	write them to a file
+	
+	we need a function which works in opposite to level.load()
+	
+	
+	
+	
+	eventually we should write player data to the data file too
+	this funtion doesnt need to be dynamic it can literally be like
+		write to da file ( player.x player.y player.z ) 
+		write to da file ( player.h player.p player.r ) 
+		write to da file ( player.kills player.deaths ) 
+	
+	
+	*/
+	
 }
 
 void sys_exit(const Event* eventPtr, void* dataPtr){
