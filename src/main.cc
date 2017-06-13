@@ -42,6 +42,7 @@ https://www.panda3d.org/manual/index.php/Common_State_Changes
 //#include <tostring>
 #include <vector>
 #include <cmath>
+#include <fstream>
 
 // Please keep includes in alphabetical order from now on
 #include "ambientLight.h"
@@ -113,6 +114,7 @@ NodePath startMenuItems;
 NodePath menuItems;
 NodePath optionMenuItems;
 NodePath deathMenuItems;
+NodePath loadMenuItems;
 NodePath staticModels;
 PT(PGSliderBar) Slider=new PGSliderBar("MySliderBar");;
 PT(PGSliderBar) mouseSlider=new PGSliderBar("mouseSliderBar");;
@@ -128,6 +130,8 @@ WindowFramework* window;
 // Forward declared functions
 void startGame(const Event* eventPtr, void* dataPtr);
 void loadGame(const Event* eventPtr, void* dataPtr);
+void loadLevel(const Event* eventPtr, void* dataPtr);
+void saveLevel(const Event* eventPtr, void* dataPtr);
 void sys_exit(const Event* eventPtr, void* dataPtr);
 void toggle(const Event* eventPtr, void* dataPtr);
 void toggleHitBox(const Event* eventPtr, void* dataPtr);
@@ -286,6 +290,8 @@ int main(int argc, char *argv[]) {
 	optionMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
 	deathMenuItems = window -> get_aspect_2d().attach_new_node("Death Menu Buttons");
 	deathMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
+	loadMenuItems = window -> get_aspect_2d().attach_new_node("Load Menu Buttons");
+	loadMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
 	
 	doStep(&framework,Thread::get_current_thread());
 	
@@ -366,13 +372,14 @@ int main(int argc, char *argv[]) {
 
 	doStep(&framework,Thread::get_current_thread());
 
+
+
 	// Start Menu items
 	PGButton* StartGameButton;
 	PGButton* loadGameButton;
 	PGButton* realQuitButton;
 	PGButton* OptionTogButton3;
 	startMenuItems.hide();
-
 
 	/*
 	PT(Texture) tex_hellothere;
@@ -394,7 +401,6 @@ int main(int argc, char *argv[]) {
 	
 	nd_hellothere.hide();
 	
-	
 	AnimControlCollection start_anim_collection;
 	NodePath loadnode2 = window->load_model(nd_hellothere, mydir + "Assets/Iris/Iris-Idle.egg");
 	auto_bind(nd_hellothere.node(), start_anim_collection);
@@ -405,9 +411,8 @@ int main(int argc, char *argv[]) {
 	
 	doStep(&framework,Thread::get_current_thread());
 
-
 	StartGameButton = new PGButton("StartGameButton");
-	StartGameButton -> setup("Start Game");
+	StartGameButton -> setup("New Game");
 	NodePath bnp = window -> get_pixel_2d().attach_new_node(StartGameButton);
 	bnp.set_scale(0.1);
 	bnp.set_pos(xs + 0.1, 0, 0.85);
@@ -441,7 +446,8 @@ int main(int argc, char *argv[]) {
 	keys.buttonIndex["click-mouse1-"+OptionTogButton3->get_id()] = OptionTogButton3;
 
 	doStep(&framework,Thread::get_current_thread());
-	
+
+
 
 
 	// Menu items
@@ -449,16 +455,18 @@ int main(int argc, char *argv[]) {
 	PGButton* HitTogButton;
 	PGButton* DoubleTogButton;
 	PGButton* OptionTogButton;
+	PGButton* SaveButton;
 	menuItems.hide();
 
+	OptionTogButton = new PGButton("OptionTogButton");
+	OptionTogButton -> setup("Toggle Option Menu");
+	NodePath defbutNP5 = window -> get_pixel_2d().attach_new_node(OptionTogButton);
+	defbutNP5.set_scale(0.1);
+	defbutNP5.set_pos(xs + 0.1, 0, 0.85);
+	defbutNP5.reparent_to(menuItems);
+	keys.buttonIndex["click-mouse1-"+OptionTogButton->get_id()] = OptionTogButton;
 
-	QuitButton = new PGButton("MenuButton");
-	QuitButton -> setup("Main Menu");
-	NodePath defbutNP = window -> get_pixel_2d().attach_new_node(QuitButton);
-	defbutNP.set_scale(0.1);
-	defbutNP.set_pos(xs+0.1,0, 0.25);
-	defbutNP.reparent_to(menuItems);
-	keys.buttonIndex["click-mouse1-"+QuitButton->get_id()] = QuitButton;
+	doStep(&framework,Thread::get_current_thread());
 
 	HitTogButton = new PGButton("HitTogButton");
 	HitTogButton -> setup("Toggle Hit Boxes");
@@ -476,13 +484,21 @@ int main(int argc, char *argv[]) {
 	defbutNP4.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+DoubleTogButton->get_id()] = DoubleTogButton;
 
-	OptionTogButton = new PGButton("OptionTogButton");
-	OptionTogButton -> setup("Toggle Option Menu");
-	NodePath defbutNP5 = window -> get_pixel_2d().attach_new_node(OptionTogButton);
-	defbutNP5.set_scale(0.1);
-	defbutNP5.set_pos(xs + 0.1, 0, 0.85);
-	defbutNP5.reparent_to(menuItems);
-	doStep(&framework,Thread::get_current_thread());
+	SaveButton = new PGButton("SaveButton");
+	SaveButton -> setup("Save Game");
+	NodePath defbutNP9000 = window -> get_pixel_2d().attach_new_node(SaveButton);
+	defbutNP9000.set_scale(0.1);
+	defbutNP9000.set_pos(xs+0.1,0, 0.25);
+	defbutNP9000.reparent_to(menuItems);
+	keys.buttonIndex["click-mouse1-"+SaveButton->get_id()] = SaveButton;
+
+	QuitButton = new PGButton("MenuButton");
+	QuitButton -> setup("Main Menu");
+	NodePath defbutNP = window -> get_pixel_2d().attach_new_node(QuitButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs+0.1,0, 0.05);
+	defbutNP.reparent_to(menuItems);
+	keys.buttonIndex["click-mouse1-"+QuitButton->get_id()] = QuitButton;
 
 
 	//Option Menu Items
@@ -490,13 +506,13 @@ int main(int argc, char *argv[]) {
 	PGButton* mouseSensBut;
 	optionMenuItems.hide();
 
-
 	OptionTogButton2 = new PGButton("OptionTogButton");
 	OptionTogButton2 -> setup("Toggle Option Menu");
 	NodePath defbutNP6 = window -> get_pixel_2d().attach_new_node(OptionTogButton2);
 	defbutNP6.set_scale(0.1);
 	defbutNP6.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP6.reparent_to(optionMenuItems);
+	keys.buttonIndex["click-mouse1-"+OptionTogButton2->get_id()] = OptionTogButton2;
 
 	for (unsigned int i=0; i<keys.keybindItems.size(); i++){
 		doStep(&framework,Thread::get_current_thread());
@@ -530,11 +546,11 @@ int main(int argc, char *argv[]) {
 	defbutNPmous.reparent_to(optionMenuItems);
 
 
+
 	//Death Menu Items
 	PGButton* respawnButton;
 	PGButton* restartButton;
 	deathMenuItems.hide();
-
 
 	respawnButton = new PGButton("respawnButton");
 	respawnButton -> setup("Respawn");
@@ -560,6 +576,41 @@ int main(int argc, char *argv[]) {
 	deathMessage.hide();
 
 	doStep(&framework,Thread::get_current_thread());
+
+
+
+	//Load Menu Items
+	PGButton* MainMenuReturnButton;
+	loadMenuItems.hide();
+
+	MainMenuReturnButton = new PGButton("MainMenuReturnButton");
+	MainMenuReturnButton -> setup("Main Menu");
+	NodePath defbutNP69 = window -> get_pixel_2d().attach_new_node(MainMenuReturnButton);
+	defbutNP69.set_scale(0.1);
+	defbutNP69.set_pos(xs + 0.1, 0, 0.85);
+	defbutNP69.reparent_to(loadMenuItems);
+
+	pvector <string> saveFiles;
+	Filename saveDir = mydir+"saves/";
+	saveDir.scan_directory(saveFiles); //remember to sensitize inputs
+	
+	for (unsigned int i=0; i<saveFiles.size(); i++){
+		if (saveFiles.at(i) == ".default"){
+			i--;
+			continue;
+		}
+		doStep(&framework,Thread::get_current_thread());
+		PGButton* butt;
+		butt = new PGButton(saveFiles.at(i));
+		butt -> setup("Load " + saveFiles.at(i));
+		NodePath LoadBindNode = window -> get_pixel_2d().attach_new_node(butt);
+		LoadBindNode.set_scale(0.1);
+		LoadBindNode.set_pos(xs+0.1*(i/11*8+1),0,0.85-(.15*(i%11+1)));
+		LoadBindNode.reparent_to(loadMenuItems);
+		window -> get_panda_framework() -> define_key(butt->get_click_event(keys.keybinds["use"].first ), "Load " + saveFiles.at(i)+" Press",&loadLevel, butt);
+		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
+	}
+
 
 
 	//Status bar items
@@ -656,7 +707,6 @@ int main(int argc, char *argv[]) {
 	fpsNodePath.hide();
 
 	doStep(&framework,Thread::get_current_thread());
-
 
 
 	//This is example code for fancy buttons. Dont delete
@@ -887,11 +937,14 @@ int main(int argc, char *argv[]) {
 
 	window -> get_panda_framework() -> define_key(StartGameButton->get_click_event(keys.keybinds["use"].first ), "Start game button press", &startGame, NULL);
 	window -> get_panda_framework() -> define_key(loadGameButton->get_click_event(keys.keybinds["use"].first ), "Load game button press", &loadGame, NULL);
+	window -> get_panda_framework() -> define_key(MainMenuReturnButton->get_click_event(keys.keybinds["use"].first ), "Main menu from load button press", &loadGame, NULL);
+
 	window -> get_panda_framework() -> define_key(realQuitButton->get_click_event(keys.keybinds["use"].first ), "Quit button press", &sys_exit, realQuitButton);
 	//MouseButton::one()
 	window -> get_panda_framework() -> define_key(QuitButton->get_click_event(keys.keybinds["use"].first ), "Menu button press", &startGame, QuitButton);
 	window -> get_panda_framework() -> define_key(HitTogButton->get_click_event(keys.keybinds["use"].first ), "Hitbox button press", &toggleHitBox, HitTogButton);
 	window -> get_panda_framework() -> define_key(DoubleTogButton->get_click_event(keys.keybinds["use"].first ), "Double jump button press", &toggleDoubleJump, DoubleTogButton);
+	window -> get_panda_framework() -> define_key(SaveButton->get_click_event(keys.keybinds["use"].first ), "Save button press", &saveLevel, SaveButton);
 
 	window -> get_panda_framework() -> define_key(OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton);
 	window -> get_panda_framework() -> define_key(OptionTogButton2->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton2);
@@ -923,20 +976,9 @@ int main(int argc, char *argv[]) {
 	makeAmmobox(0,5,20, &gameModels);
 	*/
 	// make the items
-	
-	
-	
-	
-	
-	Level firstlevel;
-	firstlevel.load("levelCreator/level.brennan");
-	gameloader.load_level(firstlevel,window,&framework);
-	
-	
-	
-	
-	
-	
+
+
+
 	// Start the loop / gameoptionMe
 	//Thread *current_thread = Thread::get_current_thread();
 	world.init();
@@ -1062,6 +1104,7 @@ int main(int argc, char *argv[]) {
 			nd_crosshair.hide();
 		}
 		else{
+			nd_hellothere.hide();
 			player.handDisplay.hide();
 			player.volumeNodePath.hide();
 			player.weightNodePath.hide();
@@ -1103,15 +1146,89 @@ int main(int argc, char *argv[]) {
 	return (0);
 }
 
+
 void startGame(const Event* eventPtr, void* dataPtr){
+	/*
+	for (unsigned int i=0;i<stats.size();i++){
+		stats[i]->model.show();
+	}
+	Level firstlevel;
+	firstlevel.load("saves/.default/0.lvl");
+	cout << "loading default" << endl;
+	gameloader.load_level(firstlevel,window,window->get_panda_framework());
+	world.menuStart();
+	*/
+	
+	string savename = "newstuff";
+	//Gather input from user
+	
+	
+	system(("cp -R saves/.default saves/"+savename).c_str());
+	
+	Level firstlevel;
+	firstlevel.load("saves/"+savename+"/0.lvl");
+	cout << "loading default" << endl;
+	gameloader.load_level(firstlevel,window,window->get_panda_framework());
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
 	}
 	world.menuStart();
+	
+	
+	
 }
 
 void loadGame(const Event* eventPtr, void* dataPtr){
-	cout << "load game" << endl;
+	world.menuLoad();
+}
+
+void loadLevel(const Event* eventPtr, void* dataPtr){
+	//load the selected world as selected by the button pressed - the button tag is the filename
+	string tag = keys.buttonIndex[eventPtr->get_name()]->get_name();
+	
+	ifstream myfile("saves/"+tag+"/data");
+	string temp;
+	getline(myfile,temp);
+	myfile.close();
+	
+	Level firstlevel;
+	firstlevel.load("saves/"+tag+"/"+temp+".lvl");
+	cout << "loading " <<  tag << endl;
+	gameloader.load_level(firstlevel,window,window->get_panda_framework());
+	for (unsigned int i=0;i<stats.size();i++){
+		stats[i]->model.show();
+	}
+	cout << "starting game" << endl;
+	world.menuStart();
+}
+
+void saveLevel(const Event* eventPtr, void* dataPtr){
+	cout <<"save level not working yet" << endl;
+	
+	//sudo for saving
+	/*
+	
+	Determine what level # you're on. This should be saved in the Level object possibly under level.id
+	update your save's "data" file with this number
+	
+	gather all satics, items, gameobjects etc etc
+	write them to Nodepaths
+	
+	we need a function which works in opposite to ourloader.load()
+	then run level.save()
+	
+	
+	
+	
+	eventually we should write player data to the data file too
+	this funtion doesnt need to be dynamic it can literally be like
+		write to da file ( player.x player.y player.z ) 
+		write to da file ( player.h player.p player.r ) 
+		write to da file ( player.kills player.deaths ) 
+	
+	
+	*/
+	
 }
 
 void sys_exit(const Event* eventPtr, void* dataPtr){

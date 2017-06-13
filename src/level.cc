@@ -104,7 +104,7 @@ void Level::save(string filename, bool ov){
 void Level::load(string filename){
 	if (!file_exists(filename))
 	{
-		std::cout << "Level, " << filename << " does not exist!";
+		std::cout << "Level, " << filename << " does not exist!"<<endl;
 		return;
 	}
 	
