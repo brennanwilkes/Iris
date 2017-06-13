@@ -1212,9 +1212,10 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	update your save's "data" file with this number
 	
 	gather all satics, items, gameobjects etc etc
-	write them to a file
+	write them to Nodepaths
 	
-	we need a function which works in opposite to level.load()
+	we need a function which works in opposite to ourloader.load()
+	then run level.save()
 	
 	
 	
