@@ -1131,34 +1131,31 @@ int main(int argc, char *argv[]) {
 
 
 void startGame(const Event* eventPtr, void* dataPtr){
-	if (world.menuStatus != world.ms_start){
+	if (world.menuStatus == world.ms_start){
+		/*
+		for (unsigned int i=0;i<stats.size();i++){
+			stats[i]->model.show();
+		}
+		Level firstlevel;
+		firstlevel.load("saves/.default/0.lvl");
+		cout << "loading default" << endl;
+		gameloader.load_level(firstlevel,window,window->get_panda_framework());
 		world.menuStart();
-		return;
-	}
-	/*
-	for (unsigned int i=0;i<stats.size();i++){
-		stats[i]->model.show();
-	}
-	Level firstlevel;
-	firstlevel.load("saves/.default/0.lvl");
-	cout << "loading default" << endl;
-	gameloader.load_level(firstlevel,window,window->get_panda_framework());
-	world.menuStart();
-	*/
-	
-	string savename;
-	//Gather input from user
-	cout << "new save name: " << endl;
-	cin >> savename;
-	
-	system(("cp -R saves/.default saves/"+savename).c_str());
-	
-	Level firstlevel;
-	firstlevel.load("saves/"+savename+"/0.lvl");
-	cout << "loading default" << endl;
-	gameloader.load_level(firstlevel,window,window->get_panda_framework());
-	for (unsigned int i=0;i<stats.size();i++){
-		stats[i]->model.show();
+		*/
+		string savename;
+		//Gather input from user
+		cout << "new save name: ";
+		cin >> savename;
+		
+		system(("cp -R saves/.default saves/"+savename).c_str());
+		
+		Level firstlevel;
+		firstlevel.load("saves/"+savename+"/0.lvl");
+		cout << "loading default" << endl;
+		gameloader.load_level(firstlevel,window,window->get_panda_framework());
+		for (unsigned int i=0;i<stats.size();i++){
+			stats[i]->model.show();
+		}
 	}
 	world.menuStart();
 }
@@ -1172,7 +1169,7 @@ void loadGame(const Event* eventPtr, void* dataPtr){
 
 		saveDir.scan_directory(saveFiles); //remember to sensitize inputs
 		int babies = loadMenuItems.get_num_children();
-		for (unsigned i=1; i<babies; i++){
+		for (int i=1; i<babies; i++){
 			loadMenuItems.get_child(i).hide();
 		}
 		for (unsigned int i=0; i<saveFiles.size(); i++){
