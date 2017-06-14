@@ -580,6 +580,7 @@ int main(int argc, char *argv[]) {
 
 
 	//Load Menu Items
+	//All in loadGame now
 	PGButton* MainMenuReturnButton;
 	loadMenuItems.hide();
 
@@ -590,28 +591,10 @@ int main(int argc, char *argv[]) {
 	defbutNP69.set_pos(xs + 0.1, 0, 0.85);
 	defbutNP69.reparent_to(loadMenuItems);
 
-	pvector <string> saveFiles;
-	Filename saveDir = mydir+"saves/";
-	saveDir.scan_directory(saveFiles); //remember to sensitize inputs
 	
-	for (unsigned int i=0; i<saveFiles.size(); i++){
-		if (saveFiles.at(i) == ".default"){
-			i--;
-			continue;
-		}
-		doStep(&framework,Thread::get_current_thread());
-		PGButton* butt;
-		butt = new PGButton(saveFiles.at(i));
-		butt -> setup("Load " + saveFiles.at(i));
-		NodePath LoadBindNode = window -> get_pixel_2d().attach_new_node(butt);
-		LoadBindNode.set_scale(0.1);
-		LoadBindNode.set_pos(xs+0.1*(i/11*8+1),0,0.85-(.15*(i%11+1)));
-		LoadBindNode.reparent_to(loadMenuItems);
-		window -> get_panda_framework() -> define_key(butt->get_click_event(keys.keybinds["use"].first ), "Load " + saveFiles.at(i)+" Press",&loadLevel, butt);
-		keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
-	}
+	//the load menu file buttons are made in loadGame
 
-
+	doStep(&framework,Thread::get_current_thread());
 
 	//Status bar items
 	PT(Texture) redTex=TexturePool::load_texture(mydir+"Assets/Red.png");
@@ -1148,6 +1131,10 @@ int main(int argc, char *argv[]) {
 
 
 void startGame(const Event* eventPtr, void* dataPtr){
+	if (world.menuStatus != world.ms_start){
+		world.menuStart();
+		return;
+	}
 	/*
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
@@ -1159,9 +1146,10 @@ void startGame(const Event* eventPtr, void* dataPtr){
 	world.menuStart();
 	*/
 	
-	string savename = "newstuff";
+	string savename;
 	//Gather input from user
-	
+	cout << "new save name: " << endl;
+	cin >> savename;
 	
 	system(("cp -R saves/.default saves/"+savename).c_str());
 	
@@ -1173,27 +1161,53 @@ void startGame(const Event* eventPtr, void* dataPtr){
 		stats[i]->model.show();
 	}
 	world.menuStart();
-	
-	
-	
 }
 
 void loadGame(const Event* eventPtr, void* dataPtr){
+	if (world.menuStatus == world.ms_start){
+		float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
+		Filename saveDir = mydir+"saves/";
+		pvector <string> saveFiles;
+
+
+		saveDir.scan_directory(saveFiles); //remember to sensitize inputs
+		int babies = loadMenuItems.get_num_children();
+		for (unsigned i=1; i<babies; i++){
+			loadMenuItems.get_child(i).hide();
+		}
+		for (unsigned int i=0; i<saveFiles.size(); i++){
+			if (saveFiles.at(i) == ".default"){
+				i--;
+				continue;
+			}
+			PGButton* butt;
+			butt = new PGButton(saveFiles.at(i));
+			butt -> setup("Load " + saveFiles.at(i));
+			NodePath LoadBindNode = window -> get_pixel_2d().attach_new_node(butt);
+			LoadBindNode.set_scale(0.1);
+			LoadBindNode.set_pos(xs+0.1*(i/11*8+1),0,0.85-(.15*(i%11+1)));
+			LoadBindNode.reparent_to(loadMenuItems);
+			window -> get_panda_framework() -> define_key(butt->get_click_event(keys.keybinds["use"].first ), "Load " + saveFiles.at(i)+" Press",&loadLevel, butt);
+			keys.buttonIndex["click-mouse1-"+butt->get_id()] = butt;
+		}
+	}
 	world.menuLoad();
 }
 
 void loadLevel(const Event* eventPtr, void* dataPtr){
 	//load the selected world as selected by the button pressed - the button tag is the filename
-	string tag = keys.buttonIndex[eventPtr->get_name()]->get_name();
+	string saveName = keys.buttonIndex[eventPtr->get_name()]->get_name();
 	
-	ifstream myfile("saves/"+tag+"/data");
-	string temp;
-	getline(myfile,temp);
+	ifstream myfile("saves/"+saveName+"/data");
+	string currentLevel;
+	getline(myfile,currentLevel);
 	myfile.close();
 	
 	Level firstlevel;
-	firstlevel.load("saves/"+tag+"/"+temp+".lvl");
-	cout << "loading " <<  tag << endl;
+	firstlevel.load("saves/"+saveName+"/"+currentLevel+".lvl");
+	cout << "loading " <<  saveName << endl;
+
+	//load the level
 	gameloader.load_level(firstlevel,window,window->get_panda_framework());
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
@@ -1205,7 +1219,7 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 void saveLevel(const Event* eventPtr, void* dataPtr){
 	cout <<"save level not working yet" << endl;
 	
-	//sudo for saving
+	//pseudo for saving
 	/*
 	
 	Determine what level # you're on. This should be saved in the Level object possibly under level.id
