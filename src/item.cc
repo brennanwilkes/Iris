@@ -97,6 +97,10 @@ Item::Item(char t,int xx,int yy,int zz,float wei,float vol, std::string fn,NodeP
 	imgTex=TexturePool::load_texture(fn2);
 	imgNode.set_texture(imgTex);
 	imgNode.hide();
+	
+	filename=fn;
+	imgName=fn2;
+	
 }
 void Item::action1(){
 	cout<<"error, action for item not handled"<<endl;

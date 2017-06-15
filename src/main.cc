@@ -1198,19 +1198,21 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 	getline(myfile,currentLevel);
 	myfile.close();
 	
-	Level firstlevel;
-	firstlevel.load("saves/"+saveName+"/"+currentLevel+".lvl");
+	//Level firstlevel;
+	gameLevel = new Level;
+	
+	gameLevel->load("saves/"+saveName+"/"+currentLevel+".lvl");
 	cout << "loading " <<  saveName << endl;
 
 	//load the level
-	gameloader.load_level(firstlevel,window,window->get_panda_framework());
+	gameloader.load_level(*gameLevel,window,window->get_panda_framework());
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
 	}
 	cout << "starting game" << endl;
 	world.menuStart();
 	
-	gameLevel=&firstlevel;
+	//gameLevel=&firstlevel;
 	
 }
 
@@ -1262,7 +1264,7 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	
 	// new temp nodepath(name)
 	// uuid = level.add_model(node)
-
+	gameLevel->clear();
 	
 	for (int i=0;i<itms.size();i++){
 		NodePath danode(itms[i]->filename);
@@ -1284,6 +1286,8 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		danode.set_tag("amo",to_string(itms[i]->volume));
 		danode.set_tag("id",to_string(itms[i]->amount));
 		
+		danode.set_tag("type",to_string(itms[i]->type));
+		
 		danode.set_tag("class", "food_item");
 		
 		//cout<<gameLevel<<endl;
@@ -1293,10 +1297,10 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	
 	}
 	
-	string savename;
+	/*string savename;
 	cout << "new save name: ";
-	cin >> savename;
-	gameLevel->save(savename,false);
+	cin >> savename;*/
+	gameLevel->save(savedir+to_string(scene)+".lvl",true);
 	
 	
 	
