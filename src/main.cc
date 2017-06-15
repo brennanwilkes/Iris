@@ -1124,13 +1124,37 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		
 		danode.set_tag("type",to_string(itms[i]->type));
 		
-		danode.set_tag("class", "food_item");
-		
-		//cout<<gameLevel<<endl;
-		
+		if(itms[i]->type=='g'){
+			danode.set_tag("class", "weapon");
+			//danode.set_tag("max", "weapon");
+			//danode.set_tag("rate", "weapon");
+			//danode.set_tag("ammo", "weapon");
+			//FIGURE OUT A WAY TO DO THESE
+		}
+		else if (itms[i]->type=='c'){
+			if(itms[i]->id==1){
+				danode.set_tag("class", "health_item");
+			}
+			//ADD MORE IDS WITH WHICH ITEM TYPE THEY ARE
+		}
 		string uuid=gameLevel->add_model(danode);
+	}
 	
-	
+	for (int i=0;i<stats.size();i++){
+		NodePath danode(stats[i]->filename);
+		//danode.set_tag("tag","data");
+		danode.set_tag("x",to_string(stats[i]->model.get_x()));
+		danode.set_tag("y",to_string(stats[i]->model.get_y()));
+		danode.set_tag("z",to_string(stats[i]->model.get_z()));
+		danode.set_tag("h",to_string(stats[i]->model.get_h()));
+		danode.set_tag("p",to_string(stats[i]->model.get_p()));
+		danode.set_tag("r",to_string(stats[i]->model.get_r()));
+		danode.set_tag("s",to_string(stats[i]->model.get_scale().get_x()));
+		
+		danode.set_tag("file",stats[i]->filename);
+		
+		danode.set_tag("class", "static");
+		string uuid=gameLevel->add_model(danode);
 	}
 	
 	/*string savename;
