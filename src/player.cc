@@ -61,6 +61,8 @@ void Player::tick() {
 	
 	//GameObject::tick(); 
 	ptrav.traverse(window -> get_render());
+	
+	/*
 	if(totaltickcount%60 == 0){
 		for (unsigned int i=0;i<gameLevel->exits.size();i++){
 			if (player.model.get_x() >= gameLevel->exits[i].x1 && player.model.get_x() <= gameLevel->exits[i].x2){
@@ -84,7 +86,7 @@ void Player::tick() {
 			}
 		}
 	}
-	
+	*/
 	
 	
 	

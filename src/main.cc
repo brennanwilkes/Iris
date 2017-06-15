@@ -1262,9 +1262,7 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	
 	// new temp nodepath(name)
 	// uuid = level.add_model(node)
-	
-	
-	
+
 	
 	for (int i=0;i<itms.size();i++){
 		NodePath danode(itms[i]->filename);
@@ -1286,13 +1284,20 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		danode.set_tag("amo",to_string(itms[i]->volume));
 		danode.set_tag("id",to_string(itms[i]->amount));
 		
+		danode.set_tag("class", "food_item");
+		
+		//cout<<gameLevel<<endl;
+		
 		string uuid=gameLevel->add_model(danode);
+	
+	
 	}
 	
 	string savename;
 	cout << "new save name: ";
 	cin >> savename;
 	gameLevel->save(savename,false);
+	
 	
 	
 }

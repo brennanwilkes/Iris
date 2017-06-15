@@ -190,10 +190,33 @@ bool Level::file_exists(string filename){
 }
 
 string Level::add_model(NodePath model){
+	
+	if(uuid>100000){
+		uuid=10;
+	}
+	
+	
+	cout<<0<<endl;
 	string id_s = to_string(uuid);
+	cout<<1<<endl;
+	cout<<"UUID "<<uuid<<endl;
+	
+	/*
+	for (auto &p:models)
+	{
+		cout<<p.second<<endl;
+	}
+	*/
+	
+	cout<<"ids "<<id_s<<endl;
+	
+	
 	models[id_s] = model;
+	cout<<2<<endl;
 	models[id_s].set_tag("uuid", id_s);
+	cout<<3<<endl;
 	++uuid;
+	cout<<4<<endl;
 	return to_string(uuid - 1);
 }
 
