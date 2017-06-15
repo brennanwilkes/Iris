@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <unistd.h>
 
 #include "pandaFramework.h"
 #include "pandaSystem.h"
@@ -12,13 +13,16 @@
 #include "mouseWatcher.h"
 #include "keyboardButton.h"
 
-#include <auto_bind.h>
-#include <animControlCollection.h>
+#include "animControlCollection.h"
 #include "omniBoundingVolume.h"
 
+#include "nodePathCollection.h"
+
+// For Half-Body Animations
+#include "partBundle.h"
+#include "partSubset.h"
+
 int main(int argc, char* argv[]){
-	if (true) 
-	{ // This is panda setup.
 	PandaFramework fw;
 	fw.open_framework(argc, argv);
 	fw.set_window_title("Half-Body Animations Test");
@@ -38,61 +42,76 @@ int main(int argc, char* argv[]){
 	
 	NodePath cam = window -> get_camera_group();
 	cam.set_pos(-1, 0, 0);
-	}
-	NodePath Model = window -> load_model(cam, "../Assets/Iris/Iris.egg");
-	Model.set_pos(0, 25, 0);
+	
+	NodePath Model = window -> load_model(window -> get_render(), "../Assets/Iris/Iris.egg");
+	Model.set_pos(0, 25, -5);
 	
 	window -> load_model(Model, "../Assets/Iris/Iris-walk.egg");
 	window -> load_model(Model, "../Assets/Iris/Iris-Death.egg");
 	
 	AnimControlCollection anim_collection;
-	auto_bind(Model.node(), anim_collection, 0);
-	anim_collection.play("Armature");
 	
-	float mdx, mdy, dx(0), dy(0), rot;
-	GraphicsWindow *gw = window -> get_graphics_window();
+	PartBundle Model_Upper("Model_Upper");
+	PartBundle Model_Lower("Model_Lower");
+	
+	PartSubset MDU;
+	const vector<string> UJoints = {
+		"Head",
+		"Neck",
+		"Chest",
+		"Shoulder_R",
+		"Shoulder_L",
+		"Upperarm_R",
+		"Upperarm_L",
+		"Lowerarm_R",
+		"Lowerarm_L",
+		"Arm_IK_R",
+		"Arm_IK_L",
+		"Waist"
+	};
+	for (auto &joint:UJoints)
+	{
+		MDU.add_include_joint(joint);
+	}
+	
+	PartSubset MDL;
+	const vector<string> LJoints = {
+		"Pelvis",
+		"Thigh_R",
+		"Thigh_L",
+		"Calf_R",
+		"Calf_L",
+		"Leg_IK_R",
+		"Leg_IK_L",
+		"Foot_R",
+		"Foot_L",
+		"Toe_R",
+		"Toe_L"
+	};
+	for (auto &joint:LJoints)
+	{
+		MDL.add_include_joint(joint);
+	}
+	
+	NodePathCollection Model_Anims = Model.find_all_matches("**/+AnimBundleNode");
+	for (int i(0); i < Model_Anims.get_num_paths(); ++i)
+	{
+		Model_Anims.get_path(i).ls();
+		cout << "Name: " << ((AnimBundle*) Model_Anims.get_path(i).node()) -> get_name() << endl;
+	}
+	
+	//AnimControl *U_Anim;
+	//AnimControl *L_Anim;
+	
+	//Model_Upper.do_bind_anim(U_Anim, AnimBundle, 0, MDU)
+	//Model_Lower.do_bind_anim(L_Anim, AnimBundle, 0, MDL)
+
 	
 	Thread *c_thr = Thread::get_current_thread();
 	while (fw.do_frame(c_thr))
 	{
 		
-		
-		
-		if (true)
-		{
-		mdx = gw -> get_properties().get_x_size() / 2 - gw -> get_pointer(0).get_x();
-		mdy = gw -> get_properties().get_y_size() / 2 - gw -> get_pointer(0).get_y();
-		cam.set_h(cam.get_h() + mdx * 0.03);
-		cam.set_p(cam.get_p() + mdy * 0.03);
-		gw -> move_pointer(0, gw -> get_properties().get_x_size() / 2, gw -> get_properties().get_y_size() / 2);
-		
-		rot = cam.get_h();
-			
-		if (mw -> is_button_down(KeyboardButton::ascii_key('w'))) 
-		{
-			dx += -0.2 * sin(rot * (3.1416 / 180));
-			dy += 0.2 * cos(rot * (3.1416 / 180));
-		}
-		if (mw -> is_button_down(KeyboardButton::ascii_key('s')))
-		{
-			dx += 0.2 * sin(rot * (3.1416 / 180));
-			dy += -0.2 * cos(rot * (3.1416 / 180));
-		}
-		if (mw -> is_button_down(KeyboardButton::ascii_key('a')))
-		{
-			dx += 0.2 * sin((rot - 90) * (3.1416 / 180));
-			dy += -0.2 * cos((rot - 90) * (3.1416 / 180));
-		}
-		if (mw -> is_button_down(KeyboardButton::ascii_key('d')))
-		{
-			dx += 0.2 * sin((rot + 90) * (3.1416 / 180));
-			dy += -0.2 * cos((rot + 90) * (3.1416 / 180));
-		}
-		cam.set_fluid_x(cam.get_x() + dx);
-		cam.set_fluid_y(cam.get_y() + dy);
-		dx = 0;
-		dy = 0;
-		}
+		sleep(1);
 	}
 	fw.close_framework();
 	return 0;
