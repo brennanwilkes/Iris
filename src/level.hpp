@@ -55,6 +55,8 @@ public:
 	
 	int id;
 	
+	string fn;
+	
 	float spawn_x;
 	float spawn_y;
 	float spawn_z;

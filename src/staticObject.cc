@@ -31,6 +31,8 @@ StaticObject::StaticObject(int xx,int yy,int zz, std::string fn,NodePath* parent
 		coll_node.node() -> set_into_collide_mask(BitMask32::all_on());
 	}
 	
+	filename=fn;
+	
 }
 StaticObject::StaticObject(NodePath* parent,WindowFramework* w,PandaFramework* pf,string dir){
 	model=w->load_model(pf->get_models(),dir+"/Assets/Iris/Iris.egg");
@@ -39,6 +41,8 @@ StaticObject::StaticObject(NodePath* parent,WindowFramework* w,PandaFramework* p
 	//setPos(xx,yy,zz);
 	model.set_pos(player.model.get_pos());
 	model.set_hpr(player.model.get_hpr());
+	
+	filename=dir+"/Assets/Iris/Iris.egg";
 	
 	//NodePath coll_node = model.find("**/+CollisionNode");
 	//if (!coll_node.is_empty()){

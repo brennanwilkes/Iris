@@ -104,9 +104,15 @@ void Level::save(string filename, bool ov){
 void Level::load(string filename){
 	if (!file_exists(filename))
 	{
-		std::cout << "Level, " << filename << " does not exist!";
+		std::cout << "Level, " << filename << " does not exist!"<<endl;
 		return;
 	}
+	
+	
+	int num = stoi(filename.substr(filename.size()-5,filename.size()-4));
+	
+	id=num;
+	fn=filename.substr(0,filename.size()-5);
 	
 	
 	
@@ -124,13 +130,18 @@ void Level::load(string filename){
 			cout << "\tClass type " << data[0] << " not valid" << endl;
 			continue;
 		}
-		NodePath temp_model;
-		for (unsigned int i(0); i < min( (Level::used_dat[data[0]]).size() + 2, data.size() ); ++i)
+		NodePath temp_model(data[1]);
+		
+		temp_model.set_tag("class", data[0]);
+		
+		for (unsigned int i(0); i < min( (Level::used_dat[data[0]]).size(), data.size() ); ++i)
 		{
 			temp_model.set_tag(Level::used_dat[data[0]][i], data[i + 2]);
 		}
 		add_model(temp_model);
 	}
+	
+	f.close();
 }
 
 void Level::clear(){
@@ -183,6 +194,7 @@ string Level::add_model(NodePath model){
 	models[id_s] = model;
 	models[id_s].set_tag("uuid", id_s);
 	++uuid;
+
 	return to_string(uuid - 1);
 }
 
