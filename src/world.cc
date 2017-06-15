@@ -419,7 +419,7 @@ void World::apply_grav(){
 }
 
 void World::menu(){
-	if ((menuStatus==ms_start) || (menuStatus==ms_optionfromstart) || (menuStatus==ms_deathfog)){
+	if ((menuStatus==ms_start) || (menuStatus==ms_optionfromstart) || (menuStatus==ms_deathfog) || (menuStatus==ms_load)){
 		return;
 	}
 	if (menuStatus == ms_deathfog || menuStatus==ms_dead){
