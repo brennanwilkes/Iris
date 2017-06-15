@@ -19,6 +19,7 @@
 #include "nodePathCollection.h"
 
 // For Half-Body Animations
+#include "animBundleNode.h"
 #include "partBundle.h"
 #include "partSubset.h"
 
@@ -43,16 +44,16 @@ int main(int argc, char* argv[]){
 	NodePath cam = window -> get_camera_group();
 	cam.set_pos(-1, 0, 0);
 	
-	NodePath Model = window -> load_model(window -> get_render(), "../Assets/Iris/Iris.egg");
+	NodePath Model = window -> load_model(window -> get_render(), "./Model.egg");
 	Model.set_pos(0, 25, -5);
 	
-	window -> load_model(Model, "../Assets/Iris/Iris-walk.egg");
-	window -> load_model(Model, "../Assets/Iris/Iris-Death.egg");
+	//window -> load_model(Model, "../Assets/Iris/Iris-walk.egg");
+	//window -> load_model(Model, "../Assets/Iris/Iris-Death.egg");
 	
 	AnimControlCollection anim_collection;
 	
-	PartBundle Model_Upper("Model_Upper");
-	PartBundle Model_Lower("Model_Lower");
+	PartBundle Model_Upper("Death");
+	PartBundle Model_Lower("Jump");
 	
 	PartSubset MDU;
 	const vector<string> UJoints = {
@@ -94,18 +95,43 @@ int main(int argc, char* argv[]){
 	}
 	
 	NodePathCollection Model_Anims = Model.find_all_matches("**/+AnimBundleNode");
+	
+	AnimBundle* jump_bun(0);
+	AnimBundle* death_bun(0);
 	for (int i(0); i < Model_Anims.get_num_paths(); ++i)
 	{
 		Model_Anims.get_path(i).ls();
-		cout << "Name: " << ((AnimBundle*) Model_Anims.get_path(i).node()) -> get_name() << endl;
+		static AnimBundleNode* t_bun;
+		t_bun = ((AnimBundleNode*) Model_Anims.get_path(i).node());
+		if (t_bun -> get_bundle() -> get_name() == "Jump")
+		{
+			jump_bun = t_bun -> get_bundle();
+			cout << "jump" << endl;
+		}
+		else if (t_bun -> get_bundle() -> get_name() == "Death")
+		{
+			death_bun = t_bun -> get_bundle();
+			cout << "death" << endl;
+		}
+			
 	}
 	
-	//AnimControl *U_Anim;
-	//AnimControl *L_Anim;
+	AnimBundleNode jump("Jump", jump_bun);
+	AnimBundleNode death("Death", death_bun);
 	
-	//Model_Upper.do_bind_anim(U_Anim, AnimBundle, 0, MDU)
-	//Model_Lower.do_bind_anim(L_Anim, AnimBundle, 0, MDL)
-
+	AnimControl *U_Anim;
+	AnimControl *L_Anim;
+	
+	if (MDU.matches_include("Head")) cout << "Head" << endl;
+	
+	cout << death.get_part() -> get_name() << endl;
+	
+	Model_Upper.bind_anim(death.get_bundle(), 0, MDU);
+	Model_Lower.bind_anim(jump.get_bundle(), 0, MDL);
+	cout << U_Anim << " : " << L_Anim << endl;
+	U_Anim -> play();
+	L_Anim -> play();
+	
 	
 	Thread *c_thr = Thread::get_current_thread();
 	while (fw.do_frame(c_thr))
