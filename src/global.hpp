@@ -44,5 +44,5 @@ extern WindowFramework *window;
 extern int scene;
 extern string savedir;
 extern PT(PGSliderBar) Slider;
-extern vector<Level*> gameLevels;
+extern Level* gameLevel;
 #endif

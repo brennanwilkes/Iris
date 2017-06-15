@@ -118,7 +118,7 @@ NodePath loadMenuItems;
 NodePath staticModels;
 PT(PGSliderBar) Slider=new PGSliderBar("MySliderBar");;
 PT(PGSliderBar) mouseSlider=new PGSliderBar("mouseSliderBar");;
-vector<Level*> gameLevels;
+Level* gameLevel;
 OurLoader gameloader;
 int scene;
 string savedir;
@@ -1209,6 +1209,9 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 	}
 	cout << "starting game" << endl;
 	world.menuStart();
+	
+	gameLevel=&firstlevel;
+	
 }
 
 void saveLevel(const Event* eventPtr, void* dataPtr){
@@ -1277,11 +1280,19 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		danode.set_tag("wei",to_string(itms[i]->weight));
 		danode.set_tag("vol",to_string(itms[i]->volume));
 		
+		danode.set_tag("file",itms[i]->filename);
+		danode.set_tag("icon",itms[i]->imgName);
+		
+		danode.set_tag("amo",to_string(itms[i]->volume));
+		danode.set_tag("id",to_string(itms[i]->amount));
+		
+		string uuid=gameLevel->add_model(danode);
 	}
 	
-	
-	
-	
+	string savename;
+	cout << "new save name: ";
+	cin >> savename;
+	gameLevel->save(savename,false);
 	
 	
 }

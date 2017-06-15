@@ -62,25 +62,23 @@ void Player::tick() {
 	//GameObject::tick(); 
 	ptrav.traverse(window -> get_render());
 	if(totaltickcount%60 == 0){
-		if(gameLevels.size()>(unsigned int)player.lvlid){
-			for (unsigned int i=0;i<gameLevels[player.lvlid]->exits.size();i++){
-				if (player.model.get_x() >= gameLevels[player.lvlid]->exits[i].x1 && player.model.get_x() <= gameLevels[player.lvlid]->exits[i].x2){
-					if (player.model.get_y() >= gameLevels[player.lvlid]->exits[i].y1 && player.model.get_y() <= gameLevels[player.lvlid]->exits[i].y2){
-						if (player.model.get_z() >= gameLevels[player.lvlid]->exits[i].z1 && player.model.get_z() <= gameLevels[player.lvlid]->exits[i].z2){
-							cout<<"Level change!"<<endl;
-							
-							//gameLevels[player.lvlid]->save("Saves/"+player.savefilename+"/"+to_string(player.lvlid)+".isf");
-							
-							player.lvlid = gameLevels[player.lvlid]->exits[i].lvlid;
-							
-							//gameLevels[player.lvlid]->load("Story/"+to_string(player.lvlid)+".isf");
-							
-							
-							//kaboom(gameModels);
-							
-							break;
-							
-						}
+		for (unsigned int i=0;i<gameLevel->exits.size();i++){
+			if (player.model.get_x() >= gameLevel->exits[i].x1 && player.model.get_x() <= gameLevel->exits[i].x2){
+				if (player.model.get_y() >= gameLevel->exits[i].y1 && player.model.get_y() <= gameLevel->exits[i].y2){
+					if (player.model.get_z() >= gameLevel->exits[i].z1 && player.model.get_z() <= gameLevel->exits[i].z2){
+						cout<<"Level change!"<<endl;
+						
+						//gameLevel->save("Saves/"+player.savefilename+"/"+to_string(player.lvlid)+".isf");
+						
+						player.lvlid = gameLevel->exits[i].lvlid;
+						
+						//gameLevel->load("Story/"+to_string(player.lvlid)+".isf");
+						
+						
+						//kaboom(gameModels);
+						
+						break;
+						
 					}
 				}
 			}
@@ -590,18 +588,18 @@ void Player::death(vector<Item*> &v,NodePath* parent){
 	player.mainHand=NULL;
 	calc_arms();
 	
-	player.model.set_x(gameLevels[0]->spawn_x);
-	player.model.set_y(gameLevels[0]->spawn_y);
-	player.model.set_z(gameLevels[0]->spawn_z);
+	player.model.set_x(gameLevel->spawn_x);
+	player.model.set_y(gameLevel->spawn_y);
+	player.model.set_z(gameLevel->spawn_z);
 
 	//this was segfaulting 
 	
 	//cout<<player.lvlid<<endl;
 	//cout<<gameLevels.size()<<endl;
 	
-	model.set_x(gameLevels[lvlid]->spawn_x);
-	model.set_y(gameLevels[lvlid]->spawn_y);
-	model.set_z(gameLevels[lvlid]->spawn_z);
+	model.set_x(gameLevel->spawn_x);
+	model.set_y(gameLevel->spawn_y);
+	model.set_z(gameLevel->spawn_z);
 	model.show();
 	
 }
