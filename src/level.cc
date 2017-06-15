@@ -109,6 +109,12 @@ void Level::load(string filename){
 	}
 	
 	
+	int num = stoi(filename.substr(filename.size()-5,filename.size()-4));
+	
+	id=num;
+	fn=filename.substr(0,filename.size()-5);
+	
+	
 	
 	ifstream f(filename);
 	
@@ -134,6 +140,8 @@ void Level::load(string filename){
 		}
 		add_model(temp_model);
 	}
+	
+	f.close();
 }
 
 void Level::clear(){
@@ -186,6 +194,7 @@ string Level::add_model(NodePath model){
 	models[id_s] = model;
 	models[id_s].set_tag("uuid", id_s);
 	++uuid;
+
 	return to_string(uuid - 1);
 }
 

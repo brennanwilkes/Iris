@@ -30,6 +30,30 @@ void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf){
 	
 	*/
 	
+	
+	scene=L.id;
+	savedir=L.fn;
+	
+	fstream d(L.fn+"data");
+	int ii=0;
+	for (string l; getline(d, l);){
+		cout<<l<<endl;
+		if(ii!=0){
+			//LOAD THE PLAYER DATA
+		}
+		ii++;
+	}
+	
+	
+	d.close();
+	
+	
+	
+	
+	
+	
+	
+	
 	for (auto i:L.models){
 		
 		if (i.second.get_tag("class") == "weapon"){
