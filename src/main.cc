@@ -118,12 +118,10 @@ NodePath loadMenuItems;
 NodePath staticModels;
 PT(PGSliderBar) Slider=new PGSliderBar("MySliderBar");;
 PT(PGSliderBar) mouseSlider=new PGSliderBar("mouseSliderBar");;
-
 vector<Level*> gameLevels;
-
 OurLoader gameloader;
-
 int scene;
+string savedir;
 
 WindowFramework* window;
 
@@ -1222,6 +1220,9 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	Determine what level # you're on. This should be saved in the Level object possibly under level.id
 	update your save's "data" file with this number
 	
+	//scene is what level youre on
+	
+	
 	gather all satics, items, gameobjects etc etc
 	write them to Nodepaths
 	
@@ -1239,6 +1240,49 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	
 	
 	*/
+	
+	
+	ofstream f(savedir+"data");
+	f<<to_string(scene);
+	f.close();
+	
+	
+	/*
+	m["weapon"] = {"type", "x", "y", "z", "h", "p", "r", "s", "wei", "vol", "file", "icon", "amo", "id", "max", "rate", "ammo"};
+	m["static"] = {"type", "x", "y", "z", "h", "p", "r", "s", "file"};
+	m["enemy"] = {"file", "x", "y", "z", "h", "p", "r", "s", "heal", "dmg", "xp", "dist"};
+	m["item"] = {"type", "x", "y", "z", "h", "p", "r", "s", "wei", "vol", "file", "icon", "amo", "id"};
+	m["food_item"] = m["item"];
+	m["health_item"] = m["item"];
+	m["water_item"] = m["item"];
+	*/
+	
+	// new temp nodepath(name)
+	// uuid = level.add_model(node)
+	
+	
+	
+	
+	for (int i=0;i<itms.size();i++){
+		NodePath danode(itms[i]->filename);
+		//danode.set_tag("tag","data");
+		danode.set_tag("x",to_string(itms[i]->model.get_x()));
+		danode.set_tag("y",to_string(itms[i]->model.get_y()));
+		danode.set_tag("z",to_string(itms[i]->model.get_z()));
+		danode.set_tag("h",to_string(itms[i]->model.get_h()));
+		danode.set_tag("p",to_string(itms[i]->model.get_p()));
+		danode.set_tag("r",to_string(itms[i]->model.get_r()));
+		
+		danode.set_tag("s",to_string(itms[i]->model.get_scale().get_x()));
+		danode.set_tag("wei",to_string(itms[i]->weight));
+		danode.set_tag("vol",to_string(itms[i]->volume));
+		
+	}
+	
+	
+	
+	
+	
 	
 }
 
