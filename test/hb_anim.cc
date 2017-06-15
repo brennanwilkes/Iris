@@ -124,10 +124,8 @@ int main(int argc, char* argv[]){
 	
 	if (MDU.matches_include("Head")) cout << "Head" << endl;
 	
-	cout << death.get_part() -> get_name() << endl;
-	
-	Model_Upper.bind_anim(death.get_bundle(), 0, MDU);
-	Model_Lower.bind_anim(jump.get_bundle(), 0, MDL);
+	Model_Upper.do_bind_anim(U_Anim, death.get_bundle(), 0x07, MDU);
+	Model_Lower.do_bind_anim(L_Anim, jump.get_bundle(), 0x07, MDL);
 	cout << U_Anim << " : " << L_Anim << endl;
 	U_Anim -> play();
 	L_Anim -> play();
