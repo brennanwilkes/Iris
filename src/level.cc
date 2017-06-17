@@ -58,7 +58,7 @@ void Level::save(string filename, bool ov){
 	vector<string> to_save = {};
 	vector<string> equiv_data = {"item", "food_item", "health_item", "water_item"};
 	
-	tagify();
+	//tagify();		//seriously fuck this line it has made my life so hard
 	
 	for (const auto &np:models)
 	{
@@ -80,7 +80,9 @@ void Level::save(string filename, bool ov){
 		
 		// Get data that needs to be saved
 		to_save = used_dat[t_np.get_tag("class")];	
-
+		
+		//cout<<t_np.get_tag("class")<<" x "<<t_np.get_tag("x")<<endl;
+		
 		// Check data and save to file
 		for (const auto &dat:to_save)
 		{

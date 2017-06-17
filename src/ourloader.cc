@@ -10,6 +10,7 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include "ourloader.hpp"
+#include <vector>
 
 void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf){
 	//map<string,NodePath> model_vector = L.models;
@@ -34,23 +35,35 @@ void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf){
 	scene=L.id;
 	savedir=L.fn;
 	
+	vector<string> lines={};
+	
 	fstream d(L.fn+"data");
 	int ii=0;
 	for (string l; getline(d, l);){
-		cout<<l<<endl;
+		//cout<<l<<endl;
 		if(ii!=0){
-			//LOAD THE PLAYER DATA
+			lines.push_back(l);
 		}
 		ii++;
 	}
-	
-	
 	d.close();
 	
+	player.model.set_pos(stof(lines[0]),stof(lines[1]),stof(lines[2]));
+	player.model.set_hpr(stof(lines[3]),stof(lines[4]),stof(lines[5]));
 	
+	player.max_weight=stof(lines[6]);
+	player.max_volume=stof(lines[7]);
 	
+	player.max_food=stof(lines[8]);
+	player.food=stof(lines[9]);
+	player.max_water=stof(lines[10]);
+	player.water=stof(lines[11]);
+	player.max_health=stof(lines[12]);
+	player.health=stof(lines[13]);
 	
-	
+	player.xp=stof(lines[14]);
+	player.deaths=stoi(lines[15]);
+	player.kills=stoi(lines[16]);
 	
 	
 	

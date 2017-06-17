@@ -1084,7 +1084,28 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	
 	
 	ofstream f(savedir+"data");
-	f<<to_string(scene);
+	f<<to_string(scene)<<"\n";
+	f<<to_string(player.model.get_x())<<"\n";
+	f<<to_string(player.model.get_y())<<"\n";
+	f<<to_string(player.model.get_z())<<"\n";
+	f<<to_string(player.model.get_h())<<"\n";
+	f<<to_string(player.model.get_p())<<"\n";
+	f<<to_string(player.model.get_r())<<"\n";
+	
+	f<<to_string(player.max_weight)<<"\n";
+	f<<to_string(player.max_volume)<<"\n";
+	
+	f<<to_string(player.max_food)<<"\n";
+	f<<to_string(player.food)<<"\n";
+	f<<to_string(player.max_water)<<"\n";
+	f<<to_string(player.water)<<"\n";
+	f<<to_string(player.max_health)<<"\n";
+	f<<to_string(player.health)<<"\n";
+	
+	f<<to_string(player.xp)<<"\n";
+	f<<to_string(player.deaths)<<"\n";
+	f<<to_string(player.kills)<<"\n";
+	
 	f.close();
 	
 	
@@ -1102,70 +1123,74 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	// uuid = level.add_model(node)
 	gameLevel->clear();
 	
-	for (int i=0;i<itms.size();i++){
-		NodePath danode(itms[i]->filename.substr(mydir.get_dirname().length()));
+	for (unsigned int i=0;i<itms.size();i++){
+		NodePath danode(itms[i]->filename.substr(mydir.get_dirname().length()+1));
 		//danode.set_tag("tag","data");
+		string uuid=gameLevel->add_model(danode);
 		
-		danode.set_tag("x",to_string(itms[i]->model.get_x()));
 		
-		cout<<"x "<<itms[i]->model.get_x()<<" "<<to_string(itms[i]->model.get_x())<<" "<<danode.get_tag("x")<<endl;
+		gameLevel->models[uuid].set_tag("x",to_string(itms[i]->model.get_x()));
 		
-		danode.set_tag("y",to_string(itms[i]->model.get_y()));
-		danode.set_tag("z",to_string(itms[i]->model.get_z()));
-		danode.set_tag("h",to_string(itms[i]->model.get_h()));
-		danode.set_tag("p",to_string(itms[i]->model.get_p()));
-		danode.set_tag("r",to_string(itms[i]->model.get_r()));
+		//cout<<"x "<<itms[i]->model.get_x()<<" "<<to_string(itms[i]->model.get_x())<<" "<<gameLevel->models[uuid].get_tag("x")<<endl;
 		
-		danode.set_tag("s",to_string(itms[i]->model.get_scale().get_x()));
-		danode.set_tag("wei",to_string(itms[i]->weight));
-		danode.set_tag("vol",to_string(itms[i]->volume));
+		gameLevel->models[uuid].set_tag("y",to_string(itms[i]->model.get_y()));
+		gameLevel->models[uuid].set_tag("z",to_string(itms[i]->model.get_z()));
+		gameLevel->models[uuid].set_tag("h",to_string(itms[i]->model.get_h()));
+		gameLevel->models[uuid].set_tag("p",to_string(itms[i]->model.get_p()));
+		gameLevel->models[uuid].set_tag("r",to_string(itms[i]->model.get_r()));
 		
-		danode.set_tag("file",itms[i]->filename.substr(mydir.get_dirname().length()));
-		danode.set_tag("icon",itms[i]->imgName.substr(mydir.get_dirname().length()));
+		gameLevel->models[uuid].set_tag("s",to_string(itms[i]->model.get_scale().get_x()));
+		gameLevel->models[uuid].set_tag("wei",to_string(itms[i]->weight));
+		gameLevel->models[uuid].set_tag("vol",to_string(itms[i]->volume));
 		
-		danode.set_tag("amo",to_string(itms[i]->volume));
-		danode.set_tag("id",to_string(itms[i]->amount));
+		gameLevel->models[uuid].set_tag("file",itms[i]->filename.substr(mydir.get_dirname().length()+1));
+		gameLevel->models[uuid].set_tag("icon",itms[i]->imgName.substr(mydir.get_dirname().length()+1));
+		
+		gameLevel->models[uuid].set_tag("amo",to_string(itms[i]->volume));
+		gameLevel->models[uuid].set_tag("id",to_string(itms[i]->amount));
 		
 		//danode.set_tag("type",to_string(itms[i]->type));
 		
 		if(itms[i]->type=='g'){
-			danode.set_tag("type","g");
-			danode.set_tag("class", "weapon");
+			gameLevel->models[uuid].set_tag("type","g");
+			gameLevel->models[uuid].set_tag("class", "weapon");
 			//danode.set_tag("max", "max");
 			//danode.set_tag("rate", "rate");
 			//danode.set_tag("ammo", "ammo");
 			//FIGURE OUT A WAY TO DO THESE
 		}
 		else if (itms[i]->type=='c'){
-			danode.set_tag("type","c");
+			gameLevel->models[uuid].set_tag("type","c");
 			if(itms[i]->consumable_type=='h'){
-				danode.set_tag("class", "health_item");
+				gameLevel->models[uuid].set_tag("class", "health_item");
 			}
 			else if(itms[i]->consumable_type=='w'){
-				danode.set_tag("class", "water_item");
+				gameLevel->models[uuid].set_tag("class", "water_item");
 			}
 			else if(itms[i]->consumable_type=='f'){
-				danode.set_tag("class", "food_item");
+				gameLevel->models[uuid].set_tag("class", "food_item");
 			}
 		}
-		string uuid=gameLevel->add_model(danode);
+		
 	}
 	
-	for (int i=0;i<stats.size();i++){
-		NodePath danode(stats[i]->filename.substr(mydir.get_dirname().length()));
-		//danode.set_tag("tag","data");
-		danode.set_tag("x",to_string(stats[i]->model.get_x()));
-		danode.set_tag("y",to_string(stats[i]->model.get_y()));
-		danode.set_tag("z",to_string(stats[i]->model.get_z()));
-		danode.set_tag("h",to_string(stats[i]->model.get_h()));
-		danode.set_tag("p",to_string(stats[i]->model.get_p()));
-		danode.set_tag("r",to_string(stats[i]->model.get_r()));
-		danode.set_tag("s",to_string(stats[i]->model.get_scale().get_x()));
-		
-		danode.set_tag("file",stats[i]->filename.substr(mydir.get_dirname().length()));
-		danode.set_tag("type","s");
-		danode.set_tag("class", "static");
+	for (unsigned int i=0;i<stats.size();i++){
+		NodePath danode(stats[i]->filename.substr(mydir.get_dirname().length()+1));
 		string uuid=gameLevel->add_model(danode);
+		
+		//danode.set_tag("tag","data");
+		gameLevel->models[uuid].set_tag("x",to_string(stats[i]->model.get_x()));
+		gameLevel->models[uuid].set_tag("y",to_string(stats[i]->model.get_y()));
+		gameLevel->models[uuid].set_tag("z",to_string(stats[i]->model.get_z()));
+		gameLevel->models[uuid].set_tag("h",to_string(stats[i]->model.get_h()));
+		gameLevel->models[uuid].set_tag("p",to_string(stats[i]->model.get_p()));
+		gameLevel->models[uuid].set_tag("r",to_string(stats[i]->model.get_r()));
+		gameLevel->models[uuid].set_tag("s",to_string(stats[i]->model.get_scale().get_x()));
+		
+		gameLevel->models[uuid].set_tag("file",stats[i]->filename.substr(mydir.get_dirname().length()+1));
+		gameLevel->models[uuid].set_tag("type","s");
+		gameLevel->models[uuid].set_tag("class", "static");
+		
 	}
 	
 	/*string savename;

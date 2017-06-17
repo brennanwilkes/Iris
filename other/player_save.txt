@@ -1,0 +1,25 @@
+
+
+	x,y,z,h,p,y
+	
+	float max_weight;
+	float max_volume;
+
+	float max_food;
+	float food;
+
+	float max_water;
+	float water;
+
+	float max_health;
+	float health;
+
+	float xp;
+	int deaths;
+	int kills;
+
+std::vector<Item*> inventory;
+
+
+
+
