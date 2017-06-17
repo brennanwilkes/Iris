@@ -1159,6 +1159,10 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 			//danode.set_tag("ammo", "ammo");
 			//FIGURE OUT A WAY TO DO THESE
 		}
+		else if(itms[i]->type=='a'){
+			gameLevel->models[uuid].set_tag("type","a");
+			gameLevel->models[uuid].set_tag("class", "ammo_item");
+		}
 		else if (itms[i]->type=='c'){
 			gameLevel->models[uuid].set_tag("type","c");
 			if(itms[i]->consumable_type=='h'){

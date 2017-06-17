@@ -66,6 +66,8 @@ void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf){
 	player.kills=stoi(lines[16]);
 	
 	
+	//do inventory here
+	
 	
 	for (auto i:L.models){
 		
