@@ -982,7 +982,11 @@ void startGame(const Event* eventPtr, void* dataPtr){
 		cout << "new save name: ";
 		cin >> savename;
 		
-		system(("cp -R saves/.default saves/"+savename).c_str());
+		int CMD_STATUS = system(("cp -R saves/.default saves/"+savename).c_str());
+		
+		if(CMD_STATUS!=0){
+			cout<<"cp command returned "<<CMD_STATUS<<"!!!! Please report thank you bb"<<endl;
+		}
 		
 		Level firstlevel;
 		firstlevel.load("saves/"+savename+"/0.lvl");
