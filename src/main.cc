@@ -1053,36 +1053,7 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 }
 
 void saveLevel(const Event* eventPtr, void* dataPtr){
-	cout <<"save level not working yet" << endl;
-	
-	//pseudo for saving
-	/*
-	
-	Determine what level # you're on. This should be saved in the Level object possibly under level.id
-	update your save's "data" file with this number
-	
-	//scene is what level youre on
-	
-	
-	gather all satics, items, gameobjects etc etc
-	write them to Nodepaths
-	
-	we need a function which works in opposite to ourloader.load()
-	then run level.save()
-	
-	
-	
-	
-	eventually we should write player data to the data file too
-	this funtion doesnt need to be dynamic it can literally be like
-		write to da file ( player.x player.y player.z ) 
-		write to da file ( player.h player.p player.r ) 
-		write to da file ( player.kills player.deaths ) 
-	
-	
-	*/
-	
-	
+		
 	ofstream f(savedir+"data");
 	f<<to_string(scene)<<"\n";
 	f<<to_string(player.model.get_x())<<"\n";
@@ -1149,14 +1120,13 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		gameLevel->models[uuid].set_tag("amo",to_string(itms[i]->volume));
 		gameLevel->models[uuid].set_tag("id",to_string(itms[i]->amount));
 		
-		//danode.set_tag("type",to_string(itms[i]->type));
 		
 		if(itms[i]->type=='g'){
 			gameLevel->models[uuid].set_tag("type","g");
 			gameLevel->models[uuid].set_tag("class", "weapon");
-			//danode.set_tag("max", "max");
-			//danode.set_tag("rate", "rate");
-			//danode.set_tag("ammo", "ammo");
+			danode.set_tag("max", to_string(itms[i]->tot_ammo));
+			danode.set_tag("rate", to_string(itms[i]->firerate));
+			danode.set_tag("ammo", to_string(itms[i]->amount));
 			//FIGURE OUT A WAY TO DO THESE
 		}
 		else if(itms[i]->type=='a'){
