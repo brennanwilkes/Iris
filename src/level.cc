@@ -23,7 +23,7 @@ map< const string, vector<string> > Level::gen_used_dat(){
 	map< const string, vector<string> > m;
 	m["weapon"] = {"type", "x", "y", "z", "h", "p", "r", "s", "wei", "vol", "file", "icon", "amo", "id", "max", "rate", "ammo"};
 	m["static"] = {"type", "x", "y", "z", "h", "p", "r", "s", "file"};
-	m["enemy"] = {"file", "x", "y", "z", "h", "p", "r", "s", "heal", "dmg", "xp", "dist"};
+	m["enemy"] = {"file", "x", "y", "z", "h", "p", "r", "s", "heal", "dmg", "xp", "id"};
 	m["item"] = {"type", "x", "y", "z", "h", "p", "r", "s", "wei", "vol", "file", "icon", "amo", "id"};
 	m["food_item"] = m["item"];
 	m["health_item"] = m["item"];
