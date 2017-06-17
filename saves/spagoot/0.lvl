@@ -1,2 +1,2 @@
-health_item pillBottle.egg c -6.005883 24.229494 0.000000 0.000000 0.000000 0.000000 1.000000 10 2 Assets/pillBottle.egg Assets/pill.png 50 1 
-static Terrain_C.egg asdf 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 Assets/Stage/Terrain_C.egg 
+health_item Assets/pillBottle.egg c -6.000000 24.000000 0.000000 0.000000 0.000000 0.000000 0.500000 10.000000 2.000000 Assets/pillBottle.egg Assets/pill.png 2.000000 50.000000 
+static Assets/Stage/Terrain_C.egg s 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 Assets/Stage/Terrain_C.egg 
