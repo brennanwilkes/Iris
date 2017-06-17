@@ -41,10 +41,16 @@ public:
 	bool pickedup;
 	char type;
 	
+	char consumable_type;
+	//This shouldn't be a thing its just a work around for now for a saving problem. This is only to tell the saver which "class" to use.
+	
 	virtual void action1();
 	
 	//virtual float ammo;
 	int id;
+	
+	
+	
 	float amount;
 	int tot_ammo;
 	float firerate;

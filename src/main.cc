@@ -1103,9 +1103,13 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	gameLevel->clear();
 	
 	for (int i=0;i<itms.size();i++){
-		NodePath danode(itms[i]->filename);
+		NodePath danode(itms[i]->filename.substr(mydir.get_dirname().length()));
 		//danode.set_tag("tag","data");
+		
 		danode.set_tag("x",to_string(itms[i]->model.get_x()));
+		
+		cout<<"x "<<itms[i]->model.get_x()<<" "<<to_string(itms[i]->model.get_x())<<" "<<danode.get_tag("x")<<endl;
+		
 		danode.set_tag("y",to_string(itms[i]->model.get_y()));
 		danode.set_tag("z",to_string(itms[i]->model.get_z()));
 		danode.set_tag("h",to_string(itms[i]->model.get_h()));
@@ -1116,32 +1120,39 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		danode.set_tag("wei",to_string(itms[i]->weight));
 		danode.set_tag("vol",to_string(itms[i]->volume));
 		
-		danode.set_tag("file",itms[i]->filename);
-		danode.set_tag("icon",itms[i]->imgName);
+		danode.set_tag("file",itms[i]->filename.substr(mydir.get_dirname().length()));
+		danode.set_tag("icon",itms[i]->imgName.substr(mydir.get_dirname().length()));
 		
 		danode.set_tag("amo",to_string(itms[i]->volume));
 		danode.set_tag("id",to_string(itms[i]->amount));
 		
-		danode.set_tag("type",to_string(itms[i]->type));
+		//danode.set_tag("type",to_string(itms[i]->type));
 		
 		if(itms[i]->type=='g'){
+			danode.set_tag("type","g");
 			danode.set_tag("class", "weapon");
-			//danode.set_tag("max", "weapon");
-			//danode.set_tag("rate", "weapon");
-			//danode.set_tag("ammo", "weapon");
+			//danode.set_tag("max", "max");
+			//danode.set_tag("rate", "rate");
+			//danode.set_tag("ammo", "ammo");
 			//FIGURE OUT A WAY TO DO THESE
 		}
 		else if (itms[i]->type=='c'){
-			if(itms[i]->id==1){
+			danode.set_tag("type","c");
+			if(itms[i]->consumable_type=='h'){
 				danode.set_tag("class", "health_item");
 			}
-			//ADD MORE IDS WITH WHICH ITEM TYPE THEY ARE
+			else if(itms[i]->consumable_type=='w'){
+				danode.set_tag("class", "water_item");
+			}
+			else if(itms[i]->consumable_type=='f'){
+				danode.set_tag("class", "food_item");
+			}
 		}
 		string uuid=gameLevel->add_model(danode);
 	}
 	
 	for (int i=0;i<stats.size();i++){
-		NodePath danode(stats[i]->filename);
+		NodePath danode(stats[i]->filename.substr(mydir.get_dirname().length()));
 		//danode.set_tag("tag","data");
 		danode.set_tag("x",to_string(stats[i]->model.get_x()));
 		danode.set_tag("y",to_string(stats[i]->model.get_y()));
@@ -1151,8 +1162,8 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		danode.set_tag("r",to_string(stats[i]->model.get_r()));
 		danode.set_tag("s",to_string(stats[i]->model.get_scale().get_x()));
 		
-		danode.set_tag("file",stats[i]->filename);
-		
+		danode.set_tag("file",stats[i]->filename.substr(mydir.get_dirname().length()));
+		danode.set_tag("type","s");
 		danode.set_tag("class", "static");
 		string uuid=gameLevel->add_model(danode);
 	}
