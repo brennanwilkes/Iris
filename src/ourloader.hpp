@@ -32,7 +32,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 class OurLoader{
 public:
-	void load_level(Level L,WindowFramework* w,PandaFramework* pf);
+	void load_level(Level L,WindowFramework* w,PandaFramework* pf,bool mode);
 private:
 
 };

@@ -12,7 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include "ourloader.hpp"
 #include <vector>
 
-void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf){
+void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf,bool mode){
 	//map<string,NodePath> model_vector = L.models;
 	
 	/*
@@ -31,41 +31,40 @@ void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf){
 	
 	*/
 	
-	
-	scene=L.id;
-	savedir=L.fn;
-	
-	vector<string> lines={};
-	
-	fstream d(L.fn+"data");
-	int ii=0;
-	for (string l; getline(d, l);){
-		//cout<<l<<endl;
-		if(ii!=0){
-			lines.push_back(l);
+	if(mode){
+		scene=L.id;
+		savedir=L.fn;
+		
+		vector<string> lines={};
+		
+		fstream d(L.fn+"data");
+		int ii=0;
+		for (string l; getline(d, l);){
+			//cout<<l<<endl;
+			if(ii!=0){
+				lines.push_back(l);
+			}
+			ii++;
 		}
-		ii++;
+		d.close();
+		
+		player.model.set_pos(stof(lines[0]),stof(lines[1]),stof(lines[2]));
+		player.model.set_hpr(stof(lines[3]),stof(lines[4]),stof(lines[5]));
+	
+		player.max_weight=stof(lines[6]);
+		player.max_volume=stof(lines[7]);
+	
+		player.max_food=stof(lines[8]);
+		player.food=stof(lines[9]);
+		player.max_water=stof(lines[10]);
+		player.water=stof(lines[11]);
+		player.max_health=stof(lines[12]);
+		player.health=stof(lines[13]);
+	
+		player.xp=stof(lines[14]);
+		player.deaths=stoi(lines[15]);
+		player.kills=stoi(lines[16]);
 	}
-	d.close();
-	
-	player.model.set_pos(stof(lines[0]),stof(lines[1]),stof(lines[2]));
-	player.model.set_hpr(stof(lines[3]),stof(lines[4]),stof(lines[5]));
-	
-	player.max_weight=stof(lines[6]);
-	player.max_volume=stof(lines[7]);
-	
-	player.max_food=stof(lines[8]);
-	player.food=stof(lines[9]);
-	player.max_water=stof(lines[10]);
-	player.water=stof(lines[11]);
-	player.max_health=stof(lines[12]);
-	player.health=stof(lines[13]);
-	
-	player.xp=stof(lines[14]);
-	player.deaths=stoi(lines[15]);
-	player.kills=stoi(lines[16]);
-	
-	
 	//do inventory here
 	
 	
@@ -74,22 +73,46 @@ void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf){
 		if (i.second.get_tag("class") == "weapon"){
 			WeaponObject* weapon = new WeaponObject('g',stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),stof(i.second.get_tag("wei")),stof(i.second.get_tag("vol")), mydir+i.second.get_tag("file"),&gameModels,w,pf,1.0f,1,0,0,1.5f,0,mydir+i.second.get_tag("icon"),stoi(i.second.get_tag("amo")),stoi(i.second.get_tag("id")));
 			weapon->weapon_init(stoi(i.second.get_tag("amo")),stof(i.second.get_tag("rate")),1.0,0,stoi(i.second.get_tag("ammo")),1);
-			itms.push_back(weapon);
+			if(i.second.get_tag("load_type")=="world"){
+				itms.push_back(weapon);
+			}
+			else{
+				weapon->model.hide();
+				player.inventory.push_back(weapon);
+			}
 		}
 		else if (i.second.get_tag("class") == "food_item"){
 			FoodItem* FOOD = new FoodItem('c',stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),stof(i.second.get_tag("wei")),stof(i.second.get_tag("vol")), mydir+i.second.get_tag("file"),&gameModels,w,pf,0.5f,1,0,0,1.5f,0,mydir+i.second.get_tag("icon"),stoi(i.second.get_tag("amo")),stoi(i.second.get_tag("id")));
 			FOOD->init();
-			itms.push_back(FOOD);
+			if(i.second.get_tag("load_type")=="world"){
+				itms.push_back(FOOD);
+			}
+			else{
+				FOOD->model.hide();
+				player.inventory.push_back(FOOD);
+			}
 		}
 		else if (i.second.get_tag("class") == "health_item"){
 			HealthItem* DRUGS = new HealthItem('c',stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),stof(i.second.get_tag("wei")),stof(i.second.get_tag("vol")), mydir+i.second.get_tag("file"),&gameModels,w,pf,0.5f,1,0,0,1.5f,0,mydir+i.second.get_tag("icon"),stoi(i.second.get_tag("amo")),stoi(i.second.get_tag("id")));
 			DRUGS->init();
-			itms.push_back(DRUGS);
+			if(i.second.get_tag("load_type")=="world"){
+				itms.push_back(DRUGS);
+			}
+			else{
+				DRUGS->model.hide();
+				player.inventory.push_back(DRUGS);
+			}
 		}
 		else if (i.second.get_tag("class") == "water_item"){
 			WaterItem* BOOZE = new WaterItem('c',stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),stof(i.second.get_tag("wei")),stof(i.second.get_tag("vol")), mydir+i.second.get_tag("file"),&gameModels,w,pf,0.5f,1,0,0,1.5f,0,mydir+i.second.get_tag("icon"),stoi(i.second.get_tag("amo")),stoi(i.second.get_tag("id")));
 			BOOZE->init();
-			itms.push_back(BOOZE);
+			if(i.second.get_tag("load_type")=="world"){
+				itms.push_back(BOOZE);
+			}
+			else{
+				BOOZE->model.hide();
+				player.inventory.push_back(BOOZE);
+			}
 		}
 		else if (i.second.get_tag("class") == "static"){
 			StaticObject* wall = new StaticObject(stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),mydir+i.second.get_tag("file"),&gameModels,window,pf,stoi(i.second.get_tag("h")),stoi(i.second.get_tag("p")),stoi(i.second.get_tag("r")),1.0);

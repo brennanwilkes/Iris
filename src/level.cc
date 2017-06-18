@@ -60,9 +60,19 @@ void Level::save(string filename, bool ov){
 	
 	//tagify();		//seriously fuck this line it has made my life so hard
 	
+	
+	//string reg_file = filename;
+	//string dat_file= filename.substr(0,filename.length()-5)+"data";
+	
+	
 	for (const auto &np:models)
 	{
 		t_np = np.second;
+		
+		if(t_np.get_tag("save_kind")=="inventory"){
+			continue;
+		}
+		
 		to_save = {};
 		
 		// Check class tag and save to file
@@ -101,6 +111,71 @@ void Level::save(string filename, bool ov){
 	}
 	
 	f.close();
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	std::ofstream f2(filename.substr(0,filename.length()-5)+"data",std::ios::app);
+	
+	
+	to_save = {};
+	equiv_data = {"item", "food_item", "health_item", "water_item"};
+	
+	//tagify();		//seriously fuck this line it has made my life so hard
+	
+	
+	
+	for (const auto &np:models)
+	{
+		t_np = np.second;
+		
+		if(t_np.get_tag("save_kind")=="world"){
+			continue;
+		}
+		
+		to_save = {};
+		
+		// Check class tag and save to file
+		if (!t_np.has_tag("class") || t_np.get_tag("class") == "" || Level::used_dat.find(t_np.get_tag("class")) == Level::used_dat.end())
+		{
+			cout << "ERROR: Nodepath " << t_np.get_name() << " has invalid class attribute!" << endl;
+			cout << "\tThis object will not be saved!" << endl;
+			cout << "\tPlease report this incident as a bug" << endl;
+			continue;
+		}
+		else
+		{
+			f2 << t_np.get_tag("class") << " " << t_np.get_name() << " ";
+		}
+		
+		// Get data that needs to be saved
+		to_save = used_dat[t_np.get_tag("class")];	
+		
+		//cout<<t_np.get_tag("class")<<" x "<<t_np.get_tag("x")<<endl;
+		
+		// Check data and save to file
+		for (const auto &dat:to_save)
+		{
+			if (!t_np.has_tag(dat) || t_np.get_tag(dat) == "")
+			{
+				cout << "WARNING: NodePath " << t_np.get_name() << " has no data for " << dat << "!" << endl;
+				cout << "\tUsing value of 0" << endl;
+				f2 << "0" << " ";
+			}
+			else
+			{
+				f2 << t_np.get_tag(dat) << " ";
+			}
+		}
+		f2 << "\n";
+	}
+	
+	f2.close();
+	
+	
+	
+	
+	
 }
 
 void Level::load(string filename){
@@ -110,12 +185,12 @@ void Level::load(string filename){
 		return;
 	}
 	
-	
-	int num = stoi(filename.substr(filename.size()-5,filename.size()-4));
-	
-	id=num;
-	fn=filename.substr(0,filename.size()-5);
-	
+	if(filename.substr(filename.length()-4)!="data"){
+		int num = stoi(filename.substr(filename.size()-5,filename.size()-4));
+		
+		id=num;
+		fn=filename.substr(0,filename.size()-5);
+	}
 	
 	
 	ifstream f(filename);
@@ -126,6 +201,9 @@ void Level::load(string filename){
 	for (string line; getline(f, line);)
 	{
 		data = split(line);
+		if(data.size()==1){
+			continue;
+		}
 		if (Level::used_dat.find(data[0]) == Level::used_dat.end())
 		{
 			cout << "ERROR: Invalid Save file:" << endl;
@@ -139,6 +217,12 @@ void Level::load(string filename){
 		for (unsigned int i(0); i < min( (Level::used_dat[data[0]]).size(), data.size() ); ++i)
 		{
 			temp_model.set_tag(Level::used_dat[data[0]][i], data[i + 2]);
+		}
+		if(filename.substr(filename.length()-4)=="data"){
+			temp_model.set_tag("load_type","inv");
+		}
+		else{
+			temp_model.set_tag("load_type","world");
 		}
 		add_model(temp_model);
 	}

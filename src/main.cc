@@ -991,7 +991,7 @@ void startGame(const Event* eventPtr, void* dataPtr){
 		Level firstlevel;
 		firstlevel.load("saves/"+savename+"/0.lvl");
 		cout << "loading default" << endl;
-		gameloader.load_level(firstlevel,window,window->get_panda_framework());
+		gameloader.load_level(firstlevel,window,window->get_panda_framework(),true);
 		for (unsigned int i=0;i<stats.size();i++){
 			stats[i]->model.show();
 		}
@@ -1041,11 +1041,20 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 	//Level firstlevel;
 	gameLevel = new Level;
 	
+	gameLevel->load("saves/"+saveName+"/data");
+
+	//load the level
+	gameloader.load_level(*gameLevel,window,window->get_panda_framework(),false);
+	
+	
+	
+	gameLevel = new Level;
+	
 	gameLevel->load("saves/"+saveName+"/"+currentLevel+".lvl");
 	cout << "loading " <<  saveName << endl;
 
 	//load the level
-	gameloader.load_level(*gameLevel,window,window->get_panda_framework());
+	gameloader.load_level(*gameLevel,window,window->get_panda_framework(),true);
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
 	}
@@ -1123,7 +1132,7 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		
 		gameLevel->models[uuid].set_tag("amo",to_string(itms[i]->volume));
 		gameLevel->models[uuid].set_tag("id",to_string(itms[i]->amount));
-		
+		gameLevel->models[uuid].set_tag("save_kind","world");
 		
 		if(itms[i]->type=='g'){
 			gameLevel->models[uuid].set_tag("type","g");
@@ -1168,6 +1177,7 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		gameLevel->models[uuid].set_tag("file",stats[i]->filename.substr(mydir.get_dirname().length()+1));
 		gameLevel->models[uuid].set_tag("type","s");
 		gameLevel->models[uuid].set_tag("class", "static");
+		gameLevel->models[uuid].set_tag("save_kind","world");
 		
 	}
 	//	m["enemy"] = {"file", "x", "y", "z", "h", "p", "r", "s", "heal", "dmg", "xp", "id"};
@@ -1191,6 +1201,61 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		gameLevel->models[uuid].set_tag("dmg",to_string(enems[i]->damage));
 		gameLevel->models[uuid].set_tag("xp",to_string(enems[i]->xp));
 		gameLevel->models[uuid].set_tag("id",to_string(enems[i]->id));
+		gameLevel->models[uuid].set_tag("save_kind","world");
+	}
+	
+	for (unsigned int i=0;i<player.inventory.size();i++){
+		NodePath danode(player.inventory[i]->filename.substr(mydir.get_dirname().length()+1));
+		//danode.set_tag("tag","data");
+		string uuid=gameLevel->add_model(danode);
+		
+		
+		gameLevel->models[uuid].set_tag("x",to_string(player.inventory[i]->model.get_x()));
+		
+		//cout<<"x "<<itms[i]->model.get_x()<<" "<<to_string(itms[i]->model.get_x())<<" "<<gameLevel->models[uuid].get_tag("x")<<endl;
+		
+		gameLevel->models[uuid].set_tag("y",to_string(player.inventory[i]->model.get_y()));
+		gameLevel->models[uuid].set_tag("z",to_string(player.inventory[i]->model.get_z()));
+		gameLevel->models[uuid].set_tag("h",to_string(player.inventory[i]->model.get_h()));
+		gameLevel->models[uuid].set_tag("p",to_string(player.inventory[i]->model.get_p()));
+		gameLevel->models[uuid].set_tag("r",to_string(player.inventory[i]->model.get_r()));
+		
+		gameLevel->models[uuid].set_tag("s",to_string(player.inventory[i]->model.get_scale().get_x()));
+		gameLevel->models[uuid].set_tag("wei",to_string(player.inventory[i]->weight));
+		gameLevel->models[uuid].set_tag("vol",to_string(player.inventory[i]->volume));
+		
+		gameLevel->models[uuid].set_tag("file",player.inventory[i]->filename.substr(mydir.get_dirname().length()+1));
+		gameLevel->models[uuid].set_tag("icon",player.inventory[i]->imgName.substr(mydir.get_dirname().length()+1));
+		
+		gameLevel->models[uuid].set_tag("amo",to_string(player.inventory[i]->volume));
+		gameLevel->models[uuid].set_tag("id",to_string(player.inventory[i]->amount));
+		gameLevel->models[uuid].set_tag("save_kind","inventory");
+		
+		if(itms[i]->type=='g'){
+			gameLevel->models[uuid].set_tag("type","g");
+			gameLevel->models[uuid].set_tag("class", "weapon");
+			danode.set_tag("max", to_string(player.inventory[i]->tot_ammo));
+			danode.set_tag("rate", to_string(player.inventory[i]->firerate));
+			danode.set_tag("ammo", to_string(player.inventory[i]->amount));
+			//FIGURE OUT A WAY TO DO THESE
+		}
+		else if(itms[i]->type=='a'){
+			gameLevel->models[uuid].set_tag("type","a");
+			gameLevel->models[uuid].set_tag("class", "ammo_item");
+		}
+		else if (itms[i]->type=='c'){
+			gameLevel->models[uuid].set_tag("type","c");
+			if(itms[i]->consumable_type=='h'){
+				gameLevel->models[uuid].set_tag("class", "health_item");
+			}
+			else if(itms[i]->consumable_type=='w'){
+				gameLevel->models[uuid].set_tag("class", "water_item");
+			}
+			else if(itms[i]->consumable_type=='f'){
+				gameLevel->models[uuid].set_tag("class", "food_item");
+			}
+		}
+		
 	}
 	
 	/*string savename;
