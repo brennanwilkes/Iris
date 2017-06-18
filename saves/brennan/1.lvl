@@ -2,3 +2,4 @@ health_item Assets/pillBottle.egg c -21.000000 13.000000 0.000000 0.000000 0.000
 health_item Assets/pillBottle.egg c -14.000000 6.000000 0.000000 0.000000 0.000000 0.000000 0.500000 10.000000 2.000000 Assets/pillBottle.egg Assets/pill.png 2.000000 2.000000 
 health_item Assets/pillBottle.egg c -4.000000 12.000000 0.000000 0.000000 0.000000 0.000000 0.500000 10.000000 2.000000 Assets/pillBottle.egg Assets/pill.png 2.000000 2.000000 
 static Assets/Stage/Terrain_C.egg s 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 Assets/Stage/Terrain_C.egg 
+enemy Assets/wrom/Ryan.egg Assets/wrom/Ryan.egg -128.672623 -100.904160 0.000000 -31.798256 0.000000 0.000000 0.500000 50 15.000000 10.000000 52 

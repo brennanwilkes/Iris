@@ -40,6 +40,7 @@ void Enemy::tick(int m) {
 		td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
 	
 		if (td<range && check_sight()){			//CHANGE TO VARIABLE
+			running=false;
 			attack();
 		}
 	}
@@ -49,18 +50,41 @@ void Enemy::tick(int m) {
 	}
 	
 	
-	if (running){
-		bas_mov(target);			//CHANGE TO VARIABLE
-		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="idle"){
-			anim_collection.loop("walk",true);
+	if (id==52){		//Literally because romar decided to make a different anim system
+		if(running){
+			bas_mov(target);
+			
+			if(anim_collection.which_anim_playing()!="walk" && anim_collection.get_frame()!=35){
+				if(anim_collection.which_anim_playing()=="up"){
+					//cout<<"upping "<<anim_collection.which_anim_playing()<<endl;
+				}
+				else{
+					anim_collection.play("walk");
+				}
+			}
+		}
+		else{
+			if(anim_collection.which_anim_playing()=="walk"||(anim_collection.which_anim_playing()==""&&anim_collection.get_frame()==35)){
+				anim_collection.play("up");
+			}
+			else if(anim_collection.which_anim_playing()!="up"&&anim_collection.get_frame()-anim_collection.get_num_frames()==-1){
+				anim_collection.loop("idle",true);
+			}
 		}
 	}
 	else{
-		if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="walk"){	
-			anim_collection.loop("idle",true);
+		if (running){
+			bas_mov(target);
+			if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="idle"){
+				anim_collection.loop("walk",true);
+			}
+		}
+		else{
+			if(anim_collection.get_frame()-anim_collection.get_num_frames()==-1 || anim_collection.which_anim_playing()=="walk"){	
+				anim_collection.loop("idle",true);
+			}
 		}
 	}
-	
 	if (tint>0){
 		model.clear_color_scale();
 		model.set_color_scale(1.0,1-tint,1-tint,1.0);		
@@ -120,13 +144,13 @@ bool Enemy::check_sight(){
 		return false;
 	}
 	
-	
-	if(model.get_distance(player.model)>250){
+	if(dis2>125){
 		return false;
 	}
 	
-	
-	running=true;
+	if(dis2-2>=target){
+		running=true;
+	}
 	return true;
 }
 
@@ -222,12 +246,16 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 	id=idd;
 	
 	if(id==50){
-		range=30;
+		range=10;
 		target=0.25;
 	}
 	else if(id==51){
 		range=130;
 		target=25;
+	}
+	else if(id==52){
+		range=10;
+		target=5;
 	}
 	
 	filename=fn;
@@ -291,6 +319,44 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 		name_collection.unbind_anim(animName);
 		animNp3.detach_node();
 		anim_collection.play("attack");
+	}
+	else if(id==52){
+		NodePath animNp1 = w->load_model(model, mydir + "Assets/wrom/Ryan-Idle.egg");
+		auto_bind(model.node(), name_collection);
+		PT(AnimControl) animPtr = name_collection.get_anim(0);
+		anim_collection.store_anim(animPtr, "idle");
+		string animName = name_collection.get_anim_name(0);
+		name_collection.unbind_anim(animName);
+		animNp1.detach_node();
+		anim_collection.play("idle");
+		NodePath animNp2 = w->load_model(model, mydir + "Assets/wrom/Ryan-Move.egg");
+		auto_bind(model.node(), name_collection);
+		animPtr = name_collection.get_anim(0);
+		anim_collection.store_anim(animPtr, "walk");
+		animName = name_collection.get_anim_name(0);
+		name_collection.unbind_anim(animName);
+		animNp2.detach_node();
+		anim_collection.play("walk");
+		NodePath animNp3 = w->load_model(model, mydir + "Assets/wrom/Ryan-Attack.egg");
+		auto_bind(model.node(), name_collection);
+		animPtr = name_collection.get_anim(0);
+		anim_collection.store_anim(animPtr, "attack");
+		animName = name_collection.get_anim_name(0);
+		name_collection.unbind_anim(animName);
+		animNp3.detach_node();
+		anim_collection.play("attack");
+		NodePath animNp4 = w->load_model(model, mydir + "Assets/wrom/Ryan-Surface.egg");
+		auto_bind(model.node(), name_collection);
+		animPtr = name_collection.get_anim(0);
+		anim_collection.store_anim(animPtr, "up");
+		animName = name_collection.get_anim_name(0);
+		name_collection.unbind_anim(animName);
+		animNp4.detach_node();
+		anim_collection.play("up");
+		
+		
+		
+		anim_collection.play("walk");
 	}
 }
 
@@ -365,8 +431,17 @@ void Enemy::attack() {
 	td=pow(pow(pow((xd*xd)+(yd*yd),0.5),2)+(zd*zd),0.5);
 	
 	player.health-=damage/td;
-	anim_collection.play("attack");
-	
+	if(id==52){
+		if(anim_collection.get_frame()==35){
+			anim_collection.play("up");
+		}
+		else if (anim_collection.which_anim_playing()!="up"){
+			anim_collection.play("attack");
+		}
+	}
+	else{
+		anim_collection.play("attack");
+	}
 	player.tint=1;
 	float ran=rand()/(float)RAND_MAX;
 	if(ran>(6.0/7.0)){
