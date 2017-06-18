@@ -1162,6 +1162,9 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	}
 	
 	for (unsigned int i=0;i<stats.size();i++){
+		if(stats[i]->filename.substr(mydir.get_dirname().length()+1)=="Assets/Iris/Iris.egg"){
+			continue;
+		}
 		NodePath danode(stats[i]->filename.substr(mydir.get_dirname().length()+1));
 		string uuid=gameLevel->add_model(danode);
 		
@@ -1184,7 +1187,6 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 	for (unsigned int i=0;i<enems.size();i++){
 		NodePath danode(enems[i]->filename.substr(mydir.get_dirname().length()+1));
 		string uuid=gameLevel->add_model(danode);
-		
 		//danode.set_tag("tag","data");
 		gameLevel->models[uuid].set_tag("x",to_string(enems[i]->model.get_x()));
 		gameLevel->models[uuid].set_tag("y",to_string(enems[i]->model.get_y()));
@@ -1193,17 +1195,14 @@ void saveLevel(const Event* eventPtr, void* dataPtr){
 		gameLevel->models[uuid].set_tag("p",to_string(enems[i]->model.get_p()));
 		gameLevel->models[uuid].set_tag("r",to_string(enems[i]->model.get_r()));
 		gameLevel->models[uuid].set_tag("s",to_string(enems[i]->model.get_scale().get_x()));
-		
 		gameLevel->models[uuid].set_tag("file",enems[i]->filename.substr(mydir.get_dirname().length()+1));
 		gameLevel->models[uuid].set_tag("class", "enemy");
-		
 		gameLevel->models[uuid].set_tag("heal",to_string(enems[i]->health));
 		gameLevel->models[uuid].set_tag("dmg",to_string(enems[i]->damage));
 		gameLevel->models[uuid].set_tag("xp",to_string(enems[i]->xp));
 		gameLevel->models[uuid].set_tag("id",to_string(enems[i]->id));
 		gameLevel->models[uuid].set_tag("save_kind","world");
 	}
-	
 	for (unsigned int i=0;i<player.inventory.size();i++){
 		NodePath danode(player.inventory[i]->filename.substr(mydir.get_dirname().length()+1));
 		//danode.set_tag("tag","data");

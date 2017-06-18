@@ -1,4 +1,4 @@
-health_item Assets/pillBottle.egg c -21.397392 13.122984 0.049042 0.000000 0.000000 0.000000 0.500000 10.000000 2.000000 Assets/pillBottle.egg Assets/pill.png 2.000000 2.000000 
-health_item Assets/pillBottle.egg c -14.656247 6.415905 -0.021104 0.000000 0.000000 0.000000 0.500000 10.000000 2.000000 Assets/pillBottle.egg Assets/pill.png 2.000000 2.000000 
-health_item Assets/pillBottle.egg c -4.232257 12.018951 0.167153 0.000000 0.000000 0.000000 0.500000 10.000000 2.000000 Assets/pillBottle.egg Assets/pill.png 2.000000 2.000000 
+health_item Assets/pillBottle.egg c -21.000000 13.000000 0.000000 0.000000 0.000000 0.000000 0.500000 10.000000 2.000000 Assets/pillBottle.egg Assets/pill.png 2.000000 2.000000 
+health_item Assets/pillBottle.egg c -14.000000 6.000000 0.000000 0.000000 0.000000 0.000000 0.500000 10.000000 2.000000 Assets/pillBottle.egg Assets/pill.png 2.000000 2.000000 
+health_item Assets/pillBottle.egg c -4.000000 12.000000 0.000000 0.000000 0.000000 0.000000 0.500000 10.000000 2.000000 Assets/pillBottle.egg Assets/pill.png 2.000000 2.000000 
 static Assets/Stage/Terrain_C.egg s 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 Assets/Stage/Terrain_C.egg 

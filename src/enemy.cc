@@ -230,7 +230,7 @@ void Enemy::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,string
 		target=25;
 	}
 	
-	
+	filename=fn;
 	
 	
 	AnimControlCollection name_collection;
