@@ -70,14 +70,16 @@ void Player::tick() {
 					if (player.model.get_z() >= gameLevel->exits[i].z1 && player.model.get_z() <= gameLevel->exits[i].z2){
 						cout<<"Level change!"<<endl;
 						
-						//gameLevel->save("Saves/"+player.savefilename+"/"+to_string(player.lvlid)+".isf");
-						
 						player.lvlid = gameLevel->exits[i].lvlid;
 						
-						//gameLevel->load("Story/"+to_string(player.lvlid)+".isf");
+						gameLevel->clear();
+						
+						gameLevel->save("Saves/"+player.savefilename+"/"+to_string(player.lvlid)+".lvl");
+						
+						kaboom(gameModels);
 						
 						
-						//kaboom(gameModels);
+						gameLevel->load("Saves/"+player.savefilename+"/"+to_string(player.lvlid)+".lvl");
 						
 						break;
 						
@@ -86,8 +88,8 @@ void Player::tick() {
 			}
 		}
 	}
-	*/
 	
+	*/
 	
 	
 	

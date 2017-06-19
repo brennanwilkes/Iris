@@ -827,6 +827,65 @@ int main(int argc, char *argv[]) {
 			
 			world.draw();
 			nd_crosshair.show();
+			
+			
+			
+			
+			for (unsigned int i=0;i<gameLevel->exits.size();i++){
+				cout<<gameLevel->exits[i].x1<<" "<<gameLevel->exits[i].x2<<" "<<gameLevel->exits[i].y1<<" "<<gameLevel->exits[i].y2<<" "<<gameLevel->exits[i].z1<<" "<<gameLevel->exits[i].z2<<endl;
+				
+				cout<<player.model.get_x()<<" "<<player.model.get_y()<<" "<<player.model.get_z()<<endl;
+				
+				if (player.model.get_x() >= gameLevel->exits[i].x1 && player.model.get_x() <= gameLevel->exits[i].x2){
+					if (player.model.get_y() >= gameLevel->exits[i].y1 && player.model.get_y() <= gameLevel->exits[i].y2){
+						if (player.model.get_z() >= gameLevel->exits[i].z1 && player.model.get_z() <= gameLevel->exits[i].z2){
+							cout<<"Level change!"<<endl;
+					
+							player.lvlid = gameLevel->exits[i].lvlid;
+					
+							gameLevel->clear();
+							saveLevel(NULL, NULL);		
+							//gameLevel->save("Saves/"+player.savefilename+"/"+to_string(player.lvlid)+".lvl");
+					
+							player.kaboom(gameModels);
+							
+	
+							//Level firstlevel;
+							gameLevel = new Level;
+	
+							gameLevel->load(savedir+"data");
+
+							//load the level
+							gameloader.load_level(*gameLevel,window,window->get_panda_framework(),false);
+	
+	
+	
+							gameLevel = new Level;
+	
+							gameLevel->load(savedir+to_string(player.lvlid)+".lvl");
+							cout << "loading " <<  savedir << endl;
+
+							//load the level
+							gameloader.load_level(*gameLevel,window,window->get_panda_framework(),true);
+							for (unsigned int i=0;i<stats.size();i++){
+								stats[i]->model.show();
+							}
+					
+							break;
+					
+						}
+					}
+				}
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
 
 		}
 		else if (world.menuStatus==world.ms_deathfog){
@@ -1000,12 +1059,18 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 		stats[i]->model.show();
 	}
 	
-	/*int tid;
+	int tid;
 	float tx1,tx2,ty1,ty2,tz1,tz2;
 	
 	if(saveName=="brennan"){
 		if(currentLevel=="0"){
-			
+			tx1=-10;
+			tx2=10;
+			ty1=-10;
+			ty2=10;
+			tz1=-5;
+			tz2=5;
+			tid=1;
 		}
 		else if(currentLevel=="1"){
 			
@@ -1018,7 +1083,7 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 	
 	ChangeRegion tempreg(tx1,tx2,ty1,ty2,tz1,tz2,tid);
 	gameLevel->exits.push_back(tempreg);
-	*/
+	
 	cout << "starting game" << endl;
 	world.menuStart();
 	
