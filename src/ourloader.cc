@@ -72,6 +72,7 @@ void OurLoader::load_level(Level L,WindowFramework* w,PandaFramework* pf,bool mo
 		
 		if (i.second.get_tag("class") == "weapon"){
 			WeaponObject* weapon = new WeaponObject('g',stoi(i.second.get_tag("x")),stoi(i.second.get_tag("y")),stoi(i.second.get_tag("z")),stof(i.second.get_tag("wei")),stof(i.second.get_tag("vol")), mydir+i.second.get_tag("file"),&gameModels,w,pf,1.0f,1,0,0,1.5f,0,mydir+i.second.get_tag("icon"),stoi(i.second.get_tag("amo")),stoi(i.second.get_tag("id")));
+			weapon -> init();
 			weapon->weapon_init(stoi(i.second.get_tag("amo")),stof(i.second.get_tag("rate")),1.0,0,stoi(i.second.get_tag("ammo")),1);
 			if(i.second.get_tag("load_type")=="world"){
 				itms.push_back(weapon);
