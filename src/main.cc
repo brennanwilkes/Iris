@@ -1458,7 +1458,7 @@ void menu(const Event* eventPtr, void* dataPtr){
 void spiderClick(const Event* eventPtr, void* dataPtr){
 	NodePath* shootableModels = static_cast<NodePath*>(dataPtr);
 	makeSpider(player.model.get_x()+50, player.model.get_y(), player.model.get_z()+6, shootableModels);
-	makeBandit(player.model.get_x()+25, player.model.get_y(), player.model.get_z()+6, shootableModels);
+	//makeBandit(player.model.get_x()+25, player.model.get_y(), player.model.get_z()+6, shootableModels);
 	//player.main_collection.play("Death.1");
 }
 
@@ -1882,6 +1882,9 @@ void makeNegev(int x, int y, int z,NodePath* parentNode){
 void makeSpider(int x, int y, int z, NodePath* parentNode){
 	Enemy* romar = new Enemy;
 	romar->set_up(parentNode, window, window->get_panda_framework(), mydir+"Assets/INSECT/insect.egg",50.0,x,y,z,15.0,40,24,0,10.0,50);
+	
+	//romar->set_up(parentNode, window, window->get_panda_framework(), mydir+"Assets/wrom/Ryan.egg",50.0,x,y,z,15.0,40,24,0,10.0,52);
+	//romar->set_up(parentNode, window, window->get_panda_framework(), mydir+"Assets/bandit/Bandit.egg",50.0,x,y,z,15.0,40,24,0,10.0,50);	
 	romar->init();
 	romar->coll_set_up(1000);
 	enems.push_back(romar);
