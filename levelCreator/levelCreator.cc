@@ -336,12 +336,26 @@ void edit_model(const Event* eventPtr, void* dataPtr){
 
 	
 	vector<string> data = Level::used_dat[datum];
-
-	for (const auto &dat:data)
+	
+	cout << "Load default tags? [(ak/negev/pistol/bat/spider/bandit/cheese/pills/gauze/water)/N]" << endl;
+	string inp;
+	cin >> inp;
+	if (inp != "" && Level::default_tags.find(inp) != Level::default_tags.end())
 	{
-		cout << dat << ": ";
-		cin >> datum;
-		selected.set_tag(dat, datum);
+		vector<string> def = Level::default_tags[inp];
+		for (unsigned int i(0); i < def.size(); ++i)
+		{
+			selected.set_tag(data[i], def[i]);
+		}
+	}
+	else if (inp != "y")
+	{
+		for (const auto &dat:data)
+		{
+			cout << dat << ": ";
+			getline(cin, datum);
+			if (datum != "") selected.set_tag(dat, datum);
+		}
 	}
 	cout << "Done editing!" << endl;
 	cur_state = sel;
