@@ -40,6 +40,7 @@ void test_func(const Event* eventPtr, void* dataPtr);
 void setup(WindowFramework* win);
 
 void move_cam();
+void teleport(const Event* eventPtr, void* dataPtr);
 void rot_cam_locked(GraphicsWindow* gw);
 void rot_cam_unlocked(GraphicsWindow* gw);
 
@@ -129,13 +130,14 @@ int main(int argc, char* argv[])
 	window -> get_panda_framework() -> define_key("l", "Load Model", load_new_model, window);
 	window -> get_panda_framework() -> define_key("u", "Unload Selected Model", unload_model, NULL);
 	window -> get_panda_framework() -> define_key("m", "Move Model", move_model, NULL);
+	window -> get_panda_framework() -> define_key("t", "Teleport Camera", teleport, NULL);
 	window -> get_panda_framework() -> define_key("wheel_up", "Rotate Model", mwheel_up, NULL);
 	window -> get_panda_framework() -> define_key("wheel_down", "Rotate Model", mwheel_down, NULL);
 	window -> get_panda_framework() -> define_key("control-s", "Save Level to file", save_level, NULL);
 	window -> get_panda_framework() -> define_key("control-l", "Load Level from file", load_level, NULL);
 	window -> get_panda_framework() -> define_key("control-a", "Append Level from file", append_level, NULL);
 	window -> get_panda_framework() -> define_key("e", "Edit model attributes", edit_model, NULL);
-	window -> get_panda_framework() -> define_key("t", "Test Function", test_func, NULL);
+	window -> get_panda_framework() -> define_key("k", "Test Function", test_func, NULL);
 	
 	while (fw.do_frame(c_thr))
 	{
@@ -243,6 +245,7 @@ void load_new_model(const Event* eventPtr, void* dataPtr){
 	string id;
 	id = level.add_model(window -> load_model(nodes[parent], filepath));
 	selected = level.models[id];
+	if (parent != "static") selected.set_pos(camera, 0, 10, 0);
 	cur_state = sel;
 	cout << "Loaded model: [" << id << "] " << selected.get_name() << endl;
 }
@@ -366,15 +369,38 @@ void move_cam(){
 	if (dz) camera.set_z(camera.get_z() + dz * dt);
 }
 
-void rot_cam_locked(GraphicsWindow* gw){ if (gw) {
+void teleport(const Event* eventPtr, void* dataPtr){
+	qray_pick -> set_from_lens(window -> get_camera(0), mW -> get_mouse().get_x(), mW -> get_mouse().get_y());
+	qtrav_pick.traverse(window -> get_render());
+	if (qcoll_pick -> get_num_entries() > 0)
+	{
+		qcoll_pick -> sort_entries();
+		camera.set_pos(qcoll_pick -> get_entry(0) -> get_surface_point(window -> get_render()));
+	}
+}
+
+void rot_cam_locked(GraphicsWindow* gw){
+	if (!gw)
+	{
+		cout << "ERROR! EMPTY GRAPHICS WINDOW!" << endl;
+		return;
+	}
 	int dx = (gw -> get_properties().get_x_size() / 2) - gw -> get_pointer(0).get_x();
 	int dy = (gw -> get_properties().get_y_size() / 2) - gw -> get_pointer(0).get_y();
 	camera.set_h(camera.get_h() + dx * dt * 3);
 	camera.set_p(camera.get_p() + dy * dt * 3);
 	gw -> move_pointer(0, gw -> get_properties().get_x_size() / 2, gw -> get_properties().get_y_size() / 2);
-} else { cout << "ERROR! EMPTY GRAPHICS WINDOW!" << endl; } }
+}
 
-void rot_cam_unlocked(GraphicsWindow* gw){ if (gw) { if (mW -> is_button_down(MouseButton::two())) {
+void rot_cam_unlocked(GraphicsWindow* gw){
+	if (!gw) {
+		cout << "ERROR! EMPTY GRAPHICS WINDOW!" << endl;
+		return;
+	}
+	if (!mW -> is_button_down(MouseButton::two())) {
+		mouse2_down = 0;
+		return;
+	}
 	if (!mouse2_down) {	prevMx = gw -> get_pointer(0).get_x(); prevMy = gw -> get_pointer(0).get_y(); }
 	mouse2_down = 1;
 	int dx = prevMx - gw -> get_pointer(0).get_x();
@@ -383,7 +409,7 @@ void rot_cam_unlocked(GraphicsWindow* gw){ if (gw) { if (mW -> is_button_down(Mo
 	camera.set_p(camera.get_p() - dy * dt * 5);
 	prevMx = gw -> get_pointer(0).get_x();
 	prevMy = gw -> get_pointer(0).get_y();
-} else {mouse2_down = 0;}} else { cout << "ERROR! EMPTY GRAPHICS WINDOW!" << endl; } }
+}
 
 void test_func(const Event* eventPtr, void* dataPtr){
 	selected.ls();
@@ -413,17 +439,17 @@ void move_sel_unlocked(){
 
 void mwheel_up(const Event* eventPtr, void* dataPtr){
 	if (cur_state == mov_sel) mv_dist += 0.5;
-	else
+	else if (!selected.is_empty())
 	{
-		selected.set_h(selected, 5);
+		selected.set_scale(selected.get_scale().get_x() * 1.1);
 	}
 }
 
 void mwheel_down(const Event* eventPtr, void* dataPtr){
 	if (cur_state == mov_sel) mv_dist -= 0.5;
-	else
+	else if (!selected.is_empty())
 	{
-		selected.set_h(selected, -5);
+		selected.set_scale(selected.get_scale().get_x()*.9);
 	}
 }
 
@@ -431,6 +457,7 @@ void save_level(const Event* eventPtr, void* dataPtr){
 	string filename;
 	cout << "Save to: ";
 	cin >> filename;
+	level.tagify();
 	level.save(filename);
 	cout << "Saved level to " << filename << endl;
 }
