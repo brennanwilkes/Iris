@@ -231,6 +231,7 @@ void load_new_model(const Event* eventPtr, void* dataPtr){
 	// Get path to model
 	cout << "Model path: ";
 	cin >> filepath;
+	string shortpath = filepath;
 	filepath = mydir + filepath;
 	
 	// Check if file exists
@@ -246,6 +247,9 @@ void load_new_model(const Event* eventPtr, void* dataPtr){
 	id = level.add_model(window -> load_model(nodes[parent], filepath));
 	selected = level.models[id];
 	if (parent != "static") selected.set_pos(camera, 0, 10, 0);
+	if (parent == "static") level.models[id].set_tag("file", shortpath);
+	if (parent == "static") level.models[id].set_tag("class", "static");
+	if (parent == "static") level.models[id].set_tag("type", "s");
 	cur_state = sel;
 	cout << "Loaded model: [" << id << "] " << selected.get_name() << endl;
 }
@@ -350,6 +354,7 @@ void edit_model(const Event* eventPtr, void* dataPtr){
 	}
 	else if (inp != "y")
 	{
+		getline(cin, datum);
 		for (const auto &dat:data)
 		{
 			cout << dat << ": ";

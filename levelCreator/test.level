@@ -1,0 +1,14 @@
+static Terrain_C.egg s 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 Assets/Stage/Terrain_C.egg 
+static Building_C.egg s 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 Assets/Stage/Building_C.egg 
+weapon Baseballbat.egg g 1.007623 -4.563844 0.000000 0.000000 0.000000 0.000000 1.000000 1 1 Model/Baseballbat.egg blenderFiles/baticon.png 15 2 15 1 0 
+food_item cheese.egg c -2.008241 -5.016101 0.000000 0.000000 0.000000 0.000000 1.000000 1 1 blenderFiles/cheese.egg blenderFiles/cheeseicon.png 25 5 
+health_item pillBottle.egg c 8.843122 7.738353 0.000000 0.000000 0.000000 0.000000 0.150095 1 1 Assets/pillBottle.egg blenderFiles/pbottleicon.png 100 1 
+water_item Bootle.egg c 5.635418 7.910296 0.008758 0.000000 0.000000 0.000000 0.282430 1 1 blenderFiles/Bootle.egg blenderFiles/BottleIcon.png 80 6 
+static Ramp_C.egg s 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 Assets/Stage/Ramp_C.egg 
+static Grave.egg s 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 Assets/Stage/Grave.egg 
+static SkyBox.egg s 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 Assets/Stage/SkyBox.egg 
+static Stairs_C.egg s 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.000000 Assets/Stage/Stairs_C.egg 
+static Stone_C.egg s 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 1.100000 Assets/Stage/Stone_C.egg 
+weapon AK47.egg g 9.257133 -6.458196 0.000000 0.000000 0.000000 0.000000 1.000000 3.1 2 blenderFiles/AK47.egg blenderFiles/ak47icon.png 24 10 24 25 64 
+weapon negevitem.egg g 4.765741 -8.191223 0.000000 0.000000 0.000000 0.000000 1.000000 7.6 3 blenderFiles/negevitem.egg blenderFiles/negevicon.png 140 11 140 27 560 
+weapon Pistol.egg g 2.539967 -3.625266 2.159605 -178.863510 0.000000 0.000000 1.000000 1 1 Model/PIstol/Pistol.egg Model/PIstol/ITSAGUN.png 8 0 8 1 64 
