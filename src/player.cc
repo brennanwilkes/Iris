@@ -239,8 +239,44 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 		negev_arms.reparent_to(camera);
 		//arms_shown = false;
 		negev_arms.hide();
-	
-	
+		//NodePath cheese_arms;
+		//NodePath pill_arms;
+		//NodePath water_arms;
+		
+		cheese_arms = w -> load_model(pf->get_models(),dir+"Assets/Iris/cheesehands.egg");
+		cheese_arms.set_scale(0.5);
+		cheese_arms.set_pos(0.1, 0.3, -0.57);
+		cheese_arms.set_hpr(0, 0, 0);
+		cheese_arms.set_shader_auto();
+		cheese_arms.reparent_to(camera);
+		cheese_arms.hide();
+		
+		water_arms = w -> load_model(pf->get_models(),dir+"Assets/Iris/waterbottlehands.egg");
+		water_arms.set_scale(0.5);
+		water_arms.set_pos(0.1, 0.3, -0.57);
+		water_arms.set_hpr(0, 0, 0);
+		water_arms.set_shader_auto();
+		water_arms.reparent_to(camera);
+		water_arms.hide();
+		
+		pill_arms = w -> load_model(pf->get_models(),dir+"Assets/Iris/pillhands.egg");
+		pill_arms.set_scale(0.5);
+		pill_arms.set_pos(0.1, 0.3, -0.57);
+		pill_arms.set_hpr(0, 0, 0);
+		pill_arms.set_shader_auto();
+		pill_arms.reparent_to(camera);
+		pill_arms.hide();
+		
+		gauze_arms = w -> load_model(pf->get_models(),dir+"Assets/Iris/gauzehands.egg");
+		gauze_arms.set_scale(0.5);
+		gauze_arms.set_pos(0.1, 0.3, -0.57);
+		gauze_arms.set_hpr(0, 0, 0);
+		gauze_arms.set_shader_auto();
+		gauze_arms.reparent_to(camera);
+		gauze_arms.hide();
+		
+		
+		
 		///////////////////////////////////////////////////////////////////////////
 		//PT(AnimControl) animPtr;
 		name_collection.clear_anims();
@@ -347,6 +383,31 @@ void Player::set_up(NodePath* parent,WindowFramework* w,PandaFramework* pf,strin
 		w->load_model(empty_arms, dir + "Assets/Iris/EmptyHands-Idle.egg");
 		auto_bind(empty_arms.node(), empty_collection);
 		empty_collection.loop_all(true);//"Armature");
+		
+		w->load_model(cheese_arms, dir + "Assets/Iris/cheesehands-Idle.egg");
+		auto_bind(cheese_arms.node(), cheese_collection);
+		cheese_collection.loop_all(true);//"Armature");
+		
+		w->load_model(water_arms, dir + "Assets/Iris/waterbottlehands-Idle.egg");
+		auto_bind(water_arms.node(), water_collection);
+		water_collection.loop_all(true);//"Armature");
+		
+		w->load_model(pill_arms, dir + "Assets/Iris/pillhands-Idle.egg");
+		auto_bind(pill_arms.node(), pill_collection);
+		pill_collection.loop_all(true);//"Armature");
+		
+		NodePath animNp88 = w->load_model(gauze_arms, dir + "Assets/Iris/gauzehands-pull_out_pistol.egg");
+		auto_bind(gauze_arms.node(), name_collection);
+		animPtr = name_collection.get_anim(0);
+		gauze_collection.store_anim(animPtr, "gauze_reload");
+		animName = name_collection.get_anim_name(0);
+		name_collection.unbind_anim(animName);
+		animNp88.detach_node();
+		gauze_collection.play("gauze_reload");
+		
+		/*w->load_model(gauze_arms, dir + "Assets/Iris/waterbottlehands-Idle.egg");
+		auto_bind(gauze_arms.node(), gauze_collection);
+		gauze_collection.loop_all(true);//"Armature");*/
 	
 		////////////////////////////////////////////////////////////////////////////////
 	
@@ -621,6 +682,10 @@ void Player::calc_arms(){
 	empty_arms.hide();
 	ak_arms.hide();
 	negev_arms.hide();
+	cheese_arms.hide();
+	water_arms.hide();
+	pill_arms.hide();
+	gauze_arms.hide();
 	if (arms!=NULL){
 		arms->hide();
 	}
@@ -668,6 +733,28 @@ void Player::calc_arms(){
 			}
 			else if (mainHand->type=='c'){
 				ammoNodePath.show();
+				
+				if (mainHand->id==20){
+					on=true;
+					arms=&cheese_arms;
+
+				}
+				if (mainHand->id==21){
+					on=true;
+					arms=&water_arms;
+
+				}
+				if (mainHand->id==22){
+					on=true;
+					arms=&pill_arms;
+
+				}
+				if (mainHand->id==23){
+					on=true;
+					arms=&gauze_arms;
+
+				}
+				
 			}
 		}
 		

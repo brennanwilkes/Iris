@@ -115,11 +115,21 @@ public:
 	AnimControlCollection ak_collection;
 	AnimControlCollection negev_collection;
 	
+	AnimControlCollection cheese_collection;
+	AnimControlCollection pill_collection;
+	AnimControlCollection water_collection;
+	AnimControlCollection gauze_collection;
+	
 	NodePath pistol_arms;
 	NodePath bat_arms;
 	NodePath empty_arms;
 	NodePath ak_arms;
 	NodePath negev_arms;
+	
+	NodePath cheese_arms;
+	NodePath pill_arms;
+	NodePath water_arms;
+	NodePath gauze_arms;
 	
 	float xp;
 	int deaths;

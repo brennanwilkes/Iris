@@ -104,6 +104,9 @@ void World::tick(){
 		else if(player.pullout==11){
 			player.negev_collection.play("negev_reload");
 		}
+		else if(player.pullout==23){
+			player.gauze_collection.play("gauze_reload");
+		}
 		
 		player.pullout=-1;
 	}
