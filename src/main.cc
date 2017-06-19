@@ -1341,7 +1341,7 @@ void invPress(const Event* eventPtr, void* dataPtr){
 		if(player.mainHand->type=='g'){
 			player.pullout=player.mainHand->id;
 		}
-		else if(player.mainhand->id==23){
+		else if(player.mainHand->id==23){
 			player.pullout=23;
 		}
 		
@@ -1370,7 +1370,7 @@ void invHotkey(const Event* eventPtr, void* dataPtr){
 		if(player.mainHand->type=='g'){
 			player.pullout=player.mainHand->id;
 		}
-		else if(player.mainhand->id==23){
+		else if(player.mainHand->id==23){
 			player.pullout=23;
 		}
 	}
