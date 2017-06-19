@@ -1,7 +1,7 @@
-weapon blenderFiles/AK47.egg g 9.000000 -6.000000 0.000000 0.000000 0.000000 0.000000 1.000000 3.100000 2.000000 blenderFiles/AK47.egg blenderFiles/ak47icon.png 2.000000 2.000000 2 25.000000 2.000000 
-weapon blenderFiles/negevitem.egg g 4.000000 -8.000000 0.000000 0.000000 0.000000 0.000000 1.000000 7.600000 3.000000 blenderFiles/negevitem.egg blenderFiles/negevicon.png 3.000000 3.000000 3 27.000000 3.000000 
-weapon Model/PIstol/Pistol.egg g 2.000000 -3.000000 2.000000 0.000000 0.000000 0.000000 1.000000 1.000000 1.000000 Model/PIstol/Pistol.egg Model/PIstol/ITSAGUN.png 1.000000 1.000000 1 1.000000 1.000000 
-weapon Model/Baseballbat.egg g 1.000000 -4.000000 0.000000 0.000000 0.000000 0.000000 1.000000 1.000000 1.000000 Model/Baseballbat.egg blenderFiles/baticon.png 1.000000 1.000000 1 1.000000 1.000000 
+weapon blenderFiles/AK47.egg g 9.000000 -6.000000 0.000000 0.000000 0.000000 0.000000 1.000000 3.100000 2.000000 blenderFiles/AK47.egg blenderFiles/ak47icon.png 24.000000 10.000000 24 25.000000 120.000000 
+weapon blenderFiles/negevitem.egg g 4.000000 -8.000000 0.000000 0.000000 0.000000 0.000000 1.000000 7.600000 3.000000 blenderFiles/negevitem.egg blenderFiles/negevicon.png 140.000000 11.000000 140 27.000000 560.000000 
+weapon Model/PIstol/Pistol.egg g 2.000000 -3.000000 2.000000 0.000000 0.000000 0.000000 1.000000 1.000000 1.000000 Model/PIstol/Pistol.egg Model/PIstol/ITSAGUN.png 16.000000 0.000000 16 1.000000 64.000000
+weapon Model/Baseballbat.egg g 1.000000 -4.000000 0.000000 0.000000 0.000000 0.000000 1.000000 1.000000 1.000000 Model/Baseballbat.egg blenderFiles/baticon.png 15.000000 2.000000 15 1.000000 0.000000 
 food_item blenderFiles/cheese.egg c -2.000000 -5.000000 0.000000 0.000000 0.000000 0.000000 0.500000 1.000000 1.000000 blenderFiles/cheese.egg blenderFiles/cheeseicon.png 1.000000 1.000000 
 health_item Assets/pillBottle.egg c 8.000000 7.000000 0.000000 0.000000 0.000000 0.000000 0.500000 1.000000 1.000000 Assets/pillBottle.egg blenderFiles/pbottleicon.png 1.000000 1.000000 
 water_item blenderFiles/Bootle.egg c 5.000000 7.000000 0.053753 0.000000 0.000000 0.000000 0.500000 1.000000 1.000000 blenderFiles/Bootle.egg blenderFiles/BottleIcon.png 1.000000 1.000000 

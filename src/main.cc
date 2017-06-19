@@ -832,9 +832,9 @@ int main(int argc, char *argv[]) {
 			
 			
 			for (unsigned int i=0;i<gameLevel->exits.size();i++){
-				cout<<gameLevel->exits[i].x1<<" "<<gameLevel->exits[i].x2<<" "<<gameLevel->exits[i].y1<<" "<<gameLevel->exits[i].y2<<" "<<gameLevel->exits[i].z1<<" "<<gameLevel->exits[i].z2<<endl;
+				//cout<<gameLevel->exits[i].x1<<" "<<gameLevel->exits[i].x2<<" "<<gameLevel->exits[i].y1<<" "<<gameLevel->exits[i].y2<<" "<<gameLevel->exits[i].z1<<" "<<gameLevel->exits[i].z2<<endl;
 				
-				cout<<player.model.get_x()<<" "<<player.model.get_y()<<" "<<player.model.get_z()<<endl;
+				//cout<<player.model.get_x()<<" "<<player.model.get_y()<<" "<<player.model.get_z()<<endl;
 				
 				if (player.model.get_x() >= gameLevel->exits[i].x1 && player.model.get_x() <= gameLevel->exits[i].x2){
 					if (player.model.get_y() >= gameLevel->exits[i].y1 && player.model.get_y() <= gameLevel->exits[i].y2){
@@ -1032,6 +1032,8 @@ void loadGame(const Event* eventPtr, void* dataPtr){
 void loadLevel(const Event* eventPtr, void* dataPtr){
 	//load the selected world as selected by the button pressed - the button tag is the filename
 	string saveName = keys.buttonIndex[eventPtr->get_name()]->get_name();
+	
+	player.inventory.clear();
 	
 	ifstream myfile("saves/"+saveName+"/data");
 	string currentLevel;
