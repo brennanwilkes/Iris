@@ -993,6 +993,26 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 	for (unsigned int i=0;i<stats.size();i++){
 		stats[i]->model.show();
 	}
+	
+	/*int tid;
+	float tx1,tx2,ty1,ty2,tz1,tz2;
+	
+	if(saveName=="brennan"){
+		if(currentLevel=="0"){
+			
+		}
+		else if(currentLevel=="1"){
+			
+		}
+		else if(currentLevel=="2"){
+			
+		}
+		
+	}
+	
+	ChangeRegion tempreg(tx1,tx2,ty1,ty2,tz1,tz2,tid);
+	gameLevel->exits.push_back(tempreg);
+	*/
 	cout << "starting game" << endl;
 	world.menuStart();
 	
