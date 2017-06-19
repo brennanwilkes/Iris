@@ -1341,6 +1341,9 @@ void invPress(const Event* eventPtr, void* dataPtr){
 		if(player.mainHand->type=='g'){
 			player.pullout=player.mainHand->id;
 		}
+		else if(player.mainhand->id==23){
+			player.pullout=23;
+		}
 		
 	}
 	else{
@@ -1366,6 +1369,9 @@ void invHotkey(const Event* eventPtr, void* dataPtr){
 		player.handDisplay.set_texture(player.inventory[t-1]->imgTex);
 		if(player.mainHand->type=='g'){
 			player.pullout=player.mainHand->id;
+		}
+		else if(player.mainhand->id==23){
+			player.pullout=23;
 		}
 	}
 	else{
