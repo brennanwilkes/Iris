@@ -373,6 +373,7 @@ int main(int argc, char *argv[]) {
 	doStep(&framework,Thread::get_current_thread());
 
 
+	//Option menu buttons
 	for (unsigned int i=0; i<keys.keybindItems.size(); i++){
 		doStep(&framework,Thread::get_current_thread());
 		PGButton* butt;
@@ -487,7 +488,6 @@ int main(int argc, char *argv[]) {
 
 
 
-	
 	//Inventory buttons
 
 	// Setup, feeding the constructor with (bool vertical,float lenght,float width,float bevel)
@@ -782,7 +782,6 @@ int main(int argc, char *argv[]) {
 
 			//if u ded
 			if (player.health<=0){
-				
 				StaticObject* tempStat = new StaticObject(&gameModels,window,&framework,mydir.get_dirname());
 				stats.push_back(tempStat);
 				float ranStat=rand()/(float)RAND_MAX;
