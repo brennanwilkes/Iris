@@ -118,7 +118,6 @@ NodePath deathMenuItems;
 NodePath loadMenuItems;
 NodePath staticModels;
 PT(PGSliderBar) Slider=new PGSliderBar("MySliderBar");;
-PT(PGSliderBar) mouseSlider=new PGSliderBar("mouseSliderBar");;
 Level* gameLevel;
 OurLoader gameloader;
 int scene;
@@ -374,19 +373,6 @@ int main(int argc, char *argv[]) {
 	doStep(&framework,Thread::get_current_thread());
 
 
-	//Option Menu Items
-	PGButton* OptionTogButton2;
-	PGButton* mouseSensBut;
-	optionMenuItems.hide();
-
-	OptionTogButton2 = new PGButton("OptionTogButton");
-	OptionTogButton2 -> setup("Toggle Option Menu");
-	NodePath defbutNP6 = window -> get_pixel_2d().attach_new_node(OptionTogButton2);
-	defbutNP6.set_scale(0.1);
-	defbutNP6.set_pos(xs + 0.1, 0, 0.85);
-	defbutNP6.reparent_to(optionMenuItems);
-	keys.buttonIndex["click-mouse1-"+OptionTogButton2->get_id()] = OptionTogButton2;
-
 	for (unsigned int i=0; i<keys.keybindItems.size(); i++){
 		doStep(&framework,Thread::get_current_thread());
 		PGButton* butt;
@@ -402,34 +388,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	doStep(&framework,Thread::get_current_thread());
-	mouseSlider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
-	mouseSlider->set_range(0,1);
-	mouseSlider->set_value(0);
-	 
-	mouseSlider->setup_slider(true,1,0.05,false);
-	NodePath mouseSliderNP = window->get_aspect_2d().attach_new_node(mouseSlider);
-	mouseSliderNP.set_pos(xs+2.5,0,.25);
-	mouseSliderNP.reparent_to(optionMenuItems);
 
-	mouseSensBut = new PGButton("mouseSensBut");
-	mouseSensBut -> setup("Change mouse sens");
-	NodePath defbutNPmous = window -> get_pixel_2d().attach_new_node(mouseSensBut);
-	defbutNPmous.set_scale(0.1);
-	defbutNPmous.set_pos(xs+0.1*(17/8*8+1),0, 0.85);
-	defbutNPmous.reparent_to(optionMenuItems);
-
-
-
-
-	//Death message
-	PT(TextNode) deathNode = new TextNode("deathNode");
-	NodePath deathMessage= window->get_aspect_2d().attach_new_node(deathNode);
-	deathMessage.set_scale(0.2);
-	deathMessage.set_pos(xs+0.1,0, 0.5);
-	deathMessage.hide();
-
-	doStep(&framework,Thread::get_current_thread());
-	doStep(&framework,Thread::get_current_thread());
 
 	//Status bar items
 	PT(Texture) redTex=TexturePool::load_texture(mydir+"Assets/Red.png");
@@ -527,30 +486,7 @@ int main(int argc, char *argv[]) {
 	doStep(&framework,Thread::get_current_thread());
 
 
-	//This is example code for fancy buttons. Dont delete
-	/*
-	PT(PGButton) MyButton;
-	MyButton = new PGButton("MyButton");
-	MyButton->setup("Button",0.1);
-	PT(Texture) ButtonReady=TexturePool::load_texture("Assets/Red.png");
-	PT(Texture) ButtonRollover=TexturePool::load_texture("Assets/Blue.png");
-	PT(Texture) ButtonPressed=TexturePool::load_texture("Assets/Green.png");
-	PT(Texture) ButtonInactive=TexturePool::load_texture("Assets/Yellow.png");
-	
-	PGFrameStyle MyStyle=MyButton->get_frame_style(0); // frame_style(0): ready state
-	MyStyle.set_type(PGFrameStyle::T_flat);
-	
-	MyStyle.set_texture(ButtonReady);    MyButton->set_frame_style(0,MyStyle);
-	MyStyle.set_texture(ButtonRollover); MyButton->set_frame_style(1,MyStyle);
-	MyStyle.set_texture(ButtonPressed);  MyButton->set_frame_style(2,MyStyle);
-	MyStyle.set_texture(ButtonInactive); MyButton->set_frame_style(3,MyStyle);
-	
-	
-	NodePath defbutNPa = window->get_aspect_2d().attach_new_node(MyButton);
-	defbutNPa.set_scale(0.1);
-	defbutNPa.set_pos(xs+0.1,0, 0.45);
-	defbutNPa.reparent_to(menuItems);
-	*/
+
 	
 	//Inventory buttons
 
@@ -765,9 +701,9 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(buttons.SaveButton->get_click_event(keys.keybinds["use"].first ), "Save button press", &saveLevel, buttons.SaveButton);
 
 	window -> get_panda_framework() -> define_key(buttons.OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, buttons.OptionTogButton);
-	window -> get_panda_framework() -> define_key(OptionTogButton2->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, OptionTogButton2);
+	window -> get_panda_framework() -> define_key(buttons.OptionTogButton2->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, buttons.OptionTogButton2);
 	window -> get_panda_framework() -> define_key(buttons.OptionTogButton3->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, buttons.OptionTogButton3);
-	window -> get_panda_framework() -> define_key(mouseSensBut->get_click_event(keys.keybinds["use"].first ), "Mousebind button press", &rebindMouseSens, mouseSensBut);
+	window -> get_panda_framework() -> define_key(buttons.mouseSensBut->get_click_event(keys.keybinds["use"].first ), "Mousebind button press", &rebindMouseSens, buttons.mouseSensBut);
 
 	window -> get_panda_framework() -> define_key(buttons.respawnButton->get_click_event(keys.keybinds["use"].first ), "Respawn button press", &menu, NULL);
 	window -> get_panda_framework() -> define_key(buttons.restartButton->get_click_event(keys.keybinds["use"].first ), "Restart button press", &startGame, buttons.restartButton);
@@ -865,7 +801,7 @@ int main(int argc, char *argv[]) {
 				float ranD=rand()/(float)RAND_MAX;
 				ranD*=360;
 				world.menuDeath(); //changes menu status to start death fog and then player.death
-				deathNode->set_text(world.deathMessageList.at(rand()%world.deathMessageList.size())); //set death message
+				buttons.deathNode->set_text(world.deathMessageList.at(rand()%world.deathMessageList.size())); //set death message
 			}
 			
 			
@@ -897,7 +833,7 @@ int main(int argc, char *argv[]) {
 			player.ammoNodePath2.hide();
 			Bars.hide();
 			nd_crosshair.hide();
-			deathMessage.show();
+			buttons.deathMessage.show();
 			world.deathFogIncrease+=world.dt;
 			player.model.hide();
 			
@@ -909,7 +845,7 @@ int main(int argc, char *argv[]) {
 			} else{
 				player.death(itms,&entityModels);
 				deathMenuItems.show();
-				deathMessage.hide();
+				buttons.deathMessage.hide();
 				world.menuStatus=world.ms_dead;
 			}
 		}
@@ -1341,7 +1277,7 @@ void invPress(const Event* eventPtr, void* dataPtr){
 		if(player.mainHand->type=='g'){
 			player.pullout=player.mainHand->id;
 		}
-		else if(player.mainhand->id==23){
+		else if(player.mainHand->id==23){
 			player.pullout=23;
 		}
 		
@@ -1370,7 +1306,7 @@ void invHotkey(const Event* eventPtr, void* dataPtr){
 		if(player.mainHand->type=='g'){
 			player.pullout=player.mainHand->id;
 		}
-		else if(player.mainhand->id==23){
+		else if(player.mainHand->id==23){
 			player.pullout=23;
 		}
 	}
@@ -1418,7 +1354,8 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 }
 
 void rebindMouseSens(const Event* eventPtr, void* dataPtr){
-	keys.mouseSens = mouseSlider->get_value()*2.0;
+	Buttons buttons;
+	keys.mouseSens = buttons.mouseSlider->get_value()*2.0;
 }
 
 void menu(const Event* eventPtr, void* dataPtr){
