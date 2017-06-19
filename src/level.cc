@@ -33,6 +33,26 @@ map< const string, vector<string> > Level::gen_used_dat(){
 	return m;
 }
 
+map< const string, vector<string> > Level::default_tags = Level::gen_default_tags();
+
+map< const string, vector<string> > Level::gen_default_tags(){
+	map< const string, vector<string> > m;
+	m["ak"] = {"g", "0", "0", "0", "0", "0", "0", "1", "3.1", "2", "blenderFiles/AK47.egg", "blenderFiles/ak47icon.png", "24", "10", "24", "25", "64"};
+	m["negev"] = {"g", "0", "0", "0", "0", "0", "0", "1", "7.6", "3", "blenderFiles/negevitem.egg", "blenderFiles/negevicon.png", "140", "11", "140", "27", "560"};
+	m["pistol"] = {"g", "0", "0", "0", "0", "0", "0", "1", "1", "1", "Model/PIstol/Pistol.egg", "Model/PIstol/ITSAGUN.png", "8", "0", "8", "1", "64"};
+	m["bat"] = {"g", "0", "0", "0", "0", "0", "0", "0", "1", "1", "Model/Baseballbat.egg", "blenderFiles/baticon.png", "15", "2", "15", "1", "0"};
+	m["spider"] = {"Assets/INSECT/insect.egg", "0", "0", "0", "0", "0", "0", "0", "50", "15", "10", "50"};
+	m["bandit"] = {"Assets/bandit/Bandit.egg", "0", "0", "0", "0", "0", "0", "0", "50", "15", "10", "51"};
+	//~ m["item"] = {"type", "x", "y", "z", "h", "p", "r", "s", "wei", "vol", "file", "icon", "amo", "id"};
+	m["cheese"] = {"c", "0", "0", "0", "0", "0", "0", "1", "1", "1", "blenderFiles/cheese.egg", "blenderFiles/cheeseicon.png", "25", "5"};
+	m["pills"] = {"c", "0", "0", "0", "0", "0", "0", "1", "1", "1", "Assets/pillBottle.egg", "blenderFiles/pbottleicon.png", "100", "1"};
+	m["gauze"] = {"c", "0", "0", "0", "0", "0", "0", "1", "1", "1", "", "", "25", ""};
+	m["water"] = {"c", "0", "0", "0", "0", "0", "0", "1", "1", "1", "blenderFiles/Bootle.egg", "blenderFiles/BottleIcon.png", "80", "6"};
+
+	
+	return m;
+}
+
 Level::Level(){
 	
 }

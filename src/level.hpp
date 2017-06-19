@@ -39,6 +39,9 @@ public:
 	static map< const string, vector<string> > used_dat;
 	static map< const string, vector<string> > gen_used_dat();
 	
+	static map< const string, vector<string> > default_tags;
+	static map< const string, vector<string> > gen_default_tags();
+	
 	Level();
 	
 	void save(std::string file, bool ov = true); // Saves this instance of Level to a file
