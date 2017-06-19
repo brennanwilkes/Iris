@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 #include "nodePath.h"
 #include "pgButton.h"
+#include "pgSliderBar.h"
 
 Buttons::Buttons(){
 	Keys keys;
@@ -26,35 +27,35 @@ Buttons::Buttons(){
 
 	OptionTogButton = new PGButton("OptionTogButton");
 	OptionTogButton -> setup("Toggle Option Menu");
-	defbutNP5 = window -> get_pixel_2d().attach_new_node(OptionTogButton);
-	defbutNP5.set_scale(0.1);
-	defbutNP5.set_pos(xs + 0.1, 0, 0.85);
-	defbutNP5.reparent_to(menuItems);
+	defbutNP = window -> get_pixel_2d().attach_new_node(OptionTogButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs + 0.1, 0, 0.85);
+	defbutNP.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+OptionTogButton->get_id()] = OptionTogButton;
 
 
 	HitTogButton = new PGButton("HitTogButton");
 	HitTogButton -> setup("Toggle Hit Boxes");
-	defbutNP3 = window -> get_pixel_2d().attach_new_node(HitTogButton);
-	defbutNP3.set_scale(0.1);
-	defbutNP3.set_pos(xs + 0.1, 0, 0.65);
-	defbutNP3.reparent_to(menuItems);
+	defbutNP = window -> get_pixel_2d().attach_new_node(HitTogButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs + 0.1, 0, 0.65);
+	defbutNP.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+HitTogButton->get_id()] = HitTogButton;
 
 	DoubleTogButton = new PGButton("DoubleTogButton");
 	DoubleTogButton -> setup("Toggle Double Jump");
-	defbutNP4 = window -> get_pixel_2d().attach_new_node(DoubleTogButton);
-	defbutNP4.set_scale(0.1);
-	defbutNP4.set_pos(xs + 0.1, 0, 0.45);
-	defbutNP4.reparent_to(menuItems);
+	defbutNP = window -> get_pixel_2d().attach_new_node(DoubleTogButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs + 0.1, 0, 0.45);
+	defbutNP.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+DoubleTogButton->get_id()] = DoubleTogButton;
 
 	SaveButton = new PGButton("SaveButton");
 	SaveButton -> setup("Save Game");
-	defbutNP9000 = window -> get_pixel_2d().attach_new_node(SaveButton);
-	defbutNP9000.set_scale(0.1);
-	defbutNP9000.set_pos(xs+0.1,0, 0.25);
-	defbutNP9000.reparent_to(menuItems);
+	defbutNP = window -> get_pixel_2d().attach_new_node(SaveButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs+0.1,0, 0.25);
+	defbutNP.reparent_to(menuItems);
 	keys.buttonIndex["click-mouse1-"+SaveButton->get_id()] = SaveButton;
 
 	QuitButton = new PGButton("MenuButton");
@@ -99,37 +100,99 @@ Buttons::Buttons(){
 
 	StartGameButton = new PGButton("StartGameButton");
 	StartGameButton -> setup("New Game");
-	bnp = window -> get_pixel_2d().attach_new_node(StartGameButton);
-	bnp.set_scale(0.1);
-	bnp.set_pos(xs + 0.1, 0, 0.85);
-	bnp.reparent_to(startMenuItems);
+	defbutNP = window -> get_pixel_2d().attach_new_node(StartGameButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs + 0.1, 0, 0.85);
+	defbutNP.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+StartGameButton->get_id()] = StartGameButton;
 
 	loadGameButton = new PGButton("loadGameButton");
 	loadGameButton -> setup("Load Game");
-	bnp2 = window -> get_pixel_2d().attach_new_node(loadGameButton);
-	bnp2.set_scale(0.1);
-	bnp2.set_pos(xs + 0.1, 0, 0.65);
-	bnp2.reparent_to(startMenuItems);
+	defbutNP = window -> get_pixel_2d().attach_new_node(loadGameButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs + 0.1, 0, 0.65);
+	defbutNP.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+loadGameButton->get_id()] = loadGameButton;
 
 	//doStep(&framework,Thread::get_current_thread());
 	
 	realQuitButton = new PGButton("QuitButton");
 	realQuitButton -> setup("Quit");
-	defbutNPk = window -> get_pixel_2d().attach_new_node(realQuitButton);
-	defbutNPk.set_scale(0.1);
-	defbutNPk.set_pos(xs+0.1,0, 0.25);
-	defbutNPk.reparent_to(startMenuItems);
+	defbutNP = window -> get_pixel_2d().attach_new_node(realQuitButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs+0.1,0, 0.25);
+	defbutNP.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+realQuitButton->get_id()] = realQuitButton;
 
 	OptionTogButton3 = new PGButton("OptionTogButton");
 	OptionTogButton3 -> setup("Toggle Option Menu");
-	defbutNP7 = window -> get_pixel_2d().attach_new_node(OptionTogButton3);
-	defbutNP7.set_scale(0.1);
-	defbutNP7.set_pos(xs + 0.1, 0, 0.45);
-	defbutNP7.reparent_to(startMenuItems);
+	defbutNP = window -> get_pixel_2d().attach_new_node(OptionTogButton3);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs + 0.1, 0, 0.45);
+	defbutNP.reparent_to(startMenuItems);
 	keys.buttonIndex["click-mouse1-"+OptionTogButton3->get_id()] = OptionTogButton3;
+
+
+
+	//Option Menu Items
+	optionMenuItems.hide();
+
+	OptionTogButton2 = new PGButton("OptionTogButton");
+	OptionTogButton2 -> setup("Toggle Option Menu");
+	defbutNP = window -> get_pixel_2d().attach_new_node(OptionTogButton2);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs + 0.1, 0, 0.85);
+	defbutNP.reparent_to(optionMenuItems);
+	keys.buttonIndex["click-mouse1-"+OptionTogButton2->get_id()] = OptionTogButton2;
+
+	//Option menu buttons are in main
+
+	//doStep(&framework,Thread::get_current_thread());
+	mouseSlider=new PGSliderBar("mouseSliderBar");
+
+	mouseSlider->setup_scroll_bar(true,1.5,0.5,0); // 'rail' properties
+	mouseSlider->set_range(0,1);
+	mouseSlider->set_value(0);
+
+
+	mouseSlider->setup_slider(true,1,0.05,false);
+	defbutNP = window->get_aspect_2d().attach_new_node(mouseSlider);
+	defbutNP.set_pos(xs+2.5,0,.25);
+	defbutNP.reparent_to(optionMenuItems);
+
+	mouseSensBut = new PGButton("mouseSensBut");
+	mouseSensBut -> setup("Change mouse sens");
+	defbutNP = window -> get_pixel_2d().attach_new_node(mouseSensBut);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs+0.1*(17/8*8+1),0, 0.85);
+	defbutNP.reparent_to(optionMenuItems);
+
+
+	//Death Menu Items
+	deathMenuItems.hide();
+
+	respawnButton = new PGButton("respawnButton");
+	respawnButton -> setup("Respawn");
+	defbutNP = window -> get_pixel_2d().attach_new_node(respawnButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs + 0.1, 0, 0.85);
+	defbutNP.reparent_to(deathMenuItems);
+	keys.buttonIndex["click-mouse1-"+respawnButton->get_id()] = respawnButton;
+
+	restartButton = new PGButton("restartButton");
+	restartButton -> setup("Main Menu");
+	defbutNP = window -> get_pixel_2d().attach_new_node(restartButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs + 0.1, 0, 0.65);
+	defbutNP.reparent_to(deathMenuItems);
+	keys.buttonIndex["click-mouse1-"+restartButton->get_id()] = restartButton;
+
+	//Death message
+	deathNode = new TextNode("deathNode");
+	deathMessage= window->get_aspect_2d().attach_new_node(deathNode);
+	deathMessage.set_scale(0.2);
+	deathMessage.set_pos(xs+0.1,0, 0.5);
+	deathMessage.hide();
 
 
 	//Load Menu Items
@@ -137,31 +200,35 @@ Buttons::Buttons(){
 
 	MainMenuReturnButton = new PGButton("MainMenuReturnButton");
 	MainMenuReturnButton -> setup("Main Menu");
-	defbutNP69 = window -> get_pixel_2d().attach_new_node(MainMenuReturnButton);
-	defbutNP69.set_scale(0.1);
-	defbutNP69.set_pos(xs + 0.1, 0, 0.85);
-	defbutNP69.reparent_to(loadMenuItems);
-
-	//Death Menu Items
-	deathMenuItems.hide();
-
-	respawnButton = new PGButton("respawnButton");
-	respawnButton -> setup("Respawn");
-	bresp = window -> get_pixel_2d().attach_new_node(respawnButton);
-	bresp.set_scale(0.1);
-	bresp.set_pos(xs + 0.1, 0, 0.85);
-	bresp.reparent_to(deathMenuItems);
-	keys.buttonIndex["click-mouse1-"+respawnButton->get_id()] = respawnButton;
-
-	restartButton = new PGButton("restartButton");
-	restartButton -> setup("Main Menu");
-	brest = window -> get_pixel_2d().attach_new_node(restartButton);
-	brest.set_scale(0.1);
-	brest.set_pos(xs + 0.1, 0, 0.65);
-	brest.reparent_to(deathMenuItems);
-	keys.buttonIndex["click-mouse1-"+restartButton->get_id()] = restartButton;
+	defbutNP = window -> get_pixel_2d().attach_new_node(MainMenuReturnButton);
+	defbutNP.set_scale(0.1);
+	defbutNP.set_pos(xs + 0.1, 0, 0.85);
+	defbutNP.reparent_to(loadMenuItems);
 
 
-
-	
 }
+
+//This is example code for fancy buttons. Dont delete
+/*
+PT(PGButton) MyButton;
+MyButton = new PGButton("MyButton");
+MyButton->setup("Button",0.1);
+PT(Texture) ButtonReady=TexturePool::load_texture("Assets/Red.png");
+PT(Texture) ButtonRollover=TexturePool::load_texture("Assets/Blue.png");
+PT(Texture) ButtonPressed=TexturePool::load_texture("Assets/Green.png");
+PT(Texture) ButtonInactive=TexturePool::load_texture("Assets/Yellow.png");
+
+PGFrameStyle MyStyle=MyButton->get_frame_style(0); // frame_style(0): ready state
+MyStyle.set_type(PGFrameStyle::T_flat);
+
+MyStyle.set_texture(ButtonReady);    MyButton->set_frame_style(0,MyStyle);
+MyStyle.set_texture(ButtonRollover); MyButton->set_frame_style(1,MyStyle);
+MyStyle.set_texture(ButtonPressed);  MyButton->set_frame_style(2,MyStyle);
+MyStyle.set_texture(ButtonInactive); MyButton->set_frame_style(3,MyStyle);
+
+
+NodePath defbutNPa = window->get_aspect_2d().attach_new_node(MyButton);
+defbutNPa.set_scale(0.1);
+defbutNPa.set_pos(xs+0.1,0, 0.45);
+defbutNPa.reparent_to(menuItems);
+*/

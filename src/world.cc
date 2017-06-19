@@ -30,10 +30,12 @@ World::World(){
 	deathMessageList = {
 		////////////////max length
 		"You have died"
-		//"Oh, you are slain",
-		//"Wasted",
-		//":(",
-		//"RIP"
+		"Oh, you are slain",
+		"Wasted",
+		":(",
+		"RIP",
+		"nooooooooooooooooooooooo",
+		"Darkness takes you"
 	};
 	
 	menuStatus = 3; //ms = {ms_game=0, ms_pause=1, ms_option=2, ms_start=3, ms_optionfromstart=4, ms_deathfog=5, ms_dead=6};

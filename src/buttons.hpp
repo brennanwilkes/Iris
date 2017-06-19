@@ -14,6 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 #include "nodePath.h"
 #include "pgButton.h"
+#include "pgSliderBar.h"
 #include <animControlCollection.h>
 
 
@@ -21,28 +22,32 @@ class Buttons{
 public:
 	Buttons();
 	float xs;
+	NodePath defbutNP;
 	//Menu
 	PT(PGButton) QuitButton;
 	PGButton* HitTogButton;
 	PGButton* DoubleTogButton;
 	PGButton* OptionTogButton;
 	PGButton* SaveButton;
-	NodePath defbutNP, defbutNP3,  defbutNP4,  defbutNP5,  defbutNP9000;
 	//Start
 	PGButton* StartGameButton;
 	PGButton* loadGameButton;
 	PGButton* realQuitButton;
 	PGButton* OptionTogButton3;
-	NodePath nd_hellothere, loadnode2, bnp, bnp2, defbutNPk, defbutNP7;
+	NodePath nd_hellothere, loadnode2;
 	AnimControlCollection start_anim_collection;
 	PT(AnimControl) animPtrLoad2;
+	//Option
+	PGButton* OptionTogButton2;
+	PGButton* mouseSensBut;
+	PT(PGSliderBar) mouseSlider;
 	//Death
 	PGButton* respawnButton;
 	PGButton* restartButton;
-	NodePath bresp, brest;
-	//Load Menu Items
+	PT(TextNode) deathNode;
+	NodePath deathMessage;
+	//Load
 	PGButton* MainMenuReturnButton;
-	NodePath defbutNP69;
 };
 
 #endif
