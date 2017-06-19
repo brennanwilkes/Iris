@@ -282,15 +282,19 @@ int main(int argc, char *argv[]) {
 			NodePath interactModels = entityModels.attach_new_node("All interactables");
 	startMenuItems = window -> get_aspect_2d().attach_new_node("Start Menu Buttons");
 	startMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
+	startMenuItems.hide();
 	menuItems = window -> get_aspect_2d().attach_new_node("Buttons and such");
 	menuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
+	menuItems.hide();
 	optionMenuItems = window -> get_aspect_2d().attach_new_node("Option Menu Buttons");
 	optionMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
+	optionMenuItems.hide();
 	deathMenuItems = window -> get_aspect_2d().attach_new_node("Death Menu Buttons");
 	deathMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
+	deathMenuItems.hide();
 	loadMenuItems = window -> get_aspect_2d().attach_new_node("Load Menu Buttons");
 	loadMenuItems.set_transparency(TransparencyAttrib::M_alpha, 1);
-	
+	loadMenuItems.hide();
 	doStep(&framework,Thread::get_current_thread());
 
 	Buttons buttons;
@@ -703,7 +707,7 @@ int main(int argc, char *argv[]) {
 	window -> get_panda_framework() -> define_key(buttons.OptionTogButton->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, buttons.OptionTogButton);
 	window -> get_panda_framework() -> define_key(buttons.OptionTogButton2->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, buttons.OptionTogButton2);
 	window -> get_panda_framework() -> define_key(buttons.OptionTogButton3->get_click_event(keys.keybinds["use"].first ), "Option menu button press", &toggleOptionMenu, buttons.OptionTogButton3);
-	window -> get_panda_framework() -> define_key(buttons.mouseSensBut->get_click_event(keys.keybinds["use"].first ), "Mousebind button press", &rebindMouseSens, buttons.mouseSensBut);
+	window -> get_panda_framework() -> define_key(buttons.mouseSensBut->get_click_event(keys.keybinds["use"].first ), "Mousebind button press", &rebindMouseSens, buttons.mouseSlider);
 
 	window -> get_panda_framework() -> define_key(buttons.respawnButton->get_click_event(keys.keybinds["use"].first ), "Respawn button press", &menu, NULL);
 	window -> get_panda_framework() -> define_key(buttons.restartButton->get_click_event(keys.keybinds["use"].first ), "Restart button press", &startGame, buttons.restartButton);
@@ -939,6 +943,8 @@ void loadGame(const Event* eventPtr, void* dataPtr){
 		float xs = -(window -> get_graphics_window()->get_x_size() / (float)window ->get_graphics_window()->get_y_size());
 		Filename saveDir = mydir+"saves/";
 		pvector <string> saveFiles;
+		PGButton* butt;
+		NodePath LoadBindNode;
 
 		saveDir.scan_directory(saveFiles); //remember to sensitize inputs
 		int babies = loadMenuItems.get_num_children();
@@ -950,10 +956,10 @@ void loadGame(const Event* eventPtr, void* dataPtr){
 				i--;
 				continue;
 			}
-			PGButton* butt;
+			
 			butt = new PGButton(saveFiles.at(i));
 			butt -> setup("Load " + saveFiles.at(i));
-			NodePath LoadBindNode = window -> get_pixel_2d().attach_new_node(butt);
+			LoadBindNode = window -> get_pixel_2d().attach_new_node(butt);
 			LoadBindNode.set_scale(0.1);
 			LoadBindNode.set_pos(xs+0.1*(i/11*8+1),0,0.85-(.15*(i%11+1)));
 			LoadBindNode.reparent_to(loadMenuItems);
@@ -1353,8 +1359,9 @@ void rebindButton(const Event* eventPtr, void* dataPtr){
 }
 
 void rebindMouseSens(const Event* eventPtr, void* dataPtr){
-	Buttons buttons;
-	keys.mouseSens = buttons.mouseSlider->get_value()*2.0;
+	//Buttons buttons;
+	PGSliderBar* slide = static_cast<PGSliderBar*>(dataPtr);
+	keys.mouseSens = slide ->get_value()*2.0;
 }
 
 void menu(const Event* eventPtr, void* dataPtr){

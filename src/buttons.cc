@@ -23,7 +23,7 @@ Buttons::Buttons(){
 
 
 	//Menu items
-	menuItems.hide();
+	//menuItems.hide();
 
 	OptionTogButton = new PGButton("OptionTogButton");
 	OptionTogButton -> setup("Toggle Option Menu");
@@ -67,7 +67,7 @@ Buttons::Buttons(){
 	keys.buttonIndex["click-mouse1-"+QuitButton->get_id()] = QuitButton;
 
 	// Start Menu items
-	startMenuItems.hide();
+	//startMenuItems.hide();
 
 	/*
 	PT(Texture) tex_hellothere;
@@ -135,7 +135,7 @@ Buttons::Buttons(){
 
 
 	//Option Menu Items
-	optionMenuItems.hide();
+	//optionMenuItems.hide();
 
 	OptionTogButton2 = new PGButton("OptionTogButton");
 	OptionTogButton2 -> setup("Toggle Option Menu");
@@ -169,7 +169,7 @@ Buttons::Buttons(){
 
 
 	//Death Menu Items
-	deathMenuItems.hide();
+	//deathMenuItems.hide();
 
 	respawnButton = new PGButton("respawnButton");
 	respawnButton -> setup("Respawn");
@@ -196,7 +196,7 @@ Buttons::Buttons(){
 
 
 	//Load Menu Items
-	loadMenuItems.hide();
+	//loadMenuItems.hide();
 
 	MainMenuReturnButton = new PGButton("MainMenuReturnButton");
 	MainMenuReturnButton -> setup("Main Menu");
