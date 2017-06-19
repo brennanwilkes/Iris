@@ -1063,13 +1063,13 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 	float tx1,tx2,ty1,ty2,tz1,tz2;
 	
 	if(saveName=="brennan"){
-		if(currentLevel=="0"){
-			tx1=-10;
-			tx2=10;
-			ty1=-10;
-			ty2=10;
-			tz1=-5;
-			tz2=5;
+		if(currentLevel=="0"){			//114.139549 -24.136646 13.377174
+			tx1=100;
+			tx2=130;
+			ty1=-40;
+			ty2=-10;
+			tz1=10;
+			tz2=20;
 			tid=1;
 		}
 		else if(currentLevel=="1"){
@@ -1081,8 +1081,8 @@ void loadLevel(const Event* eventPtr, void* dataPtr){
 		
 	}
 	
-	//ChangeRegion tempreg(tx1,tx2,ty1,ty2,tz1,tz2,tid);
-	//gameLevel->exits.push_back(tempreg);
+	ChangeRegion tempreg(tx1,tx2,ty1,ty2,tz1,tz2,tid);
+	gameLevel->exits.push_back(tempreg);
 	
 	cout << "starting game" << endl;
 	world.menuStart();
